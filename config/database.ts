@@ -40,7 +40,10 @@ const databaseConfig: DatabaseConfig = {
         port: Env.get('MYSQL_PORT'),
         user: Env.get('MYSQL_USER'),
         password: Env.get('MYSQL_PASSWORD', ''),
-        database: Env.get('MYSQL_DB_NAME'),
+        database:
+          Env.get('NODE_ENV') === 'testing'
+            ? Env.get('MYSQL_TEST_DB_NAME')
+            : Env.get('MYSQL_DB_NAME'),
       },
       migrations: {
         naturalSort: true,
@@ -48,8 +51,7 @@ const databaseConfig: DatabaseConfig = {
       healthCheck: false,
       debug: false,
     },
-
-  }
+  },
 }
 
 export default databaseConfig
