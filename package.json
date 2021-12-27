@@ -8,7 +8,8 @@
     "start": "node server.js",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
-    "test": "node -r @adonisjs/assembler/build/register japaFile.ts"
+    "test": "node -r @adonisjs/assembler/build/register japaFile.ts",
+    "coverage": "nyc yarn run test"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.3.0",
@@ -23,6 +24,7 @@
     "get-port": "5.1.1",
     "japa": "^4.0.0",
     "jsdom": "^19.0.0",
+    "nyc": "^15.1.0",
     "pino-pretty": "^7.3.0",
     "prettier": "^2.5.1",
     "supertest": "^6.1.6",
