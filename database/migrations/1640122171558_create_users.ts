@@ -14,8 +14,7 @@ export default class Users extends BaseSchema {
       table.string('password', 255).notNullable()
       table.enum('role', ['manager', 'doctor'])
       table.string('reset_password_token', 255).nullable()
-      table.timestamp('created_at', { useTz: true })
-      table.timestamp('updated_at', { useTz: true })
+      table.timestamps(true, true)
     })
   }
 
