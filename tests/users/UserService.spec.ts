@@ -3,8 +3,14 @@ import { Assert } from 'japa/build/src/Assert'
 
 import { TRole } from 'App/Models/User'
 import UserService from 'App/Services/UserService'
+import { rollbackMigrations, runMigrations } from '../../japaFile'
 
-test.group('UserService', () => {
+test.group('UserService', (group) => {
+  group.before(async () => {
+    await rollbackMigrations()
+    await runMigrations()
+  })
+
   test('should return an empty array of users', async (assert: Assert) => {
     const users = await UserService.getAll()
 

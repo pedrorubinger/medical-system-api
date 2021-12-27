@@ -9,13 +9,13 @@ process.env.NODE_ENV = 'testing'
 process.env.ADONIS_ACE_CWD = join(__dirname)
 sourceMapSupport.install({ handleUncaughtExceptions: false })
 
-async function runMigrations() {
+export async function runMigrations() {
   await execa.node('ace', ['migration:run'], {
     stdio: 'inherit',
   })
 }
 
-async function rollbackMigrations() {
+export async function rollbackMigrations() {
   await execa.node('ace', ['migration:rollback', '--batch=0'], {
     stdio: 'inherit',
   })
@@ -32,6 +32,5 @@ async function startHttpServer() {
  */
 configure({
   files: ['tests/**/*.spec.ts'],
-  before: [runMigrations, startHttpServer],
-  after: [rollbackMigrations],
+  before: [startHttpServer],
 })
