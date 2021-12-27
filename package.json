@@ -2,11 +2,10 @@
   "name": "medical-system-api",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "start": "babel-node server.js",
+    "start": "node server.js",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "test": "node -r @adonisjs/assembler/build/register japaFile.ts",
