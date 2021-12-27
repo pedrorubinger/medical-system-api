@@ -26,3 +26,7 @@ Route.get('/user', 'UsersController.getAll')
 Route.get('/user/:id', 'UsersController.find')
 Route.put('/user/:id', 'UsersController.update')
 Route.delete('/user/:id', 'UsersController.destroy')
+
+/* AUTHENTICATION */
+Route.post('/session', 'AuthController.signIn')
+Route.get('/session/validate', 'AuthController.isAuthenticated')
