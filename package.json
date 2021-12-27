@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "start": "node server.js",
+    "start": "babel-node server.js",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "test": "node -r @adonisjs/assembler/build/register japaFile.ts",
@@ -39,6 +39,7 @@
     "@adonisjs/redis": "^7.1.0",
     "@adonisjs/repl": "^3.1.0",
     "@adonisjs/session": "^6.1.2",
+    "babel-preset-env": "^1.7.0",
     "luxon": "^2.2.0",
     "mysql": "^2.18.1",
     "phc-bcrypt": "^1.0.7",
