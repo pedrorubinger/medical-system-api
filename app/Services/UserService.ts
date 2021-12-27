@@ -1,5 +1,5 @@
-import AppError from '../Exceptions/AppError'
-import User, { TRole } from '../Models/User'
+import AppError from 'App/Exceptions/AppError'
+import User, { TRole } from 'App/Models/User'
 
 interface StoreUser {
   name: string
@@ -14,7 +14,7 @@ interface StoreUser {
 interface UpdateUser {
   name?: string
   email?: string
-  password?: string
+  // password?: string
   phone?: string
   cpf?: string
   is_admin?: boolean
@@ -29,32 +29,31 @@ class UserServices {
 
       return user
     } catch (err) {
-      throw new AppError(err)
+      throw new AppError(err?.message)
     }
   }
 
   public async update(id: number, data: UpdateUser): Promise<User> {
-    const user = await User.find(id)
+    try {
+      const user = await User.find(id)
 
-    if (!user) {
-      throw new AppError('User not found!')
+      if (!user) {
+        throw new AppError('This user was not found!', 404)
+      }
+
+      user.merge(data)
+      return await user.save()
+    } catch (err) {
+      throw new AppError(err?.message, err?.status)
     }
-
-    user.merge(data)
-
-    const updatedUser = await user.save()
-
-    return updatedUser
   }
 
   /** TO DO: Implement pagination, searching and sorting... */
   public async getAll(): Promise<User[]> {
     try {
-      const users = await User.query()
-
-      return users
-    } catch (err: any) {
-      throw new AppError(err)
+      return await User.query()
+    } catch (err) {
+      throw new AppError(err?.message, err?.status)
     }
   }
 
@@ -63,12 +62,12 @@ class UserServices {
       const user = await User.find(id)
 
       if (!user) {
-        throw new AppError('User not found!')
+        throw new AppError('This user was not found!', 404)
       }
 
       return user
     } catch (err) {
-      throw new AppError(err)
+      throw new AppError(err?.message, err?.status)
     }
   }
 
@@ -77,13 +76,13 @@ class UserServices {
       const user = await User.find(id)
 
       if (!user) {
-        throw new AppError('User not found!')
+        throw new AppError('This user was not found!', 404)
       }
 
       await user.delete()
       return true
     } catch (err) {
-      throw new AppError(err)
+      throw new AppError(err?.message, err?.status)
     }
   }
 }

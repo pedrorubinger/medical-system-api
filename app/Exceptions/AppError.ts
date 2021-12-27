@@ -1,18 +1,11 @@
-const INTERNAL_SERVER_ERROR =
-  'Sorry. An internal server error has occurred. Please try again later or contact us.'
-
-class AppError {
-  public readonly status: number
+export default class AppError {
   public readonly message: string
-  public readonly body: any
-  public readonly error: any
+  public readonly status: number
 
-  constructor(error: any) {
-    this.error = error
-    this.status = error?.response?.status || 500
-    this.message = error?.response?.data?.message || INTERNAL_SERVER_ERROR
-    this.body = error?.response?.data || null
+  constructor(message?: string, status?: number) {
+    this.message =
+      message ||
+      'Sorry. An internal server error has occurred. Please try again later or get in touch.'
+    this.status = status || 500
   }
 }
-
-export default AppError
