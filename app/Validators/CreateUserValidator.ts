@@ -32,7 +32,10 @@ export default class CreateUserValidator {
     ]),
     cpf: schema.string({}, [rules.maxLength(20)]),
     is_admin: schema.boolean(),
-    password: schema.string({}, [rules.maxLength(255), rules.confirmed()]),
+    password: schema.string.optional({}, [
+      rules.maxLength(255),
+      rules.confirmed(),
+    ]),
     role: schema.enum(['manager', 'doctor']),
   })
 

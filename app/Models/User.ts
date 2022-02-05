@@ -1,5 +1,6 @@
 import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
+import { v4 as uuidv4 } from 'uuid'
 import { DateTime } from 'luxon'
 
 export type TRole = 'manager' | 'doctor'
@@ -43,5 +44,10 @@ export default class User extends BaseModel {
     if (auth.$dirty.password) {
       auth.password = await Hash.make(auth.password)
     }
+  }
+
+  @beforeSave()
+  public static generateResetPasswordToken(user: User) {
+    user.reset_password_token = uuidv4()
   }
 }

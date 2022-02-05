@@ -36,15 +36,18 @@
     "@adonisjs/auth": "^8.0.10",
     "@adonisjs/core": "^5.4.0",
     "@adonisjs/lucid": "^16.3.2",
+    "@adonisjs/mail": "^7.2.4",
     "@adonisjs/redis": "^7.1.0",
     "@adonisjs/repl": "^3.1.0",
     "@adonisjs/session": "^6.1.2",
+    "@types/uuid": "^8.3.4",
     "babel-preset-env": "^1.7.0",
     "luxon": "^2.2.0",
     "mysql": "^2.18.1",
     "phc-bcrypt": "^1.0.7",
     "proxy-addr": "^2.0.7",
     "reflect-metadata": "^0.1.13",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "uuid": "^8.3.2"
   }
 }
