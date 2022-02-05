@@ -22,7 +22,6 @@ class EmailService {
 
       return true
     } catch (err) {
-      console.log('email send > err', err)
       throw new AppError(err?.message)
     }
   }
