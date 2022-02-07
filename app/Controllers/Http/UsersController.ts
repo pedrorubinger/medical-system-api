@@ -47,8 +47,13 @@ export default class UsersController {
     return response.status(200).json(user)
   }
 
-  public async getAll({ response }: HttpContextContract): Promise<void> {
-    const users = await UserService.getAll()
+  public async getAll({
+    request,
+    response,
+  }: HttpContextContract): Promise<void> {
+    const { cpf, email, name, page, perPage, role } = request.qs()
+    const params = { cpf, email, name, page, perPage, role }
+    const users = await UserService.getAll(params)
 
     return response.status(200).json(users)
   }

@@ -1,12 +1,16 @@
 import Database from '@ioc:Adonis/Lucid/Database'
 import Env from '@ioc:Adonis/Core/Env'
+import {
+  ModelPaginatorContract,
+  ModelQueryBuilderContract,
+} from '@ioc:Adonis/Lucid/Orm'
 import { v4 as uuidv4 } from 'uuid'
 
 import AppError from 'App/Exceptions/AppError'
 import User, { TRole } from 'App/Models/User'
 import EmailService from './EmailService'
 
-interface StoreUser {
+interface StoreUserData {
   name: string
   email: string
   password?: string
@@ -16,7 +20,7 @@ interface StoreUser {
   role: TRole
 }
 
-interface UpdateUser {
+interface UpdateUserData {
   name?: string
   email?: string
   password?: string
@@ -27,13 +31,22 @@ interface UpdateUser {
   reset_password_token?: string
 }
 
+interface FetchUsersData {
+  page?: number
+  perPage?: number
+  email?: string
+  name?: string
+  cpf?: string
+  role?: TRole
+}
+
 interface ValidateResetTokenResponse {
   email: string
   id: number
 }
 
 class UserServices {
-  public async store(data: StoreUser): Promise<User> {
+  public async store(data: StoreUserData): Promise<User> {
     return await Database.transaction(async (trx) => {
       try {
         const user = new User()
@@ -72,7 +85,7 @@ class UserServices {
     })
   }
 
-  public async update(id: number, data: UpdateUser): Promise<User> {
+  public async update(id: number, data: UpdateUserData): Promise<User> {
     try {
       const user = await User.find(id)
 
@@ -87,9 +100,37 @@ class UserServices {
     }
   }
 
-  /** TO DO: Implement pagination, searching and sorting... */
-  public async getAll(): Promise<User[]> {
+  /** TO DO: Implement sorting... */
+  public async getAll(
+    params?: FetchUsersData
+  ): Promise<ModelPaginatorContract<User> | User[]> {
     try {
+      if (params) {
+        const { cpf, email, name, page, perPage, role } = params
+
+        if (page && perPage) {
+          return await User.query()
+            .where((query: ModelQueryBuilderContract<typeof User, User>) => {
+              if (cpf) {
+                query.andWhere('cpf', 'like', `%${cpf}%`)
+              }
+
+              if (email) {
+                query.andWhere('email', 'like', `%${email}%`)
+              }
+
+              if (name) {
+                query.andWhere('name', 'like', `${name}%`)
+              }
+
+              if (role) {
+                query.andWhere('role', '=', role)
+              }
+            })
+            .paginate(page, perPage)
+        }
+      }
+
       return await User.query()
     } catch (err) {
       throw new AppError(err?.message, err?.status)
