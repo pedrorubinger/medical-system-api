@@ -21,12 +21,12 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 /* USERS */
-Route.post('/user', 'UsersController.store')
-Route.get('/user', 'UsersController.getAll')
-Route.get('/user/:id', 'UsersController.find')
+Route.post('/user', 'UsersController.store').middleware('auth')
+Route.get('/user', 'UsersController.getAll').middleware('auth')
+Route.get('/user/:id', 'UsersController.find').middleware('auth')
 Route.get('/user/set_password/:token', 'UsersController.validateResetToken')
-Route.put('/user/:id', 'UsersController.update')
-Route.delete('/user/:id', 'UsersController.destroy')
+Route.put('/user/:id', 'UsersController.update').middleware('auth')
+Route.delete('/user/:id', 'UsersController.destroy').middleware('auth')
 
 /* AUTHENTICATION */
 Route.post('/session', 'AuthController.signIn')

@@ -38,6 +38,10 @@ interface FetchUsersData {
   name?: string
   cpf?: string
   role?: TRole
+  /** @default 'asc' */
+  order?: 'asc' | 'desc'
+  /** @default 'name' */
+  orderBy?: 'name' | 'cpf' | 'role' | 'email'
 }
 
 interface ValidateResetTokenResponse {
@@ -100,17 +104,20 @@ class UserServices {
     }
   }
 
-  /** TO DO: Implement sorting... */
   public async getAll(
+    userId: number,
     params?: FetchUsersData
   ): Promise<ModelPaginatorContract<User> | User[]> {
     try {
       if (params) {
-        const { cpf, email, name, page, perPage, role } = params
+        const { cpf, email, name, order, orderBy, page, perPage, role } = params
 
         if (page && perPage) {
           return await User.query()
+            .orderBy(orderBy || 'name', order || 'asc')
             .where((query: ModelQueryBuilderContract<typeof User, User>) => {
+              query.whereNot('id', userId)
+
               if (cpf) {
                 query.andWhere('cpf', 'like', `%${cpf}%`)
               }
@@ -131,7 +138,9 @@ class UserServices {
         }
       }
 
-      return await User.query()
+      return await User.query().where((query) => {
+        query.whereNot('id', userId)
+      })
     } catch (err) {
       throw new AppError(err?.message, err?.status)
     }

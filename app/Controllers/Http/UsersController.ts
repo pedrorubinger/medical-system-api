@@ -48,12 +48,20 @@ export default class UsersController {
   }
 
   public async getAll({
+    auth,
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    const { cpf, email, name, page, perPage, role } = request.qs()
-    const params = { cpf, email, name, page, perPage, role }
-    const users = await UserService.getAll(params)
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
+    const { cpf, email, name, order, orderBy, page, perPage, role } =
+      request.qs()
+    const params = { cpf, email, name, order, orderBy, page, perPage, role }
+    const users = await UserService.getAll(auth.user.id, params)
 
     return response.status(200).json(users)
   }
