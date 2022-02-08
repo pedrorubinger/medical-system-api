@@ -1,43 +1,39 @@
 import test from 'japa'
 import supertest from 'supertest'
+import { defaultUser } from 'Database/seeders/User'
 
-import { TRole } from 'App/Models/User'
-import { rollbackMigrations, runMigrations } from '../../japaFile'
+import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 
 const BASE_URL = `http://${process.env.HOST}:${process.env.PORT}`
-const dummyUser = {
-  email: 'pedro@test.com',
-  password: 'pedro123',
-  password_confirmation: 'pedro123',
-  role: 'doctor' as TRole,
-  name: 'Pedro Henrique',
-  phone: '31 9126384',
-  cpf: '12345678910',
-  is_admin: false,
+const credentials = {
+  email: defaultUser.email,
+  password: defaultUser.password,
 }
 
 test.group('UsersController', (group) => {
   group.before(async () => {
     await rollbackMigrations()
     await runMigrations()
+    await runSeeds()
   })
 
   test('should authenticate the user', async () => {
-    const credentials = { email: 'pedro@test.com', password: 'pedro123' }
-
-    await supertest(BASE_URL).post('/user').send(dummyUser)
     await supertest(BASE_URL).post('/session').send(credentials).expect(200)
   })
 
   test('should deny the user access (incorrect credentials)', async () => {
-    const credentials = { email: 'pedro@test.com.br', password: 'pedro1234' }
+    const wrongCredentials = {
+      email: 'pedro@test.com.br',
+      password: 'pedro1234',
+    }
 
-    await supertest(BASE_URL).post('/session').send(credentials).expect(400)
+    await supertest(BASE_URL)
+      .post('/session')
+      .send(wrongCredentials)
+      .expect(400)
   })
 
   test("should approve the user's token", async () => {
-    const credentials = { email: 'pedro@test.com', password: 'pedro123' }
-
     const response = await supertest(BASE_URL)
       .post('/session')
       .send(credentials)

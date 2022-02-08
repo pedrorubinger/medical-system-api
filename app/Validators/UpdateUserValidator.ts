@@ -32,11 +32,7 @@ export default class UpdateUserValidator {
     ]),
     cpf: schema.string.optional({}, [rules.maxLength(20)]),
     is_admin: schema.boolean.optional(),
-    password: schema.string.optional({}, [rules.maxLength(255)]),
-    confirmed: schema.string({}, [
-      rules.requiredIfExists('password'),
-      rules.maxLength(255),
-    ]),
+    password: schema.string({}, [rules.maxLength(255)]),
     role: schema.enum.optional(['manager', 'doctor']),
   })
 
@@ -59,6 +55,5 @@ export default class UpdateUserValidator {
     'phone.maxLength': 'Phone number cannot be longer than 40 characters long!',
     'email.maxLength': 'Email cannot be longer than 80 characters long!',
     'password': 'Password cannot be longer than 255 characters long!',
-    'confirmed': 'Passwords do not match!',
   }
 }

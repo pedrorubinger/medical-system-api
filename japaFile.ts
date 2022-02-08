@@ -15,6 +15,12 @@ export async function runMigrations() {
   })
 }
 
+export async function runSeeds() {
+  await execa.node('ace', ['db:seed'], {
+    stdio: 'inherit',
+  })
+}
+
 export async function rollbackMigrations() {
   await execa.node('ace', ['migration:rollback', '--batch=0'], {
     stdio: 'inherit',
