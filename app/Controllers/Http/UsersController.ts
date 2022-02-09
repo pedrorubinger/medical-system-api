@@ -31,13 +31,11 @@ export default class UsersController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user || auth.user.id !== params.id) {
+    if (!auth.user || auth.user.id.toString() !== params.id.toString()) {
       return response
         .status(401)
         .json({ message: 'You are not authorized to access this resource!' })
     }
-
-    await request.validate(UpdateUserValidator)
 
     const { id } = params
     const data = request.only([
@@ -49,6 +47,17 @@ export default class UsersController {
       'role',
       'password',
     ])
+
+    try {
+      await auth.attempt(auth.user.email, data.password)
+    } catch (err) {
+      return response
+        .status(400)
+        .json({ field: 'password', message: 'Invalid password!' })
+    }
+
+    await request.validate(UpdateUserValidator)
+
     const user = await UserService.update(id, data)
 
     return response.status(200).json(user)

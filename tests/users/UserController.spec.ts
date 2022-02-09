@@ -6,8 +6,6 @@ import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 import { defaultUser } from '../../database/seeders/User'
 import { BASE_URL } from '../utils/urls'
 
-/** TO DO: Implement test to validate (PUT /user) with wrong password... */
-/** TO DO: Implement test to validate whether CPF and email is unique on create user... */
 test.group('UsersController', (group) => {
   let token = ''
   let headers: Object
@@ -32,8 +30,19 @@ test.group('UsersController', (group) => {
     }
   })
 
+  test('should return status 400 (PUT /user) when password is invalid on update profile (User) data', async () => {
+    await supertest(BASE_URL)
+      .put(`/user/${defaultUser.id}`)
+      .set(headers)
+      .send({ name: 'Pedro R', password: 'wrong-p#sswrd' })
+      .expect(400)
+  })
+
   test('should return status 200 (GET /user)', async () => {
-    await supertest(BASE_URL).get('/user').set(headers).expect(200)
+    await supertest(BASE_URL)
+      .get('/user?filterOwn=true')
+      .set(headers)
+      .expect(200)
   })
 
   test('should return status 201 (POST /user)', async () => {
@@ -57,6 +66,40 @@ test.group('UsersController', (group) => {
       .expect(201)
   }).timeout(50000)
 
+  test('should return status 422 (PUT /user) when user try to update their CPF with one which already exists', async () => {
+    const user = await supertest(BASE_URL)
+      .get(`/user/${defaultUser.id}`)
+      .set(headers)
+      .expect(200)
+
+    await supertest(BASE_URL)
+      .put(`/user/${defaultUser.id}`)
+      .set(headers)
+      .send({
+        name: 'John A. Doe',
+        password: defaultUser.password,
+        cpf: user.body.cpf,
+      })
+      .expect(422)
+  })
+
+  test('should return status 422 (PUT /user) when user try to update their email with one which already exists', async () => {
+    const user = await supertest(BASE_URL)
+      .get(`/user/${defaultUser.id}`)
+      .set(headers)
+      .expect(200)
+
+    await supertest(BASE_URL)
+      .put(`/user/${defaultUser.id}`)
+      .set(headers)
+      .send({
+        name: 'John A. Doe',
+        password: defaultUser.password,
+        email: user.body.email,
+      })
+      .expect(422)
+  })
+
   test('should return status 422 (POST /user)', async () => {
     const payload = {
       email: 'jane@test.com',
@@ -73,7 +116,10 @@ test.group('UsersController', (group) => {
   })
 
   test('should return status 200 (GET /user/:id)', async () => {
-    await supertest(BASE_URL).get('/user/1').set(headers).expect(200)
+    await supertest(BASE_URL)
+      .get(`/user/${defaultUser.id}`)
+      .set(headers)
+      .expect(200)
   })
 
   test('should return status 200 (PUT /user/:id)', async () => {

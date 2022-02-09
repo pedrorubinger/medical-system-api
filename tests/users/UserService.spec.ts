@@ -64,7 +64,7 @@ test.group('UserService', (group) => {
     const users = await UserService.getAll(id)
 
     assert.isArray(users)
-    assert.equal('John Doe', users[0].name)
+    assert.equal(defaultUser.name, users[0].name)
   })
 
   test('should get the specified user', async (assert: Assert) => {
