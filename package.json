@@ -1,6 +1,10 @@
 {
   "name": "medical-system-api",
   "version": "1.0.0",
+  "engines": {
+    "node": "14.19.0",
+    "yarn": "1.22.17"
+  },
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
