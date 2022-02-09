@@ -38,6 +38,8 @@ interface FetchUsersData {
   name?: string
   cpf?: string
   role?: TRole
+  /** @default false */
+  filterOwn?: boolean
   /** @default 'asc' */
   order?: 'asc' | 'desc'
   /** @default 'name' */
@@ -110,36 +112,53 @@ class UserServices {
   ): Promise<ModelPaginatorContract<User> | User[]> {
     try {
       if (params) {
-        const { cpf, email, name, order, orderBy, page, perPage, role } = params
+        const {
+          cpf,
+          email,
+          filterOwn,
+          name,
+          order,
+          orderBy,
+          page,
+          perPage,
+          role,
+        } = params
+        const whereCallback = (
+          query: ModelQueryBuilderContract<typeof User, User>
+        ) => {
+          if (filterOwn) {
+            query.whereNot('id', userId)
+          }
+
+          if (cpf) {
+            query.andWhere('cpf', 'like', `%${cpf}%`)
+          }
+
+          if (email) {
+            query.andWhere('email', 'like', `%${email}%`)
+          }
+
+          if (name) {
+            query.andWhere('name', 'like', `${name}%`)
+          }
+
+          if (role) {
+            query.andWhere('role', '=', role)
+          }
+        }
 
         if (page && perPage) {
           return await User.query()
             .orderBy(orderBy || 'name', order || 'asc')
-            .where((query: ModelQueryBuilderContract<typeof User, User>) => {
-              query.whereNot('id', userId)
-
-              if (cpf) {
-                query.andWhere('cpf', 'like', `%${cpf}%`)
-              }
-
-              if (email) {
-                query.andWhere('email', 'like', `%${email}%`)
-              }
-
-              if (name) {
-                query.andWhere('name', 'like', `${name}%`)
-              }
-
-              if (role) {
-                query.andWhere('role', '=', role)
-              }
-            })
+            .where(whereCallback)
             .paginate(page, perPage)
         }
       }
 
       return await User.query().where((query) => {
-        query.whereNot('id', userId)
+        if (params?.filterOwn) {
+          query.whereNot('id', userId)
+        }
       })
     } catch (err) {
       throw new AppError(err?.message, err?.status)

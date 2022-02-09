@@ -30,7 +30,10 @@ export default class CreateUserValidator {
       rules.unique({ table: 'users', column: 'email' }),
       rules.maxLength(80),
     ]),
-    cpf: schema.string({}, [rules.maxLength(20)]),
+    cpf: schema.string({}, [
+      rules.maxLength(20),
+      rules.unique({ table: 'users', column: 'cpf' }),
+    ]),
     is_admin: schema.boolean(),
     password: schema.string.optional({}, [
       rules.maxLength(255),

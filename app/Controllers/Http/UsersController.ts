@@ -58,9 +58,19 @@ export default class UsersController {
         .json({ message: 'You are not authorized to access this resource!' })
     }
 
-    const { cpf, email, name, order, orderBy, page, perPage, role } =
+    const { cpf, email, name, order, orderBy, page, perPage, role, filterOwn } =
       request.qs()
-    const params = { cpf, email, name, order, orderBy, page, perPage, role }
+    const params = {
+      cpf,
+      email,
+      name,
+      order,
+      orderBy,
+      page,
+      perPage,
+      role,
+      filterOwn,
+    }
     const users = await UserService.getAll(auth.user.id, params)
 
     return response.status(200).json(users)

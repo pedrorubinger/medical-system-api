@@ -7,6 +7,7 @@ import { defaultUser } from '../../database/seeders/User'
 import { BASE_URL } from '../utils/urls'
 
 /** TO DO: Implement test to validate (PUT /user) with wrong password... */
+/** TO DO: Implement test to validate whether CPF and email is unique on create user... */
 test.group('UsersController', (group) => {
   let token = ''
   let headers: Object
