@@ -25,7 +25,7 @@ export default class User extends BaseModel {
   public is_admin: boolean
 
   @column({ serializeAs: null })
-  public password: string | null
+  public password: string | undefined
 
   @column()
   public role: TRole
