@@ -25,10 +25,8 @@ export default class AuthController {
     response,
   }: HttpContextContract): Promise<void> {
     try {
-      await auth.use('api').authenticate()
-      return response
-        .status(200)
-        .json({ isAuthenticated: auth.use('api').isAuthenticated })
+      const user = await auth.use('api').authenticate()
+      return response.status(200).json({ user })
     } catch (err) {
       throw new AppError(err?.message, err?.status)
     }
