@@ -26,10 +26,17 @@ export default class UsersController {
   }
 
   public async update({
+    auth,
     params,
     request,
     response,
   }: HttpContextContract): Promise<void> {
+    if (!auth.user || auth.user.id !== params.id) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
     await request.validate(UpdateUserValidator)
 
     const { id } = params
@@ -69,7 +76,7 @@ export default class UsersController {
       page,
       perPage,
       role,
-      filterOwn,
+      filterOwn: filterOwn === 'true' || filterOwn === true,
     }
     const users = await UserService.getAll(auth.user.id, params)
 
