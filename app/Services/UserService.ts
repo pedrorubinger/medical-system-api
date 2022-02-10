@@ -58,7 +58,7 @@ class UserServices {
         const user = new User()
 
         user.name = data.name
-        user.password = data?.password || null
+        user.password = data?.password || undefined
         user.reset_password_token = uuidv4()
         user.email = data.email
         user.phone = data.phone
