@@ -2,14 +2,14 @@
   "name": "medical-system-api",
   "version": "1.0.0",
   "engines": {
-    "node": "14.19.0",
-    "yarn": "1.22.17"
+    "node": "16.13.2",
+    "yarn": "1.22.10"
   },
   "private": true,
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "start": "node server.js",
+    "start": "ENV_SILENT=true node build/server.js",
     "lint": "eslint . --ext=.ts",
     "format": "prettier --write .",
     "test": "node -r @adonisjs/assembler/build/register japaFile.ts",

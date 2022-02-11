@@ -42,6 +42,13 @@ const redisConfig: RedisConfig = {
       db: 0,
       keyPrefix: '',
     },
+    session: {
+      host: Env.get('REDIS_HOST'),
+      port: Env.get('REDIS_PORT'),
+      password: Env.get('REDIS_PASSWORD', ''),
+      db: 1,
+      keyPrefix: 'session-',
+    },
   },
 }
 
