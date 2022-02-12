@@ -27,7 +27,6 @@ interface UpdateUserData {
   phone?: string
   cpf?: string
   is_admin?: boolean
-  role?: TRole
   reset_password_token?: string
 }
 
@@ -56,10 +55,11 @@ class UserServices {
     return await Database.transaction(async (trx) => {
       try {
         const user = new User()
+        const resetPasswordToken = uuidv4()
 
         user.name = data.name
         user.password = data?.password || undefined
-        user.reset_password_token = uuidv4()
+        user.reset_password_token = resetPasswordToken
         user.email = data.email
         user.phone = data.phone
         user.cpf = data.cpf
@@ -70,7 +70,7 @@ class UserServices {
         const content = `
           <h1>Bem-vindo(a), ${data.name}!</h1>
           <h2>A sua conta foi criada! Agora você precisa definir uma nova senha começar a utilizar o sistema.</h2>
-          <a href="http://localhost:3000/set-password?token=${user.reset_password_token}">Clique aqui para criar sua senha.</a>
+          <a href="http://localhost:3000/set-password?token=${resetPasswordToken}">Clique aqui para criar sua senha.</a>
         `
 
         await EmailService.send({

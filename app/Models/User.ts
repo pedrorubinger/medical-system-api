@@ -30,7 +30,7 @@ export default class User extends BaseModel {
   @column()
   public role: TRole
 
-  @column()
+  @column({ serializeAs: null })
   public reset_password_token: string | null
 
   @column.dateTime({ autoCreate: true })

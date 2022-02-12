@@ -44,7 +44,6 @@ export default class UsersController {
       'cpf',
       'phone',
       'is_admin',
-      'role',
       'password',
     ])
 

@@ -20,14 +20,30 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-/* USERS */
-Route.post('/user', 'UsersController.store').middleware('auth')
-Route.get('/user', 'UsersController.getAll').middleware('auth')
-Route.get('/user/:id', 'UsersController.find')
+/* USER */
+Route.group(() => {
+  Route.post('/user', 'UsersController.store').middleware([
+    'auth',
+    'permission:admin',
+  ])
+  Route.get('/user', 'UsersController.getAll').middleware([
+    'auth',
+    'permission:admin',
+  ])
+  Route.get('/user/:id', 'UsersController.find').middleware([
+    'auth',
+    'permission:admin',
+  ])
+  Route.delete('/user/:id', 'UsersController.destroy').middleware([
+    'auth',
+    'permission:admin',
+  ])
+})
+Route.put('/user/:id', 'UsersController.update').middleware(['auth'])
 Route.get('/user/set_password/:token', 'UsersController.validateResetToken')
-Route.put('/user/:id', 'UsersController.update').middleware('auth')
-Route.delete('/user/:id', 'UsersController.destroy').middleware('auth')
 
-/* AUTHENTICATION */
+/* AUTH & SESSION */
 Route.post('/session', 'AuthController.signIn')
-Route.get('/session/validate', 'AuthController.isAuthenticated')
+Route.get('/session/validate', 'AuthController.isAuthenticated').middleware([
+  'auth',
+])
