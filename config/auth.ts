@@ -5,6 +5,7 @@
  * file.
  */
 
+import Env from '@ioc:Adonis/Core/Env'
 import { AuthConfig } from '@ioc:Adonis/Addons/Auth'
 
 /*
@@ -54,7 +55,7 @@ const authConfig: AuthConfig = {
       tokenProvider: {
         type: 'api',
         driver: 'redis',
-        redisConnection: 'local',
+        redisConnection: Env.get('REDIS_CONNECTION'), // 'local',
         foreignKey: 'user_id',
       },
 
