@@ -10,7 +10,7 @@ const credentials = {
   password: defaultUser.password,
 }
 
-test.group('UsersController', (group) => {
+test.group('UserController', (group) => {
   group.before(async () => {
     await rollbackMigrations()
     await runMigrations()

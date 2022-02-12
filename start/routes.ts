@@ -22,28 +22,33 @@ import Route from '@ioc:Adonis/Core/Route'
 
 /* USER */
 Route.group(() => {
-  Route.post('/user', 'UsersController.store').middleware([
+  Route.post('/user', 'UserController.store').middleware([
     'auth',
     'permission:admin',
   ])
-  Route.get('/user', 'UsersController.getAll').middleware([
+  Route.get('/user', 'UserController.index').middleware([
     'auth',
     'permission:admin',
   ])
-  Route.get('/user/:id', 'UsersController.find').middleware([
+  Route.get('/user/:id', 'UserController.show').middleware([
     'auth',
     'permission:admin',
   ])
-  Route.delete('/user/:id', 'UsersController.destroy').middleware([
+  Route.delete('/user/:id', 'UserController.destroy').middleware([
     'auth',
     'permission:admin',
   ])
 })
-Route.put('/user/:id', 'UsersController.update').middleware(['auth'])
-Route.get('/user/set_password/:token', 'UsersController.validateResetToken')
+Route.put('/user/:id', 'UserController.update').middleware(['auth'])
+Route.get('/user/set_password/:token', 'UserController.validateResetToken')
 
 /* AUTH & SESSION */
 Route.post('/session', 'AuthController.signIn')
 Route.get('/session/validate', 'AuthController.isAuthenticated').middleware([
   'auth',
 ])
+
+/* DOCTOR */
+Route.group(() => {
+  Route.resource('/doctor', 'DoctorController')
+}).middleware(['auth', 'permission:admin'])

@@ -4,7 +4,7 @@ import UserService from 'App/Services/UserService'
 import CreateUserValidator from 'App/Validators/CreateUserValidator'
 import UpdateUserValidator from 'App/Validators/UpdateUserValidator'
 
-export default class UsersController {
+export default class UserController {
   public async store({
     request,
     response,
@@ -19,6 +19,7 @@ export default class UsersController {
       'is_admin',
       'password',
       'role',
+      'crm_document',
     ])
     const user = await UserService.store(data)
 
@@ -62,7 +63,7 @@ export default class UsersController {
     return response.status(200).json(user)
   }
 
-  public async getAll({
+  public async index({
     auth,
     request,
     response,
@@ -91,7 +92,7 @@ export default class UsersController {
     return response.status(200).json(users)
   }
 
-  public async find({ params, response }: HttpContextContract): Promise<void> {
+  public async show({ params, response }: HttpContextContract): Promise<void> {
     const { id } = params
     const user = await UserService.find(id)
 

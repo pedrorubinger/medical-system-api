@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid'
 import AppError from 'App/Exceptions/AppError'
 import User, { TRole } from 'App/Models/User'
 import EmailService from './EmailService'
+import DoctorService from './DoctorService'
 
 interface StoreUserData {
   name: string
@@ -18,6 +19,7 @@ interface StoreUserData {
   cpf: string
   is_admin: boolean
   role: TRole
+  crm_document?: string
 }
 
 interface UpdateUserData {
@@ -50,7 +52,7 @@ interface ValidateResetTokenResponse {
   id: number
 }
 
-class UserServices {
+class UserService {
   public async store(data: StoreUserData): Promise<User> {
     return await Database.transaction(async (trx) => {
       try {
@@ -67,6 +69,18 @@ class UserServices {
         user.role = data.role
         user.useTransaction(trx)
 
+        const createdUser = await user.save()
+
+        if (data.role === 'doctor' && data.crm_document) {
+          await DoctorService.store(
+            {
+              user_id: createdUser.id,
+              crm_document: data.crm_document,
+            },
+            trx
+          )
+        }
+
         const content = `
           <h1>Bem-vindo(a), ${data.name}!</h1>
           <h2>A sua conta foi criada! Agora você precisa definir uma nova senha começar a utilizar o sistema.</h2>
@@ -79,9 +93,6 @@ class UserServices {
           subject: 'Medical System - Acesso',
           content,
         })
-
-        const createdUser = await user.save()
-
         await trx.commit()
         return createdUser
       } catch (err) {
@@ -215,4 +226,4 @@ class UserServices {
   }
 }
 
-export default new UserServices()
+export default new UserService()

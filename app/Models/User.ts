@@ -1,7 +1,14 @@
-import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  beforeSave,
+  BaseModel,
+  hasOne,
+  HasOne,
+} from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
-
 import { DateTime } from 'luxon'
+
+import Doctor from 'App/Models/Doctor'
 
 export type TRole = 'manager' | 'doctor'
 
@@ -32,6 +39,9 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   public reset_password_token: string | null
+
+  @hasOne(() => Doctor)
+  public doctor: HasOne<typeof Doctor>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime

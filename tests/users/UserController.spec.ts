@@ -6,7 +6,7 @@ import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 import { defaultUser } from '../../database/seeders/User'
 import { BASE_URL } from '../utils/urls'
 
-test.group('UsersController', (group) => {
+test.group('UserController', (group) => {
   let token = ''
   let headers: Object
 
