@@ -1,33 +1,18 @@
 import test from 'japa'
 import supertest from 'supertest'
 
-import { TRole } from 'App/Models/User'
-import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
-import { defaultUser } from '../../database/seeders/User'
 import { BASE_URL } from '../utils/urls'
+import { generateTestAuth } from '../utils/authentication'
+import { defaultUser } from '../../database/seeders/User'
+import { TRole } from 'App/Models/User'
 
 test.group('UserController', (group) => {
-  let token = ''
   let headers: Object
 
   group.before(async () => {
-    await rollbackMigrations()
-    await runMigrations()
-    await runSeeds()
+    const response = await generateTestAuth()
 
-    const response = await supertest(BASE_URL)
-      .post('/session')
-      .send({
-        email: defaultUser.email,
-        password: defaultUser.password,
-      })
-      .expect(200)
-
-    token = response.body.token
-    headers = {
-      Authorization: `Bearer ${token}`,
-      ContentType: 'application/json',
-    }
+    headers = response.headers
   })
 
   test('should return status 400 (PUT /user) when password is invalid on update profile (User) data', async () => {
@@ -180,7 +165,14 @@ test.group('UserController', (group) => {
       .expect(200)
   }).timeout(50000)
 
-  test('should return status 200 (DELETE /user/:id)', async () => {
+  test('should return status 404 (DELETE /user/:id) when an admin user tries to delete a non-existent user', async () => {
+    await supertest(BASE_URL)
+      .delete(`/user/${defaultUser.id + 25}`)
+      .set(headers)
+      .expect(404)
+  })
+
+  test('should return status 200 (DELETE /user/:id) when an admin user deletes a user', async () => {
     await supertest(BASE_URL)
       .delete(`/user/${defaultUser.id}`)
       .set(headers)

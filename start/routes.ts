@@ -57,3 +57,8 @@ Route.get('/session/validate', 'AuthController.isAuthenticated').middleware([
 Route.group(() => {
   Route.resource('/doctor', 'DoctorController')
 }).middleware(['auth', 'permission:admin'])
+
+/* INSURANCE */
+Route.group(() => {
+  Route.resource('/insurance', 'InsuranceController')
+}).middleware(['auth', 'permission:admin,manager'])
