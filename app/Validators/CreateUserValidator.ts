@@ -40,7 +40,7 @@ export default class CreateUserValidator {
       rules.confirmed(),
     ]),
     role: schema.enum(['manager', 'doctor']),
-    crm_document: schema.string({}, [
+    crm_document: schema.string.optional({}, [
       rules.maxLength(20),
       rules.requiredWhen('role', '=', 'doctor'),
       rules.unique({ table: 'doctors', column: 'crm_document' }),
