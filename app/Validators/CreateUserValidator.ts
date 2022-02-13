@@ -59,13 +59,22 @@ export default class CreateUserValidator {
    *
    */
   public messages = {
-    'required': 'Field {{ field }} is required!',
-    'unique': 'This {{ field }} is already registered!',
-    'name.maxLength': 'Name cannot be longer than 100 characters long!',
-    'cpf.maxLength': 'CPF cannot be longer than 20 characters long!',
-    'phone.maxLength': 'Phone number cannot be longer than 40 characters long!',
-    'email.maxLength': 'Email cannot be longer than 80 characters long!',
-    'password': 'Password cannot be longer than 255 characters long!',
-    'confirmed': 'Passwords do not match!',
+    'name.required': 'USER_NAME_IS_REQUIRED',
+    'name.maxLength': 'USER_NAME_MAX_LENGTH_100',
+    'phone.required': 'PHONE_IS_REQUIRED',
+    'phone.maxLength': 'PHONE_MAX_LENGTH_40',
+    'email.required': 'EMAIL_IS_REQUIRED',
+    'email.maxLength': 'EMAIL_MAX_LENGTH_80',
+    'email.unique': 'EMAIL_ALREADY_REGISTERED',
+    'cpf.required': 'CPF_IS_REQUIRED',
+    'cpf.maxLength': 'CPF_MAX_LENGTH_20',
+    'cpf.unique': 'CPF_ALREADY_REGISTERED',
+    'is_admin': 'IS_ADMIN_IS_REQUIRED',
+    'password.maxLength': 'PASSWORD_MAX_LENGTH_255',
+    'confirmed': 'PASSWORDS_DO_NOT_MATCH',
+    'role.required': 'ROLE_IS_REQUIRED',
+    'crm_document.required': 'CRM_DOCUMENT_IS_REQUIRED',
+    'crm_document.unique': 'CRM_DOCUMENT_ALREADY_REGISTERED',
+    'crm_document.max_length': 'CRM_DOCUMENT_MAX_LENGTH_20',
   }
 }

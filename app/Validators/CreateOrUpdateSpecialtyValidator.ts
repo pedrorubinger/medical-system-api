@@ -12,9 +12,8 @@ export default class CreateOrUpdateSpecialtyValidator {
   })
 
   public messages = {
-    'name.required': 'Specialty name is required!',
-    'name.unique': 'This specialty is already registered!',
-    'name.maxLength':
-      'The specialty name cannot be longer than 80 characters long!',
+    'name.required': 'SPECIALTY_NAME_IS_REQUIRED',
+    'name.unique': 'SPECIALTY_ALREADY_REGISTERED',
+    'name.maxLength': 'SPECIALTY_NAME_MAX_LENGTH_80',
   }
 }

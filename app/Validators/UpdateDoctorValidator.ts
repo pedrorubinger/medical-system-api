@@ -12,8 +12,8 @@ export default class UpdateDoctorValidator {
   })
 
   public messages = {
-    'required': 'Field {{ field }} is required!',
-    'unique': 'This {{ field }} is already registered!',
-    'crm_document.maxLength': 'CRM cannot be longer than 20 characters long!',
+    'crm_document.required': 'CRM_DOCUMENT_IS_REQUIRED',
+    'crm_document.unique': 'CRM_DOCUMENT_ALREADY_REGISTERED',
+    'crm_document.maxLength': 'CRM_DOCUMENT_MAX_LENGTH_20',
   }
 }

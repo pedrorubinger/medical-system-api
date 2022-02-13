@@ -10,9 +10,9 @@ export default class SetPasswordValidator {
   })
 
   public messages = {
-    required: 'Field {{ field }} is required!',
-    unique: 'This {{ field }} is already registered!',
-    password: 'Password cannot be longer than 255 characters long!',
-    confirmed: 'Passwords do not match!',
+    'password.required': 'PASSWORD_IS_REQUIRED',
+    'password.maxLength': 'PASSWORD_MAX_LENGTH_255',
+    'confirmed': 'PASSWORDS_DO_NOT_MATCH',
+    'reset_password_token.required': 'RESET_PASSWORD_TOKEN_IS_REQUIRED',
   }
 }

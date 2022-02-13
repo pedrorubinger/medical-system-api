@@ -12,9 +12,8 @@ export default class CreateInsuranceValidator {
   })
 
   public messages = {
-    'name.required': 'Insurance name is required!',
-    'name.unique': 'This insurance is already registered!',
-    'name.maxLength':
-      'The insurance name cannot be longer than 80 characters long!',
+    'name.required': 'INSURANCE_NAME_IS_REQUIRED',
+    'name.unique': 'INSURANCE_ALREADY_REGISTERED',
+    'name.maxLength': 'INSURANCE_NAME_MAX_LENGTH_80',
   }
 }

@@ -54,9 +54,15 @@ export default class UserController {
     try {
       await auth.attempt(auth.user.email, data.password)
     } catch (err) {
-      return response
-        .status(400)
-        .json({ field: 'password', message: 'Invalid password!' })
+      return response.status(400).json({
+        errors: [
+          {
+            field: 'password',
+            rule: 'invalid',
+            message: 'INVALID_PASSWORD',
+          },
+        ],
+      })
     }
 
     await request.validate(UpdateUserValidator)

@@ -23,13 +23,14 @@ export default class UpdateUserValidator {
   })
 
   public messages = {
-    'required': 'Field {{ field }} is required!',
-    'unique': 'This {{ field }} is already registered!',
-    'name.maxLength': 'Name cannot be longer than 100 characters long!',
-    'cpf.maxLength': 'CPF cannot be longer than 20 characters long!',
-    'phone.maxLength': 'Phone number cannot be longer than 40 characters long!',
-    'email.maxLength': 'Email cannot be longer than 80 characters long!',
-    'password': 'Password cannot be longer than 255 characters long!',
-    'new_password': 'New password cannot be longer than 255 characters long!',
+    'name.maxLength': 'USER_NAME_MAX_LENGTH_100',
+    'phone.maxLength': 'PHONE_MAX_LENGTH_40',
+    'email.maxLength': 'EMAIL_MAX_LENGTH_80',
+    'email.unique': 'EMAIL_ALREADY_REGISTERED',
+    'cpf.maxLength': 'CPF_MAX_LENGTH_20',
+    'cpf.unique': 'CPF_ALREADY_REGISTERED',
+    'password.maxLength': 'PASSWORD_MAX_LENGTH_255',
+    'new_password.maxLength': 'NEW_PASSWORD_MAX_LENGTH_255',
+    'crm_document.max_length': 'CRM_DOCUMENT_MAX_LENGTH_20',
   }
 }

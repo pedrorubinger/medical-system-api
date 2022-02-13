@@ -9,7 +9,7 @@ export default class RequestPasswordChangeValidator {
   })
 
   public messages = {
-    'email.required': 'Email is required!',
-    'email.maxLength': 'Email cannot be longer than 80 characters!',
+    'email.required': 'EMAIL_IS_REQUIRED',
+    'email.maxLength': 'EMAIL_MAX_LENGTH_80',
   }
 }
