@@ -1,6 +1,6 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class CreateDoctors extends BaseSchema {
+export default class Doctors extends BaseSchema {
   protected tableName = 'doctors'
 
   public async up() {

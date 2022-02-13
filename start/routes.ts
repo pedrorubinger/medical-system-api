@@ -62,3 +62,8 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('/insurance', 'InsuranceController')
 }).middleware(['auth', 'permission:admin,manager'])
+
+/* SPECIALTY */
+Route.group(() => {
+  Route.resource('/specialty', 'SpecialtyController')
+}).middleware(['auth', 'permission:admin,manager'])

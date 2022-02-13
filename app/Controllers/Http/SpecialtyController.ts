@@ -1,19 +1,19 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-import CreateOrUpdateInsuranceValidator from 'App/Validators/CreateOrUpdateInsuranceValidator'
-import InsuranceService from 'App/Services/InsuranceService'
+import CreateOrUpdateSpecialtyValidator from 'App/Validators/CreateOrUpdateSpecialtyValidator'
+import SpecialtyService from 'App/Services/SpecialtyService'
 
-export default class InsuranceController {
+export default class SpecialtyController {
   public async store({
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    await request.validate(CreateOrUpdateInsuranceValidator)
+    await request.validate(CreateOrUpdateSpecialtyValidator)
 
     const data = request.only(['name'])
-    const insurance = await InsuranceService.store(data)
+    const specialty = await SpecialtyService.store(data)
 
-    return response.status(201).json(insurance)
+    return response.status(201).json(specialty)
   }
 
   public async update({
@@ -21,13 +21,13 @@ export default class InsuranceController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    await request.validate(CreateOrUpdateInsuranceValidator)
+    await request.validate(CreateOrUpdateSpecialtyValidator)
 
     const { id } = params
     const data = request.only(['name'])
-    const insurance = await InsuranceService.update(id, data)
+    const specialty = await SpecialtyService.update(id, data)
 
-    return response.status(200).json(insurance)
+    return response.status(200).json(specialty)
   }
 
   public async index({
@@ -42,23 +42,23 @@ export default class InsuranceController {
       page,
       perPage,
     }
-    const insurances = await InsuranceService.getAll(params)
+    const specialties = await SpecialtyService.getAll(params)
 
-    return response.status(200).json(insurances)
+    return response.status(200).json(specialties)
   }
 
   public async show({ params, response }: HttpContextContract): Promise<void> {
     const { id } = params
-    const insurance = await InsuranceService.find(id)
+    const specialty = await SpecialtyService.find(id)
 
-    return response.status(200).json(insurance)
+    return response.status(200).json(specialty)
   }
 
   public async destroy({
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    await InsuranceService.destroy(params.id)
+    await SpecialtyService.destroy(params.id)
     return response.status(200).json({ success: true })
   }
 }
