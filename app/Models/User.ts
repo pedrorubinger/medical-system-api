@@ -40,7 +40,7 @@ export default class User extends BaseModel {
   @column({ serializeAs: null })
   public reset_password_token: string | null
 
-  @hasOne(() => Doctor)
+  @hasOne(() => Doctor, { foreignKey: 'user_id' })
   public doctor: HasOne<typeof Doctor>
 
   @column.dateTime({ autoCreate: true })

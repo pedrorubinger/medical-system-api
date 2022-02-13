@@ -173,17 +173,20 @@ class UserService {
 
         if (page && perPage) {
           return await User.query()
+            .preload('doctor')
             .orderBy(orderBy || 'name', order || 'asc')
             .where(whereCallback)
             .paginate(page, perPage)
         }
       }
 
-      return await User.query().where((query) => {
-        if (params?.filterOwn) {
-          query.whereNot('id', userId)
-        }
-      })
+      return await User.query()
+        .preload('doctor')
+        .where((query) => {
+          if (params?.filterOwn) {
+            query.whereNot('id', userId)
+          }
+        })
     } catch (err) {
       throw new AppError(err?.message, err?.status)
     }
