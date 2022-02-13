@@ -129,11 +129,24 @@ test.group('UserController', (group) => {
       .expect(200)
   })
 
-  test('should return status 200 (PUT /user/:id)', async () => {
+  test('should return status 200 (PUT /user/:id) when user updates their name and phone number', async () => {
     const payload = {
       name: 'John R. Doe',
       phone: '31 238344',
       password: defaultUser.password,
+    }
+
+    await supertest(BASE_URL)
+      .put(`/user/${defaultUser.id}`)
+      .set(headers)
+      .send(payload)
+      .expect(200)
+  })
+
+  test('should return status 200 (PUT /user/:id) when user update their password', async () => {
+    const payload = {
+      password: defaultUser.password,
+      new_password: 'random-new-password',
     }
 
     await supertest(BASE_URL)

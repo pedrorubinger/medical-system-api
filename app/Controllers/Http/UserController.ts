@@ -48,6 +48,7 @@ export default class UserController {
       'phone',
       'is_admin',
       'password',
+      'new_password',
     ])
 
     try {

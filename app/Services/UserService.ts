@@ -26,6 +26,7 @@ interface UpdateUserData {
   name?: string
   email?: string
   password?: string
+  new_password?: string
   phone?: string
   cpf?: string
   is_admin?: boolean
@@ -111,12 +112,18 @@ class UserService {
   public async update(id: number, data: UpdateUserData): Promise<User> {
     try {
       const user = await User.find(id)
+      const payload = { ...data }
 
       if (!user) {
         throw new AppError('This user was not found!', 404)
       }
 
-      user.merge({ ...data })
+      if (data.new_password) {
+        payload.password = data.new_password
+        delete payload.new_password
+      }
+
+      user.merge(payload)
       return await user.save()
     } catch (err) {
       throw new AppError(err?.message, err?.status)

@@ -17,6 +17,7 @@ export default class UpdateUserValidator {
     ]),
     is_admin: schema.boolean.optional(),
     password: schema.string({}, [rules.maxLength(255)]),
+    new_password: schema.string.optional({}, [rules.maxLength(255)]),
     role: schema.enum.optional(['manager', 'doctor']),
     crm_document: schema.string.optional({}, [rules.maxLength(20)]),
   })
@@ -29,5 +30,6 @@ export default class UpdateUserValidator {
     'phone.maxLength': 'Phone number cannot be longer than 40 characters long!',
     'email.maxLength': 'Email cannot be longer than 80 characters long!',
     'password': 'Password cannot be longer than 255 characters long!',
+    'new_password': 'New password cannot be longer than 255 characters long!',
   }
 }
