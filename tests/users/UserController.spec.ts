@@ -51,6 +51,7 @@ test.group('UserController', (group) => {
       password: 'john123',
       password_confirmation: 'john123',
       role: 'doctor' as TRole,
+      crm_document: 'CRM12345',
       name: 'John Doe',
       phone: '124534384',
       cpf: '12345576231',
@@ -122,6 +123,12 @@ test.group('UserController', (group) => {
       .expect(200)
   })
 
+  test('should return status 200 (GET /user/password/validate/:token) when user opens the page to set a new password, the token must be validated', async () => {
+    await supertest(BASE_URL)
+      .get(`/user/password/validate/${defaultUser.reset_password_token}`)
+      .expect(200)
+  })
+
   test('should return status 200 (PUT /user/:id)', async () => {
     const payload = {
       name: 'John R. Doe',
@@ -135,6 +142,30 @@ test.group('UserController', (group) => {
       .send(payload)
       .expect(200)
   })
+
+  test('should return status 200 (PUT /user/password/set_password/:id) when user send a new password', async () => {
+    const payload = {
+      reset_password_token: defaultUser.reset_password_token,
+      password: 'my-new-password',
+      password_confirmation: 'my-new-password',
+    }
+
+    await supertest(BASE_URL)
+      .put(`/user/password/set_password/${defaultUser.id}`)
+      .send(payload)
+      .expect(200)
+  })
+
+  test('should return status 200 (PUT /user/password/change_password) when user request password recovery', async () => {
+    const payload = { email: defaultUser.email }
+
+    /** NOTE: A longer timeout is necessary here because this controller's method invokes an email service. */
+    await supertest(BASE_URL)
+      .put('/user/password/change_password')
+      .timeout(50000)
+      .send(payload)
+      .expect(200)
+  }).timeout(50000)
 
   test('should return status 200 (DELETE /user/:id)', async () => {
     await supertest(BASE_URL)

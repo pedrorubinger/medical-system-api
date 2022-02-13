@@ -40,7 +40,12 @@ Route.group(() => {
   ])
 })
 Route.put('/user/:id', 'UserController.update').middleware(['auth'])
-Route.get('/user/set_password/:token', 'UserController.validateResetToken')
+Route.get('/user/password/validate/:token', 'UserController.validateResetToken')
+Route.put(
+  '/user/password/change_password',
+  'UserController.requestPasswordChange'
+)
+Route.put('/user/password/set_password/:id', 'UserController.setPassword')
 
 /* AUTH & SESSION */
 Route.post('/session', 'AuthController.signIn')

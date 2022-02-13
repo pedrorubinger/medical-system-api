@@ -52,6 +52,12 @@ interface ValidateResetTokenResponse {
   id: number
 }
 
+interface SetPasswordData {
+  reset_password_token: string
+  password: string
+  confirmed: string
+}
+
 class UserService {
   public async store(data: StoreUserData): Promise<User> {
     return await Database.transaction(async (trx) => {
@@ -110,7 +116,7 @@ class UserService {
         throw new AppError('This user was not found!', 404)
       }
 
-      user.merge({ ...data, reset_password_token: null })
+      user.merge({ ...data })
       return await user.save()
     } catch (err) {
       throw new AppError(err?.message, err?.status)
@@ -205,6 +211,43 @@ class UserService {
     }
   }
 
+  public async requestPasswordChange(email: string): Promise<boolean> {
+    return await Database.transaction(async (trx) => {
+      try {
+        const user = await User.findBy('email', email)
+
+        if (!user) {
+          throw new AppError('This user was not found!', 404)
+        }
+
+        const token = uuidv4()
+
+        user.useTransaction(trx)
+        user.merge({ reset_password_token: token })
+        await user.save()
+
+        const content = `
+          <h1>Olá, ${user.name}!</h1>
+          <h2>Você solicitou uma alteração de senha para o email ${email}.</h2>
+          <a href="http://localhost:3000/set-password?token=${token}">Clique aqui para redefinir sua senha.</a>
+        `
+
+        await EmailService.send({
+          from: Env.get('SMTP_USERNAME'),
+          to: email,
+          subject: 'Medical System - Alteração de Senha',
+          content,
+        })
+
+        trx.commit()
+        return true
+      } catch (err) {
+        trx.rollback()
+        throw new AppError(err?.message, err?.status)
+      }
+    })
+  }
+
   public async validateResetToken(
     token: string
   ): Promise<ValidateResetTokenResponse> {
@@ -220,6 +263,28 @@ class UserService {
       }
 
       return { email: user.email, id: user.id }
+    } catch (err) {
+      throw new AppError(err?.message, err?.status)
+    }
+  }
+
+  public async setPassword(id: number, data: SetPasswordData): Promise<User> {
+    try {
+      const user = await User.find(id)
+
+      if (!user) {
+        throw new AppError('This user was not found!', 404)
+      }
+
+      if (user.reset_password_token !== data.reset_password_token) {
+        throw new AppError(
+          'You are not authorized to reset your password!',
+          401
+        )
+      }
+
+      user.merge({ password: data.password, reset_password_token: null })
+      return await user.save()
     } catch (err) {
       throw new AppError(err?.message, err?.status)
     }

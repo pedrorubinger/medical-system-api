@@ -1,4 +1,5 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
+import Env from '@ioc:Adonis/Core/Env'
 
 import User, { TRole } from 'App/Models/User'
 
@@ -11,7 +12,7 @@ export const defaultUser = {
   email: 'pedro@test.com',
   password: 'pedro123',
   is_admin: true,
-  reset_password_token: null,
+  reset_password_token: Env.get('NODE_ENV') === 'testing' ? 't0ken-123' : null,
 }
 
 export default class UserSeeder extends BaseSeeder {
