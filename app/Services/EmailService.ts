@@ -22,7 +22,7 @@ class EmailService {
 
       return true
     } catch (err) {
-      throw new AppError(err?.message)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 }

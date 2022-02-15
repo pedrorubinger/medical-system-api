@@ -25,7 +25,7 @@ class SpecialtyService {
     try {
       return await Specialty.create(data)
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -34,13 +34,17 @@ class SpecialtyService {
       const specialty = await Specialty.find(id)
 
       if (!specialty) {
-        throw new AppError('This specialty was not found!', 404)
+        throw new AppError(
+          'This specialty was not found!',
+          'SPECIALTY_NOT_FOUND',
+          404
+        )
       }
 
       specialty.merge({ ...data })
       return await specialty.save()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -68,7 +72,7 @@ class SpecialtyService {
 
       return await Specialty.query()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -77,12 +81,16 @@ class SpecialtyService {
       const specialty = await Specialty.find(id)
 
       if (!specialty) {
-        throw new AppError('This specialty was not found!', 404)
+        throw new AppError(
+          'This specialty was not found!',
+          'SPECIALTY_NOT_FOUND',
+          404
+        )
       }
 
       return specialty
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -91,13 +99,17 @@ class SpecialtyService {
       const specialty = await Specialty.find(id)
 
       if (!specialty) {
-        throw new AppError('This specialty was not found!', 404)
+        throw new AppError(
+          'This specialty was not found!',
+          'SPECIALTY_NOT_FOUND',
+          404
+        )
       }
 
       await specialty.delete()
       return true
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 }

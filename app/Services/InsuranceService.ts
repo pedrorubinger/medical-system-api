@@ -25,7 +25,7 @@ class InsuranceService {
     try {
       return await Insurance.create(data)
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -34,13 +34,17 @@ class InsuranceService {
       const insurance = await Insurance.find(id)
 
       if (!insurance) {
-        throw new AppError('This insurance was not found!', 404)
+        throw new AppError(
+          'This insurance was not found!',
+          'INSURANCE_NOT_FOUND',
+          404
+        )
       }
 
       insurance.merge({ ...data })
       return await insurance.save()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -68,7 +72,7 @@ class InsuranceService {
 
       return await Insurance.query()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -77,12 +81,16 @@ class InsuranceService {
       const insurance = await Insurance.find(id)
 
       if (!insurance) {
-        throw new AppError('This insurance was not found!', 404)
+        throw new AppError(
+          'This insurance was not found!',
+          'INSURANCE_NOT_FOUND',
+          404
+        )
       }
 
       return insurance
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -91,13 +99,17 @@ class InsuranceService {
       const insurance = await Insurance.find(id)
 
       if (!insurance) {
-        throw new AppError('This insurance was not found!', 404)
+        throw new AppError(
+          'This insurance was not found!',
+          'INSURANCE_NOT_FOUND',
+          404
+        )
       }
 
       await insurance.delete()
       return true
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 }

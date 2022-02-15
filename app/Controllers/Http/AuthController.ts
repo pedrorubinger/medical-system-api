@@ -11,12 +11,16 @@ export default class AuthController {
         .attempt(email, password, { expiresIn: '18h' })
 
       if (!token) {
-        throw new AppError('Please check your credentials!', 401)
+        throw new AppError(
+          'Please check your credentials!',
+          'INVALID_CREDENTIALS',
+          401
+        )
       }
 
       return response.status(200).json({ user: auth.user, token: token.token })
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -29,7 +33,7 @@ export default class AuthController {
 
       return response.status(200).json({ user })
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 }

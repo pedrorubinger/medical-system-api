@@ -104,7 +104,7 @@ class UserService {
         return createdUser
       } catch (err) {
         await trx.rollback()
-        throw new AppError(err?.message)
+        throw new AppError(err?.message, err?.code, err?.status)
       }
     })
   }
@@ -115,7 +115,7 @@ class UserService {
       const payload = { ...data }
 
       if (!user) {
-        throw new AppError('This user was not found!', 404)
+        throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
       if (data.new_password) {
@@ -126,7 +126,7 @@ class UserService {
       user.merge(payload)
       return await user.save()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -188,7 +188,7 @@ class UserService {
           }
         })
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -197,12 +197,12 @@ class UserService {
       const user = await User.find(id)
 
       if (!user) {
-        throw new AppError('This user was not found!', 404)
+        throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
       return user
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -211,13 +211,13 @@ class UserService {
       const user = await User.find(id)
 
       if (!user) {
-        throw new AppError('This user was not found!', 404)
+        throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
       await user.delete()
       return true
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -227,7 +227,7 @@ class UserService {
         const user = await User.findBy('email', email)
 
         if (!user) {
-          throw new AppError('This user was not found!', 404)
+          throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
         }
 
         const token = uuidv4()
@@ -253,7 +253,7 @@ class UserService {
         return true
       } catch (err) {
         trx.rollback()
-        throw new AppError(err?.message, err?.status)
+        throw new AppError(err?.message, err?.code, err?.status)
       }
     })
   }
@@ -265,16 +265,24 @@ class UserService {
       const user = await User.findBy('reset_password_token', token)
 
       if (!user) {
-        throw new AppError('The token does not exist!', 404)
+        throw new AppError(
+          'The token does not exist!',
+          'TOKEN_DOES_NOT_EXIST',
+          404
+        )
       }
 
       if (!user.reset_password_token) {
-        throw new AppError('The token is not valid or has expired!', 401)
+        throw new AppError(
+          'The token is not valid or has expired!',
+          'TOKEN_INVALID_OR_HAS_EXPIRED',
+          401
+        )
       }
 
       return { email: user.email, id: user.id }
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -283,12 +291,13 @@ class UserService {
       const user = await User.find(id)
 
       if (!user) {
-        throw new AppError('This user was not found!', 404)
+        throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
       if (user.reset_password_token !== data.reset_password_token) {
         throw new AppError(
           'You are not authorized to reset your password!',
+          'NOT_AUTHORIZED_TO_RESET_PASSWORD',
           401
         )
       }
@@ -296,7 +305,7 @@ class UserService {
       user.merge({ password: data.password, reset_password_token: null })
       return await user.save()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 }

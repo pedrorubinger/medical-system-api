@@ -31,7 +31,7 @@ class DoctorService {
         return await Doctor.create(data)
       }
     } catch (err) {
-      throw new AppError(err?.message)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -40,13 +40,17 @@ class DoctorService {
       const doctor = await Doctor.find(id)
 
       if (!doctor) {
-        throw new AppError('This doctor was not found!', 404)
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
       }
 
       doctor.merge(data)
       return await doctor.save()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -54,7 +58,7 @@ class DoctorService {
     try {
       return await Doctor.query()
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -63,12 +67,16 @@ class DoctorService {
       const doctor = await Doctor.find(id)
 
       if (!doctor) {
-        throw new AppError('This doctor was not found!', 404)
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
       }
 
       return doctor
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
@@ -77,13 +85,17 @@ class DoctorService {
       const doctor = await Doctor.find(id)
 
       if (!doctor) {
-        throw new AppError('This doctor was not found!', 404)
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
       }
 
       await doctor.delete()
       return true
     } catch (err) {
-      throw new AppError(err?.message, err?.status)
+      throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 }
