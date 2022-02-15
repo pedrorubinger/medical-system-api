@@ -6,10 +6,14 @@ import {
   beforeFetch,
   beforeFind,
   ModelQueryBuilderContract,
+  manyToMany,
+  ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import User from 'App/Models/User'
+import Insurance from 'App/Models/Insurance'
+import Specialty from 'App/Models/Specialty'
 
 export default class Doctor extends BaseModel {
   @column({ isPrimary: true })
@@ -23,6 +27,24 @@ export default class Doctor extends BaseModel {
 
   @belongsTo(() => User, { foreignKey: 'user_id' })
   public user: BelongsTo<typeof User>
+
+  @manyToMany(() => Insurance, {
+    localKey: 'id',
+    pivotForeignKey: 'doctor_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'insurance_id',
+    pivotTable: 'doctors_insurances',
+  })
+  public insurance: ManyToMany<typeof Insurance>
+
+  @manyToMany(() => Specialty, {
+    localKey: 'id',
+    pivotForeignKey: 'doctor_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'specialty_id',
+    pivotTable: 'doctors_specialties',
+  })
+  public specialty: ManyToMany<typeof Specialty>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime
