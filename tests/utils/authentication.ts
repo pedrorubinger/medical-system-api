@@ -11,7 +11,10 @@ interface GenerateTestAuthResponse {
   }
 }
 
-export const generateTestAuth = async (): Promise<GenerateTestAuthResponse> => {
+export const generateTestAuth = async (
+  email?: string,
+  password?: string
+): Promise<GenerateTestAuthResponse> => {
   await rollbackMigrations()
   await runMigrations()
   await runSeeds()
@@ -19,8 +22,8 @@ export const generateTestAuth = async (): Promise<GenerateTestAuthResponse> => {
   const response = await supertest(BASE_URL)
     .post('/session')
     .send({
-      email: defaultUser.email,
-      password: defaultUser.password,
+      email: email || defaultUser.email,
+      password: password || defaultUser.password,
     })
     .expect(200)
   const token = response.body.token

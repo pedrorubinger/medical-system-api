@@ -15,6 +15,14 @@ import User from 'App/Models/User'
 import Insurance from 'App/Models/Insurance'
 import Specialty from 'App/Models/Specialty'
 
+export interface DoctorAttributes {
+  id?: number
+  user_id: number
+  crm_document: string
+  created_at?: DateTime
+  updated_at?: DateTime
+}
+
 export default class Doctor extends BaseModel {
   @column({ isPrimary: true })
   public id: number
