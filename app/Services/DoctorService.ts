@@ -80,6 +80,24 @@ class DoctorService {
     }
   }
 
+  public async findByUserId(userId: number): Promise<Doctor> {
+    try {
+      const doctor = await Doctor.findBy('user_id', userId)
+
+      if (!doctor) {
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
+      }
+
+      return doctor
+    } catch (err) {
+      throw new AppError(err?.message, err?.code, err?.status)
+    }
+  }
+
   public async destroy(id: number): Promise<boolean> {
     try {
       const doctor = await Doctor.find(id)

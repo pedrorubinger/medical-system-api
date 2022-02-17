@@ -3,9 +3,6 @@ import {
   column,
   BelongsTo,
   BaseModel,
-  beforeFetch,
-  beforeFind,
-  ModelQueryBuilderContract,
   manyToMany,
   ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
@@ -59,18 +56,4 @@ export default class Doctor extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updated_at: DateTime
-
-  @beforeFetch()
-  public static joinAddressOnFetch(
-    query: ModelQueryBuilderContract<typeof Doctor>
-  ) {
-    query.preload('user')
-  }
-
-  @beforeFind()
-  public static joinAddressOnFind(
-    query: ModelQueryBuilderContract<typeof Doctor>
-  ) {
-    query.preload('user')
-  }
 }

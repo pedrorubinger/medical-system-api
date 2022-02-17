@@ -4,6 +4,8 @@ import {
   BaseModel,
   hasOne,
   HasOne,
+  ModelQueryBuilderContract,
+  beforeFind,
 } from '@ioc:Adonis/Lucid/Orm'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { DateTime } from 'luxon'
@@ -54,5 +56,12 @@ export default class User extends BaseModel {
     if (auth.password && auth.$dirty.password) {
       auth.password = await Hash.make(auth.password)
     }
+  }
+
+  @beforeFind()
+  public static async preloadDoctorBeforeFind(
+    query: ModelQueryBuilderContract<typeof User>
+  ) {
+    await query.preload('doctor')
   }
 }
