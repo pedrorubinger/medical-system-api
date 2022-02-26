@@ -5,6 +5,8 @@ import {
   BaseModel,
   manyToMany,
   ManyToMany,
+  beforeFind,
+  ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
@@ -56,4 +58,18 @@ export default class Doctor extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updated_at: DateTime
+
+  @beforeFind()
+  public static async preloadSpecialtiesBeforeFind(
+    query: ModelQueryBuilderContract<typeof Doctor>
+  ) {
+    await query.preload('specialty')
+  }
+
+  @beforeFind()
+  public static async preloadInsurancesBeforeFind(
+    query: ModelQueryBuilderContract<typeof Doctor>
+  ) {
+    await query.preload('insurance')
+  }
 }

@@ -62,6 +62,9 @@ export default class User extends BaseModel {
   public static async preloadDoctorBeforeFind(
     query: ModelQueryBuilderContract<typeof User>
   ) {
-    await query.preload('doctor')
+    await query.preload('doctor', (builder) => {
+      builder.preload('insurance')
+      builder.preload('specialty')
+    })
   }
 }
