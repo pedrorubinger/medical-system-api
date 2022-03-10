@@ -6,6 +6,13 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações estarão voltadas para as seguintes tarefas:
 
+- [x] Implementação do módulo de Autenticação;
+- [x] Implementação do módulo de Usuários;
+- [ ] Implementação do módulo de Gerenciar Perfil;
+- [x] Implementação do módulo de Convênios;
+- [x] Implementação do módulo de Especialidades;
+- [ ] Implementação do módulo de Médicos;
+- [ ] Implementação do middleware de Permissões;
 - [ ] Implementação do módulo de Relatórios;
 - [ ] Implementação da Configuração de Agenda;
 
