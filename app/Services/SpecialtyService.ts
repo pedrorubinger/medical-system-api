@@ -5,8 +5,14 @@ import {
 
 import AppError from 'App/Exceptions/AppError'
 import Specialty from 'App/Models/Specialty'
+import { TENANT_NAME } from '../../utils/constants/tenant'
 
-interface SpecialtyData {
+interface StoreSpecialtyData {
+  name: string
+  tenant_id: number
+}
+
+interface UpdateSpecialtyData {
   name: string
 }
 
@@ -21,7 +27,7 @@ interface FetchSpecialtiesData {
 }
 
 class SpecialtyService {
-  public async store(data: SpecialtyData): Promise<Specialty> {
+  public async store(data: StoreSpecialtyData): Promise<Specialty> {
     try {
       return await Specialty.create(data)
     } catch (err) {
@@ -29,11 +35,18 @@ class SpecialtyService {
     }
   }
 
-  public async update(id: number, data: SpecialtyData): Promise<Specialty> {
+  public async update(
+    id: number,
+    tenantId: number,
+    data: UpdateSpecialtyData
+  ): Promise<Specialty> {
     try {
       const specialty = await Specialty.find(id)
 
-      if (!specialty) {
+      if (
+        !specialty ||
+        specialty.tenant_id.toString() !== tenantId.toString()
+      ) {
         throw new AppError(
           'This specialty was not found!',
           'SPECIALTY_NOT_FOUND',
@@ -49,14 +62,18 @@ class SpecialtyService {
   }
 
   public async getAll(
+    tenantId: number,
     params?: FetchSpecialtiesData
   ): Promise<ModelPaginatorContract<Specialty> | Specialty[]> {
     try {
       if (params) {
         const { name, order, orderBy, page, perPage } = params
+
         const whereCallback = (
           query: ModelQueryBuilderContract<typeof Specialty, Specialty>
         ) => {
+          query.where(TENANT_NAME, tenantId)
+
           if (name) {
             query.andWhere('name', 'like', `${name}%`)
           }
@@ -70,17 +87,20 @@ class SpecialtyService {
         }
       }
 
-      return await Specialty.query()
+      return await Specialty.query().where(TENANT_NAME, tenantId)
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
-  public async find(id: number): Promise<Specialty> {
+  public async find(id: number, tenantId: number): Promise<Specialty> {
     try {
       const specialty = await Specialty.find(id)
 
-      if (!specialty) {
+      if (
+        !specialty ||
+        tenantId.toString() !== specialty.tenant_id.toString()
+      ) {
         throw new AppError(
           'This specialty was not found!',
           'SPECIALTY_NOT_FOUND',
@@ -94,11 +114,14 @@ class SpecialtyService {
     }
   }
 
-  public async destroy(id: number): Promise<boolean> {
+  public async destroy(id: number, tenantId: number): Promise<boolean> {
     try {
       const specialty = await Specialty.find(id)
 
-      if (!specialty) {
+      if (
+        !specialty ||
+        tenantId.toString() !== specialty.tenant_id.toString()
+      ) {
         throw new AppError(
           'This specialty was not found!',
           'SPECIALTY_NOT_FOUND',

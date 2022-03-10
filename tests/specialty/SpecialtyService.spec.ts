@@ -3,7 +3,7 @@ import { Assert } from 'japa/build/src/Assert'
 
 import SpecialtyService from 'App/Services/SpecialtyService'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
-import { defaultSpecialty } from '../../database/seeders/Specialty'
+import { defaultSpecialty } from '../../database/seeders/04_Specialty'
 
 const id = defaultSpecialty.id
 

@@ -3,7 +3,7 @@ import supertest from 'supertest'
 
 import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
-import { defaultUser } from '../../database/seeders/User'
+import { defaultUser } from '../../database/seeders/02_User'
 import { TRole } from 'App/Models/User'
 
 test.group('UserController', (group) => {

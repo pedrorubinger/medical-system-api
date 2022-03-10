@@ -15,6 +15,7 @@ export const defaultUser = {
   email: 'pedro@test.com',
   password: 'pedro123',
   is_admin: true,
+  tenant_id: 1,
   reset_password_token: Env.get('NODE_ENV') === 'testing' ? 't0ken-123' : null,
 }
 
@@ -26,12 +27,14 @@ export const defaultDoctorUserOne = {
   phone: '31 999999990',
   email: 'jane@test.com',
   password: 'jane123',
+  tenant_id: 2,
   is_admin: false,
   reset_password_token: null,
 }
 
 export const defaultDoctorUserTwo = {
   id: 3,
+  tenant_id: 1,
   name: 'Joseph Doe',
   cpf: '12345678912',
   role: 'doctor' as TRole,
@@ -42,8 +45,9 @@ export const defaultDoctorUserTwo = {
   reset_password_token: null,
 }
 
-export const defaultDoctor = {
+export const defaultDoctorOne = {
   id: 1,
+  tenant_id: 2,
   crm_document: 'CRM-MG 00009',
   user_id: defaultDoctorUserOne.id,
 }
@@ -52,7 +56,7 @@ export default class UserSeeder extends BaseSeeder {
   public async run() {
     await User.create(defaultUser)
     await User.create(defaultDoctorUserOne)
-    await Doctor.create(defaultDoctor)
+    await Doctor.create(defaultDoctorOne)
 
     if (Env.get('NODE_ENV') === 'testing') {
       await User.create(defaultDoctorUserTwo)

@@ -2,7 +2,7 @@ import test from 'japa'
 import supertest from 'supertest'
 
 import { BASE_URL } from '../utils/urls'
-import { defaultSpecialty } from '../../database/seeders/Specialty'
+import { defaultSpecialty } from '../../database/seeders/04_Specialty'
 import { generateTestAuth } from '../utils/authentication'
 
 test.group('SpecialtyController', (group) => {

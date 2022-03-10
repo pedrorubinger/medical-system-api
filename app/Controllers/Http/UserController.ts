@@ -8,9 +8,15 @@ import RequestPasswordChangeValidator from 'App/Validators/RequestPasswordChange
 
 export default class UserController {
   public async store({
+    auth,
     request,
     response,
   }: HttpContextContract): Promise<void> {
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
     await request.validate(CreateUserValidator)
 
     const data = request.only([
@@ -23,7 +29,7 @@ export default class UserController {
       'role',
       'crm_document',
     ])
-    const user = await UserService.store(data)
+    const user = await UserService.store(auth.user.tenant_id, data)
 
     return response.status(201).json(user)
   }
@@ -67,7 +73,7 @@ export default class UserController {
 
     await request.validate(UpdateUserValidator)
 
-    const user = await UserService.update(id, data)
+    const user = await UserService.update(id, auth.user.tenant_id, data)
 
     return response.status(200).json(user)
   }
@@ -83,6 +89,7 @@ export default class UserController {
         .json({ message: 'You are not authorized to access this resource!' })
     }
 
+    const tenantId = auth.user.tenant_id
     const { cpf, email, name, order, orderBy, page, perPage, role, filterOwn } =
       request.qs()
     const params = {
@@ -96,23 +103,40 @@ export default class UserController {
       role,
       filterOwn: filterOwn === 'true' || filterOwn === true,
     }
-    const users = await UserService.getAll(auth.user.id, params)
+    const users = await UserService.getAll(auth.user.id, tenantId, params)
 
     return response.status(200).json(users)
   }
 
-  public async show({ params, response }: HttpContextContract): Promise<void> {
+  public async show({
+    auth,
+    params,
+    response,
+  }: HttpContextContract): Promise<void> {
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
     const { id } = params
-    const user = await UserService.find(id)
+    const user = await UserService.find(id, auth.user.tenant_id)
 
     return response.status(200).json(user)
   }
 
   public async destroy({
+    auth,
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    await UserService.destroy(params.id)
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
+    await UserService.destroy(params.id, auth.user.tenant_id)
     return response.status(200).json({ success: true })
   }
 

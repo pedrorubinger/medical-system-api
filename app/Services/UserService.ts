@@ -10,6 +10,7 @@ import AppError from 'App/Exceptions/AppError'
 import User, { TRole } from 'App/Models/User'
 import EmailService from './EmailService'
 import DoctorService from './DoctorService'
+import { TENANT_NAME } from '../../utils/constants/tenant'
 
 interface StoreUserData {
   name: string
@@ -60,13 +61,14 @@ interface SetPasswordData {
 }
 
 class UserService {
-  public async store(data: StoreUserData): Promise<User> {
+  public async store(tenantId: number, data: StoreUserData): Promise<User> {
     return await Database.transaction(async (trx) => {
       try {
         const user = new User()
         const resetPasswordToken = uuidv4()
 
         user.name = data.name
+        user.tenant_id = tenantId
         user.password = data?.password || undefined
         user.reset_password_token = resetPasswordToken
         user.email = data.email
@@ -109,12 +111,16 @@ class UserService {
     })
   }
 
-  public async update(id: number, data: UpdateUserData): Promise<User> {
+  public async update(
+    id: number,
+    tenantId: number,
+    data: UpdateUserData
+  ): Promise<User> {
     try {
       const user = await User.find(id)
       const payload = { ...data }
 
-      if (!user) {
+      if (!user || user.tenant_id.toString() !== tenantId.toString()) {
         throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
@@ -132,6 +138,7 @@ class UserService {
 
   public async getAll(
     userId: number,
+    tenantId: number,
     params?: FetchUsersData
   ): Promise<ModelPaginatorContract<User> | User[]> {
     try {
@@ -150,8 +157,10 @@ class UserService {
         const whereCallback = (
           query: ModelQueryBuilderContract<typeof User, User>
         ) => {
+          query.where(TENANT_NAME, tenantId)
+
           if (filterOwn) {
-            query.whereNot('id', userId)
+            query.andWhereNot('id', userId)
           }
 
           if (cpf) {
@@ -183,8 +192,10 @@ class UserService {
       return await User.query()
         .preload('doctor')
         .where((query) => {
+          query.where(TENANT_NAME, tenantId)
+
           if (params?.filterOwn) {
-            query.whereNot('id', userId)
+            query.andWhereNot('id', userId)
           }
         })
     } catch (err) {
@@ -192,11 +203,11 @@ class UserService {
     }
   }
 
-  public async find(id: number): Promise<User> {
+  public async find(id: number, tenantId: number): Promise<User> {
     try {
       const user = await User.find(id)
 
-      if (!user) {
+      if (!user || user.tenant_id.toString() !== tenantId.toString()) {
         throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
@@ -206,11 +217,11 @@ class UserService {
     }
   }
 
-  public async destroy(id: number): Promise<boolean> {
+  public async destroy(id: number, tenantId: number): Promise<boolean> {
     try {
       const user = await User.find(id)
 
-      if (!user) {
+      if (!user || user.tenant_id.toString() !== tenantId.toString()) {
         throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 

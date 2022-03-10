@@ -3,53 +3,94 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import CreateDoctorValidator from 'App/Validators/CreateDoctorValidator'
 import DoctorService from 'App/Services/DoctorService'
 import UpdateDoctorValidator from 'App/Validators/UpdateDoctorValidator'
+import { TENANT_NAME } from '../../../utils/constants/tenant'
 
 export default class DoctorController {
   public async store({
+    auth,
     request,
     response,
   }: HttpContextContract): Promise<void> {
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
     await request.validate(CreateDoctorValidator)
 
-    const data = request.only(['user_id', 'crm_document'])
+    const data = {
+      ...request.only(['user_id', 'crm_document']),
+      [TENANT_NAME]: auth.user.tenant_id,
+    }
     const doctor = await DoctorService.store(data)
 
     return response.status(201).json(doctor)
   }
 
   public async update({
+    auth,
     params,
     request,
     response,
   }: HttpContextContract): Promise<void> {
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
     const { id } = params
     const data = request.only(['user_id', 'crm_document'])
 
     await request.validate(UpdateDoctorValidator)
 
-    const doctor = await DoctorService.update(id, data)
+    const doctor = await DoctorService.update(id, auth.user.tenant_id, data)
 
     return response.status(200).json(doctor)
   }
 
-  public async index({ response }: HttpContextContract): Promise<void> {
-    const doctors = await DoctorService.getAll()
+  public async index({ auth, response }: HttpContextContract): Promise<void> {
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
+    const doctors = await DoctorService.getAll(auth.user.tenant_id)
 
     return response.status(200).json(doctors)
   }
 
-  public async show({ params, response }: HttpContextContract): Promise<void> {
+  public async show({
+    auth,
+    params,
+    response,
+  }: HttpContextContract): Promise<void> {
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
     const { id } = params
-    const user = await DoctorService.find(id)
+    const user = await DoctorService.find(id, auth.user.tenant_id)
 
     return response.status(200).json(user)
   }
 
   public async destroy({
+    auth,
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    await DoctorService.destroy(params.id)
+    if (!auth.user) {
+      return response
+        .status(401)
+        .json({ message: 'You are not authorized to access this resource!' })
+    }
+
+    await DoctorService.destroy(params.id, auth.user.tenant_id)
     return response.status(200).json({ success: true })
   }
 }

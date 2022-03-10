@@ -3,7 +3,7 @@ import { Assert } from 'japa/build/src/Assert'
 
 import InsuranceService from 'App/Services/InsuranceService'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
-import { defaultInsurance } from '../../database/seeders/Insurance'
+import { defaultInsurance } from '../../database/seeders/03_Insurance'
 
 const id = defaultInsurance.id
 

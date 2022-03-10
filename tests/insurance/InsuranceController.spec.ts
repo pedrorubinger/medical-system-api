@@ -2,7 +2,7 @@ import test from 'japa'
 import supertest from 'supertest'
 
 import { BASE_URL } from '../utils/urls'
-import { defaultInsurance } from '../../database/seeders/Insurance'
+import { defaultInsurance } from '../../database/seeders/03_Insurance'
 import { generateTestAuth } from '../utils/authentication'
 
 test.group('InsuranceController', (group) => {

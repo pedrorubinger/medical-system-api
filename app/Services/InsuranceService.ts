@@ -5,6 +5,7 @@ import {
 
 import AppError from 'App/Exceptions/AppError'
 import Insurance from 'App/Models/Insurance'
+import { TENANT_NAME } from '../../utils/constants/tenant'
 
 interface InsuranceData {
   name: string
@@ -29,11 +30,18 @@ class InsuranceService {
     }
   }
 
-  public async update(id: number, data: InsuranceData): Promise<Insurance> {
+  public async update(
+    id: number,
+    tenantId: number,
+    data: InsuranceData
+  ): Promise<Insurance> {
     try {
       const insurance = await Insurance.find(id)
 
-      if (!insurance) {
+      if (
+        !insurance ||
+        tenantId.toString() !== insurance.tenant_id.toString()
+      ) {
         throw new AppError(
           'This insurance was not found!',
           'INSURANCE_NOT_FOUND',
@@ -49,6 +57,7 @@ class InsuranceService {
   }
 
   public async getAll(
+    tenantId: number,
     params?: FetchInsurancesData
   ): Promise<ModelPaginatorContract<Insurance> | Insurance[]> {
     try {
@@ -57,6 +66,8 @@ class InsuranceService {
         const whereCallback = (
           query: ModelQueryBuilderContract<typeof Insurance, Insurance>
         ) => {
+          query.where(TENANT_NAME, tenantId)
+
           if (name) {
             query.andWhere('name', 'like', `${name}%`)
           }
@@ -70,17 +81,20 @@ class InsuranceService {
         }
       }
 
-      return await Insurance.query()
+      return await Insurance.query().where(TENANT_NAME, tenantId)
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
   }
 
-  public async find(id: number): Promise<Insurance> {
+  public async find(id: number, tenantId: number): Promise<Insurance> {
     try {
       const insurance = await Insurance.find(id)
 
-      if (!insurance) {
+      if (
+        !insurance ||
+        tenantId.toString() !== insurance.tenant_id.toString()
+      ) {
         throw new AppError(
           'This insurance was not found!',
           'INSURANCE_NOT_FOUND',
@@ -94,11 +108,14 @@ class InsuranceService {
     }
   }
 
-  public async destroy(id: number): Promise<boolean> {
+  public async destroy(id: number, tenantId: number): Promise<boolean> {
     try {
       const insurance = await Insurance.find(id)
 
-      if (!insurance) {
+      if (
+        !insurance ||
+        tenantId.toString() !== insurance.tenant_id.toString()
+      ) {
         throw new AppError(
           'This insurance was not found!',
           'INSURANCE_NOT_FOUND',

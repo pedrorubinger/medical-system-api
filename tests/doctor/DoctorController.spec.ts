@@ -7,7 +7,7 @@ import {
   defaultDoctor,
   defaultDoctorUserOne,
   defaultDoctorUserTwo,
-} from '../../database/seeders/User'
+} from '../../database/seeders/02_User'
 
 test.group('DoctorController', (group) => {
   let headers: Object

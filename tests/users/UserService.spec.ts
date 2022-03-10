@@ -4,7 +4,7 @@ import { Assert } from 'japa/build/src/Assert'
 import { TRole } from 'App/Models/User'
 import UserService from 'App/Services/UserService'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
-import { defaultUser } from '../../database/seeders/User'
+import { defaultUser } from '../../database/seeders/02_User'
 
 const id = defaultUser.id
 

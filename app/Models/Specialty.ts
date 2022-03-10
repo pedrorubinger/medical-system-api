@@ -3,10 +3,13 @@ import {
   BaseModel,
   ManyToMany,
   manyToMany,
+  belongsTo,
+  BelongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import Doctor from 'App/Models/Doctor'
+import Tenant from 'App/Models/Tenant'
 
 export default class Specialty extends BaseModel {
   @column({ isPrimary: true })
@@ -14,6 +17,12 @@ export default class Specialty extends BaseModel {
 
   @column()
   public name: string
+
+  @column()
+  public tenant_id: number
+
+  @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })
+  public tenant: BelongsTo<typeof Tenant>
 
   @manyToMany(() => Doctor, {
     localKey: 'id',
