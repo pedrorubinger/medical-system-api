@@ -66,7 +66,10 @@ test.group('SpecialtyController', (group) => {
   })
 
   test('should return status 201 (POST /specialty/) when user creates a new specialty', async () => {
-    const payload = { name: 'New Specialty' }
+    const payload = {
+      name: 'New Specialty',
+      tenant_id: defaultSpecialty.tenant_id,
+    }
 
     await supertest(BASE_URL)
       .post('/specialty/')
@@ -76,7 +79,10 @@ test.group('SpecialtyController', (group) => {
   })
 
   test('should return status 422 (POST /specialty/) when user tries to create a new specialty with a name that already exists', async () => {
-    const payload = { name: 'New Specialty' }
+    const payload = {
+      name: 'New Specialty',
+      tenant_id: defaultSpecialty.tenant_id,
+    }
 
     await supertest(BASE_URL)
       .post('/specialty')

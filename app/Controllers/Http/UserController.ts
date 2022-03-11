@@ -29,7 +29,10 @@ export default class UserController {
       'role',
       'crm_document',
     ])
-    const user = await UserService.store(auth.user.tenant_id, data)
+    const user = await UserService.store({
+      ...data,
+      tenant_id: auth.user.tenant_id,
+    })
 
     return response.status(201).json(user)
   }

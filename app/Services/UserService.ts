@@ -20,6 +20,7 @@ interface StoreUserData {
   cpf: string
   is_admin: boolean
   role: TRole
+  tenant_id: number
   crm_document?: string
 }
 
@@ -61,14 +62,14 @@ interface SetPasswordData {
 }
 
 class UserService {
-  public async store(tenantId: number, data: StoreUserData): Promise<User> {
+  public async store(data: StoreUserData): Promise<User> {
     return await Database.transaction(async (trx) => {
       try {
         const user = new User()
         const resetPasswordToken = uuidv4()
 
         user.name = data.name
-        user.tenant_id = tenantId
+        user.tenant_id = data.tenant_id
         user.password = data?.password || undefined
         user.reset_password_token = resetPasswordToken
         user.email = data.email
@@ -84,6 +85,7 @@ class UserService {
           await DoctorService.store(
             {
               user_id: createdUser.id,
+              tenant_id: data.tenant_id,
               crm_document: data.crm_document,
             },
             trx

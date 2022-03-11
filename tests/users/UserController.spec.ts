@@ -41,6 +41,7 @@ test.group('UserController', (group) => {
       phone: '124534384',
       cpf: '12345576231',
       is_admin: false,
+      tenant_id: defaultUser.tenant_id,
     }
 
     /** NOTE: A longer timeout is necessary here because this controller's method invokes an email service. */
@@ -92,6 +93,7 @@ test.group('UserController', (group) => {
       password: 'jane123',
       password_confirmation: 'jane123',
       role: 'doctor' as TRole,
+      tenant_id: 1,
     }
 
     await supertest(BASE_URL)

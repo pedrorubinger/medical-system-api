@@ -27,7 +27,7 @@ export const defaultDoctorUserOne = {
   phone: '31 999999990',
   email: 'jane@test.com',
   password: 'jane123',
-  tenant_id: 2,
+  tenant_id: 1,
   is_admin: false,
   reset_password_token: null,
 }
@@ -47,7 +47,7 @@ export const defaultDoctorUserTwo = {
 
 export const defaultDoctorOne = {
   id: 1,
-  tenant_id: 2,
+  tenant_id: 1,
   crm_document: 'CRM-MG 00009',
   user_id: defaultDoctorUserOne.id,
 }
