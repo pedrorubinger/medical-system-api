@@ -14,6 +14,14 @@ export default class Users extends BaseSchema {
       table.string('password', 255).nullable()
       table.enum('role', ['manager', 'doctor'])
       table.string('reset_password_token', 255).nullable()
+      table
+        .integer('tenant_id')
+        .unsigned()
+        .references('id')
+        .inTable('tenants')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+        .notNullable()
       table.timestamps(true, true)
     })
   }

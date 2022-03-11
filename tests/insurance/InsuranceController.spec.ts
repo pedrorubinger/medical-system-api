@@ -2,7 +2,7 @@ import test from 'japa'
 import supertest from 'supertest'
 
 import { BASE_URL } from '../utils/urls'
-import { defaultInsurance } from '../../database/seeders/Insurance'
+import { defaultInsurance } from '../../database/seeders/03_Insurance'
 import { generateTestAuth } from '../utils/authentication'
 
 test.group('InsuranceController', (group) => {
@@ -66,7 +66,7 @@ test.group('InsuranceController', (group) => {
   })
 
   test('should return status 201 (POST /insurance/) when user creates a new insurance', async () => {
-    const payload = { name: 'New Insurance' }
+    const payload = { name: 'New Insurance', tenant_id: 1 }
 
     await supertest(BASE_URL)
       .post('/insurance/')
@@ -76,7 +76,7 @@ test.group('InsuranceController', (group) => {
   })
 
   test('should return status 422 (POST /insurance/) when user tries to create a new insurance with a name that already exists', async () => {
-    const payload = { name: 'New Insurance' }
+    const payload = { name: 'New Insurance', tenant_id: 1 }
 
     await supertest(BASE_URL)
       .post('/insurance')

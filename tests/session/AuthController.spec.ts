@@ -1,6 +1,6 @@
 import test from 'japa'
 import supertest from 'supertest'
-import { defaultUser } from 'Database/seeders/User'
+import { defaultUser } from 'Database/seeders/02_User'
 
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 

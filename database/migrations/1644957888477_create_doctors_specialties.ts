@@ -21,6 +21,14 @@ export default class DoctorsSpecialties extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
         .notNullable()
+      table
+        .integer('tenant_id')
+        .unsigned()
+        .references('id')
+        .inTable('tenants')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+        .notNullable()
       table.timestamps(true, true)
     })
   }

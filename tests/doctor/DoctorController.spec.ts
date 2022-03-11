@@ -4,10 +4,10 @@ import supertest from 'supertest'
 import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
 import {
-  defaultDoctor,
+  defaultDoctorOne,
   defaultDoctorUserOne,
   defaultDoctorUserTwo,
-} from '../../database/seeders/User'
+} from '../../database/seeders/02_User'
 
 test.group('DoctorController', (group) => {
   let headers: Object
@@ -24,14 +24,14 @@ test.group('DoctorController', (group) => {
 
   test('should return status 200 (GET /doctor/:id) when user fetches a specified doctor', async () => {
     await supertest(BASE_URL)
-      .get(`/doctor/${defaultDoctor.id}`)
+      .get(`/doctor/${defaultDoctorOne.id}`)
       .set(headers)
       .expect(200)
   })
 
   test('should return status 404 (GET /doctor/:id) when user fetches a doctor that does not exist', async () => {
     await supertest(BASE_URL)
-      .get(`/doctor/${defaultDoctor.id + 33}`)
+      .get(`/doctor/${defaultDoctorOne.id + 33}`)
       .set(headers)
       .expect(404)
   })
@@ -48,6 +48,7 @@ test.group('DoctorController', (group) => {
 
   test('should return status 201 (POST /doctor)', async () => {
     const payload = {
+      tenant_id: defaultDoctorUserTwo.tenant_id,
       user_id: defaultDoctorUserTwo.id,
       crm_document: 'CRM-SP 349122',
     }

@@ -1,7 +1,7 @@
 import supertest from 'supertest'
 
 import { BASE_URL } from './urls'
-import { defaultUser } from '../../database/seeders/User'
+import { defaultUser } from '../../database/seeders/02_User'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 
 interface GenerateTestAuthResponse {

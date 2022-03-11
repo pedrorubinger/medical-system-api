@@ -13,6 +13,7 @@ import { DateTime } from 'luxon'
 import User from 'App/Models/User'
 import Insurance from 'App/Models/Insurance'
 import Specialty from 'App/Models/Specialty'
+import Tenant from 'App/Models/Tenant'
 
 export interface DoctorAttributes {
   id?: number
@@ -32,8 +33,14 @@ export default class Doctor extends BaseModel {
   @column()
   public user_id: number
 
+  @column()
+  public tenant_id: number
+
   @belongsTo(() => User, { foreignKey: 'user_id' })
   public user: BelongsTo<typeof User>
+
+  @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })
+  public tenant: BelongsTo<typeof Tenant>
 
   @manyToMany(() => Insurance, {
     localKey: 'id',
