@@ -77,6 +77,8 @@ export default class Doctor extends BaseModel {
   public static async preloadInsurancesBeforeFind(
     query: ModelQueryBuilderContract<typeof Doctor>
   ) {
-    await query.preload('insurance')
+    await query.preload('insurance', (builder) => {
+      builder.pivotColumns(['price'])
+    })
   }
 }

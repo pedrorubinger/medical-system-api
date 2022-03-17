@@ -1,9 +1,15 @@
-import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
+import Database, { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
 import { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
 
 import AppError from 'App/Exceptions/AppError'
 import Doctor from 'App/Models/Doctor'
+import Insurance from 'App/Models/Insurance'
 import { TENANT_NAME } from '../../utils/constants/tenant'
+
+interface InsuranceData {
+  insurance_id: number
+  price: number
+}
 
 interface StoreDoctorData {
   crm_document: string
@@ -41,8 +47,21 @@ class DoctorService {
   public async update(
     id: number,
     tenantId: number,
-    data: UpdateDoctorData
+    data: UpdateDoctorData,
+    specialties?: number[]
   ): Promise<Doctor> {
+    const trx = await Database.transaction()
+
+    const attachSpecialties = (arr: number[]) => {
+      const obj = {}
+
+      arr.forEach((item: number) => {
+        obj[item] = { tenant_id: tenantId }
+      })
+
+      return obj
+    }
+
     try {
       const doctor = await Doctor.find(id)
 
@@ -54,9 +73,78 @@ class DoctorService {
         )
       }
 
+      if (specialties?.length) {
+        await doctor
+          .related('specialty')
+          .sync(attachSpecialties(specialties), true, trx)
+      } else {
+        await doctor.related('specialty').detach()
+      }
+
       doctor.merge(data)
-      return await doctor.save()
+      doctor.useTransaction(trx)
+
+      const updatedDoctor = await doctor.save()
+
+      await trx.commit()
+      return updatedDoctor
     } catch (err) {
+      await trx.rollback()
+      throw new AppError(err?.message, err?.code, err?.status)
+    }
+  }
+
+  public async manageInsurance(
+    id: number,
+    tenantId: number,
+    flag: 'attach' | 'dettach',
+    insurances: InsuranceData[]
+  ): Promise<Insurance[]> {
+    const trx = await Database.transaction()
+
+    const attachInsurances = (arr: InsuranceData[]) => {
+      const obj = {}
+
+      arr.forEach((item: InsuranceData) => {
+        obj[item.insurance_id] = { tenant_id: tenantId, price: item.price }
+      })
+
+      return obj
+    }
+
+    try {
+      const doctor = await Doctor.find(id)
+
+      if (!doctor || tenantId.toString() !== doctor.tenant_id.toString()) {
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
+      }
+
+      if (flag === 'attach') {
+        await doctor
+          .related('insurance')
+          .sync(attachInsurances(insurances), false, trx)
+      }
+
+      if (flag === 'dettach') {
+        await doctor
+          .related('insurance')
+          .detach([...insurances].map((insurance) => insurance.insurance_id))
+      }
+
+      doctor.useTransaction(trx)
+
+      const doctorInsurances = await (await doctor.save())
+        .related('insurance')
+        .query()
+
+      await trx.commit()
+      return doctorInsurances
+    } catch (err) {
+      await trx.rollback()
       throw new AppError(err?.message, err?.code, err?.status)
     }
   }

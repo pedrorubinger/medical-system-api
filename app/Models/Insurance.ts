@@ -12,13 +12,19 @@ import Doctor from 'App/Models/Doctor'
 import Tenant from 'App/Models/Tenant'
 
 export default class Insurance extends BaseModel {
+  public serializeExtras() {
+    return {
+      price: this.$extras.pivot_price,
+    }
+  }
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
   public name: string
 
-  @column()
+  @column({ serializeAs: null })
   public tenant_id: number
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })

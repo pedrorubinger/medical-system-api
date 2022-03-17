@@ -61,9 +61,9 @@ export default class User extends BaseModel {
   public updated_at: DateTime
 
   @beforeSave()
-  public static async hashPassword(auth: User) {
-    if (auth.password && auth.$dirty.password) {
-      auth.password = await Hash.make(auth.password)
+  public static async hashPassword(user: User) {
+    if (user.password && user.$dirty.password) {
+      user.password = await Hash.make(user.password)
     }
   }
 
@@ -72,7 +72,9 @@ export default class User extends BaseModel {
     query: ModelQueryBuilderContract<typeof User>
   ) {
     await query.preload('doctor', (builder) => {
-      builder.preload('insurance')
+      builder.preload('insurance', (insuranceBuilder) => {
+        insuranceBuilder.pivotColumns(['price'])
+      })
       builder.preload('specialty')
     })
   }
