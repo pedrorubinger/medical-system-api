@@ -55,19 +55,73 @@ Route.get('/session/validate', 'AuthController.isAuthenticated').middleware([
 
 /* DOCTOR */
 Route.group(() => {
-  Route.resource('/doctor', 'DoctorController')
-}).middleware(['auth', 'permission:admin'])
-Route.put(
-  '/doctor/insurance/:id',
-  'DoctorController.manageInsurance'
-).middleware(['auth', 'permission:doctor'])
+  Route.post('/doctor', 'DoctorController.store').middleware([
+    'auth',
+    'permission:admin',
+  ])
+  Route.get('/doctor', 'DoctorController.index').middleware([
+    'auth',
+    'permission:admin',
+  ])
+  Route.get('/doctor/:id', 'DoctorController.show').middleware([
+    'auth',
+    'permission:admin',
+  ])
+  Route.put('/doctor/:id', 'DoctorController.update').middleware(['auth'])
+  Route.put(
+    '/doctor/insurance/:id',
+    'DoctorController.manageInsurance'
+  ).middleware(['auth'])
+  Route.delete('/doctor/:id', 'DoctorController.destroy').middleware([
+    'auth',
+    'permission:admin',
+  ])
+})
 
 /* INSURANCE */
 Route.group(() => {
-  Route.resource('/insurance', 'InsuranceController')
-}).middleware(['auth', 'permission:admin,manager'])
+  Route.post('/insurance', 'InsuranceController.store').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+  Route.get('/insurance', 'InsuranceController.index').middleware([
+    'auth',
+    'permission:admin,manager,doctor',
+  ])
+  Route.get('/insurance/:id', 'InsuranceController.show').middleware([
+    'auth',
+    'permission:admin,manager,doctor',
+  ])
+  Route.put('/insurance', 'InsuranceController.update').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+  Route.delete('/insurance/:id', 'InsuranceController.destroy').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+})
 
 /* SPECIALTY */
 Route.group(() => {
-  Route.resource('/specialty', 'SpecialtyController')
-}).middleware(['auth', 'permission:admin,manager'])
+  Route.post('/specialty', 'SpecialtyController.store').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+  Route.put('/specialty', 'SpecialtyController.update').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+  Route.get('/specialty', 'SpecialtyController.index').middleware([
+    'auth',
+    'permission:admin,manager,doctor',
+  ])
+  Route.get('/specialty/:id', 'SpecialtyController.show').middleware([
+    'auth',
+    'permission:admin,manager,doctor',
+  ])
+  Route.delete('/specialty/:id', 'SpecialtyController.destroy').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+})

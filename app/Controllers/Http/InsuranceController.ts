@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import CreateOrUpdateInsuranceValidator from 'App/Validators/CreateOrUpdateInsuranceValidator'
 import InsuranceService from 'App/Services/InsuranceService'
+import { HAS_NO_PERMISSION_CODE } from '../../../utils/constants/errors'
 
 export default class InsuranceController {
   public async store({
@@ -10,9 +11,7 @@ export default class InsuranceController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await request.validate(CreateOrUpdateInsuranceValidator)
@@ -30,9 +29,7 @@ export default class InsuranceController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await request.validate(CreateOrUpdateInsuranceValidator)
@@ -54,9 +51,7 @@ export default class InsuranceController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     const { name, order, orderBy, page, perPage } = request.qs()
@@ -81,9 +76,7 @@ export default class InsuranceController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     const { id } = params
@@ -98,9 +91,7 @@ export default class InsuranceController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await InsuranceService.destroy(params.id, auth.user.tenant_id)

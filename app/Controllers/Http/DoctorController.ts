@@ -5,6 +5,7 @@ import CreateDoctorValidator from 'App/Validators/CreateDoctorValidator'
 import UpdateDoctorValidator from 'App/Validators/UpdateDoctorValidator'
 import ManageDoctorInsuranceValidator from 'App/Validators/ManageDoctorInsuranceValidator'
 import { TENANT_NAME } from '../../../utils/constants/tenant'
+import { HAS_NO_PERMISSION_CODE } from '../../../utils/constants/errors'
 
 export default class DoctorController {
   public async store({
@@ -13,9 +14,7 @@ export default class DoctorController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await request.validate(CreateDoctorValidator)
@@ -35,13 +34,12 @@ export default class DoctorController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+    const { id } = params
+
+    if (!auth.user || auth?.user?.doctor?.id?.toString() !== id?.toString()) {
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
-    const { id } = params
     const data = request.only(['user_id', 'crm_document'])
     const specialties = request.input('specialties')
 
@@ -63,13 +61,12 @@ export default class DoctorController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+    const { id } = params
+
+    if (!auth.user || auth?.user?.doctor?.id?.toString() !== id?.toString()) {
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
-    const { id } = params
     const flag = request.input('flag')
     const insurances = request.input('insurances')
 
@@ -87,9 +84,7 @@ export default class DoctorController {
 
   public async index({ auth, response }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     const doctors = await DoctorService.getAll(auth.user.tenant_id)
@@ -103,9 +98,7 @@ export default class DoctorController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     const { id } = params
@@ -120,9 +113,7 @@ export default class DoctorController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await DoctorService.destroy(params.id, auth.user.tenant_id)

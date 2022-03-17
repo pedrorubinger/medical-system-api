@@ -1,12 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { HAS_NO_PERMISSION_CODE } from '../../utils/constants/errors'
 
 import { TENANT_NAME } from '../../utils/constants/tenant'
 
 type TPermission = 'admin' | 'manager' | 'doctor'
-
-const unauthorizedMessage = {
-  message: 'You do not have permission to access this resource!',
-}
 
 export default class Permission {
   public async handle(
@@ -19,9 +16,13 @@ export default class Permission {
     if (!user) {
       return response
         .status(401)
-        .send({ message: 'You must provide valid credentials!' })
+        .send({ code: 'MUST_PROVIDE_VALID_CREDENTIALS' })
     }
 
+    const userRoles = user.is_admin ? ['admin', user.role] : [user.role]
+    const hasPermission = userRoles.some((role) =>
+      properties.includes(role as TPermission)
+    )
     const userTenant = user.tenant_id.toString()
     const tenantIsInvalid =
       (request.params()?.[TENANT_NAME]?.toString() &&
@@ -33,13 +34,8 @@ export default class Permission {
       (request?.headers()?.[TENANT_NAME]?.toString() &&
         userTenant !== request?.headers()?.[TENANT_NAME]?.toString())
 
-    if (
-      tenantIsInvalid ||
-      (!properties.includes(user.role) &&
-        user.is_admin &&
-        !properties.includes('admin'))
-    ) {
-      return response.status(401).send(unauthorizedMessage)
+    if (tenantIsInvalid || !hasPermission) {
+      return response.status(401).send(HAS_NO_PERMISSION_CODE)
     }
 
     return await next()

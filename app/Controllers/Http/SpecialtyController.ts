@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import CreateOrUpdateSpecialtyValidator from 'App/Validators/CreateOrUpdateSpecialtyValidator'
 import SpecialtyService from 'App/Services/SpecialtyService'
+import { HAS_NO_PERMISSION_CODE } from '../../../utils/constants/errors'
 
 export default class SpecialtyController {
   public async store({
@@ -10,9 +11,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await request.validate(CreateOrUpdateSpecialtyValidator)
@@ -30,9 +29,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await request.validate(CreateOrUpdateSpecialtyValidator)
@@ -54,9 +51,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     const { name, order, orderBy, page, perPage } = request.qs()
@@ -81,9 +76,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     const { id } = params
@@ -98,9 +91,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response
-        .status(401)
-        .json({ message: 'You are not authorized to access this resource!' })
+      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
     }
 
     await SpecialtyService.destroy(params.id, auth.user.tenant_id)
