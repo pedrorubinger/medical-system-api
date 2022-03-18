@@ -18,7 +18,7 @@ test.group('SpecialtyService', (group) => {
     await rollbackMigrations()
   })
 
-  test('should not update an specialty which id does not exist', async (assert: Assert) => {
+  test('should not update a specialty which id does not exist', async (assert: Assert) => {
     try {
       const data = { name: 'Updated Specialty' }
 
@@ -28,7 +28,7 @@ test.group('SpecialtyService', (group) => {
     }
   })
 
-  test('should not delete an specialty which id does not exist', async (assert: Assert) => {
+  test('should not delete a specialty which id does not exist', async (assert: Assert) => {
     try {
       await SpecialtyService.destroy(99, defaultSpecialty.tenant_id)
     } catch (err) {
@@ -36,7 +36,7 @@ test.group('SpecialtyService', (group) => {
     }
   })
 
-  test('should not find an specialty which id does not exist', async (assert: Assert) => {
+  test('should not find a specialty which id does not exist', async (assert: Assert) => {
     try {
       await SpecialtyService.find(99, defaultSpecialty.tenant_id)
     } catch (err) {

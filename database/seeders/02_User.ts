@@ -52,6 +52,13 @@ export const defaultDoctorOne = {
   user_id: defaultDoctorUserOne.id,
 }
 
+export const defaultDoctorTwo = {
+  id: 2,
+  tenant_id: 1,
+  crm_document: 'CRM-MG 00310',
+  user_id: defaultDoctorUserTwo.id,
+}
+
 export default class UserSeeder extends BaseSeeder {
   public async run() {
     await User.create(defaultUser)
@@ -60,6 +67,7 @@ export default class UserSeeder extends BaseSeeder {
 
     if (Env.get('NODE_ENV') === 'testing') {
       await User.create(defaultDoctorUserTwo)
+      await Doctor.create(defaultDoctorTwo)
     }
   }
 }

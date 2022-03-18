@@ -92,7 +92,7 @@ Route.group(() => {
     'auth',
     'permission:admin,manager,doctor',
   ])
-  Route.put('/insurance', 'InsuranceController.update').middleware([
+  Route.put('/insurance/:id', 'InsuranceController.update').middleware([
     'auth',
     'permission:admin,manager',
   ])
@@ -108,7 +108,7 @@ Route.group(() => {
     'auth',
     'permission:admin,manager',
   ])
-  Route.put('/specialty', 'SpecialtyController.update').middleware([
+  Route.put('/specialty/:id', 'SpecialtyController.update').middleware([
     'auth',
     'permission:admin,manager',
   ])

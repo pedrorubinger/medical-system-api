@@ -5,6 +5,7 @@ import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
 import {
   defaultDoctorOne,
+  defaultDoctorTwo,
   defaultDoctorUserOne,
   defaultDoctorUserTwo,
 } from '../../database/seeders/02_User'
@@ -70,14 +71,14 @@ test.group('DoctorController', (group) => {
       .expect(404)
   })
 
-  test('should return status 200 (PUT /doctor) when user updates doctor data', async () => {
-    const payload = { crm_document: 'updated crm' }
+  test('should return status 401 (PUT /doctor) when user tries to update the professional data of another user', async () => {
+    const payload = { crm_document: 'updated crmmm' }
 
     await supertest(BASE_URL)
-      .put(`/doctor/${defaultDoctorUserOne.id}`)
+      .put(`/doctor/${defaultDoctorTwo.id}`)
       .set(headers)
       .send(payload)
-      .expect(200)
+      .expect(401)
   })
 
   test('should return status 404 (DELETE /doctor) when user tries to delete a doctor which id does not exist', async () => {
