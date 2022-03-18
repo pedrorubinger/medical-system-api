@@ -18,7 +18,7 @@ export default class Specialty extends BaseModel {
   @column()
   public name: string
 
-  @column()
+  @column({ serializeAs: null })
   public tenant_id: number
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })

@@ -33,7 +33,7 @@ export default class Doctor extends BaseModel {
   @column()
   public user_id: number
 
-  @column()
+  @column({ serializeAs: null })
   public tenant_id: number
 
   @belongsTo(() => User, { foreignKey: 'user_id' })
