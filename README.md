@@ -18,6 +18,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [ ] Implementação do middleware de Permissões;
 - [ ] Implementação do módulo de Relatórios;
 - [ ] Implementação da Configuração de Agenda;
+- [ ] Melhorar cobertura de testes;
 
 ## 💻 Requisitos
 
