@@ -26,7 +26,7 @@ Estes são os requisitos para que este projeto execute corretamente em sua máqu
 - Você tem instalado em sua máquina `Node.js v16.13.2 (ou superior)`. Utilize o comando `node --version` para checar a sua versão do Node.js. Você também pode utilizar o `nvm` para alternar entre as versões do Node.js em sua máquina;
 - Você tem instalado em sua máquina um gerenciador de pacotes para Node.js (Yarn ou NPM);
 
-## 🚀 Configurando a aplicação
+## ☕ Configurando a aplicação
 
 Para configurar o MedicalSystem API, siga estas etapas:
 
@@ -34,7 +34,7 @@ Para configurar o MedicalSystem API, siga estas etapas:
 2. Execute o comando `yarn` ou `npm install`;
 3. No diretório do projeto raíz do projeto, crie um arquivo `.env` e configure as variáveis de ambiente necessárias. Utilize como base o arquivo `.env.example`;
 
-## ☕ Executando a aplicação
+## 🚀 Executando a aplicação
 
 Para executar a API, siga estas etapas:
 
