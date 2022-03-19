@@ -10,14 +10,6 @@ export default class AuthController {
         .use('api')
         .attempt(email, password, { expiresIn: '18h' })
 
-      if (!token || !auth.user) {
-        throw new AppError(
-          'Please check your credentials!',
-          'INVALID_CREDENTIALS',
-          401
-        )
-      }
-
       return response.status(200).json({ user: auth.user, token: token.token })
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)

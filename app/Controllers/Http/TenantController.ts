@@ -3,7 +3,6 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import CreateTenantValidator from 'App/Validators/CreateTenantValidator'
 import UpdateTenantValidator from 'App/Validators/UpdateTenantValidator'
 import TenantService from 'App/Services/TenantService'
-import { HAS_NO_PERMISSION_CODE } from '../../../utils/constants/errors'
 
 export default class TenantController {
   public async store({
@@ -38,10 +37,6 @@ export default class TenantController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     const { filterOwn, name, order, orderBy, page, perPage } = request.qs()
 
     const getFilterOwn = (): boolean => {
@@ -60,7 +55,7 @@ export default class TenantController {
       perPage,
       filterOwn: getFilterOwn(),
     }
-    const tenants = await TenantService.getAll(params, auth.user.tenant_id)
+    const tenants = await TenantService.getAll(params, auth.user!.tenant_id)
 
     return response.status(200).json(tenants)
   }

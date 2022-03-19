@@ -13,15 +13,11 @@ export default class DoctorController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     await request.validate(CreateDoctorValidator)
 
     const data = {
       ...request.only(['user_id', 'crm_document']),
-      [TENANT_NAME]: auth.user.tenant_id,
+      [TENANT_NAME]: auth.user!.tenant_id,
     }
     const doctor = await DoctorService.store(data)
 
@@ -36,7 +32,7 @@ export default class DoctorController {
   }: HttpContextContract): Promise<void> {
     const { id } = params
 
-    if (!auth.user || auth?.user?.doctor?.id?.toString() !== id?.toString()) {
+    if (auth?.user?.doctor?.id?.toString() !== id?.toString()) {
       return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
@@ -47,7 +43,7 @@ export default class DoctorController {
 
     const doctor = await DoctorService.update(
       id,
-      auth.user.tenant_id,
+      auth.user!.tenant_id,
       data,
       specialties
     )
@@ -63,7 +59,7 @@ export default class DoctorController {
   }: HttpContextContract): Promise<void> {
     const { id } = params
 
-    if (!auth.user || auth?.user?.doctor?.id?.toString() !== id?.toString()) {
+    if (auth?.user?.doctor?.id?.toString() !== id?.toString()) {
       return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
@@ -74,7 +70,7 @@ export default class DoctorController {
 
     const doctor = await DoctorService.manageInsurance(
       id,
-      auth.user.tenant_id,
+      auth.user!.tenant_id,
       flag,
       insurances
     )
@@ -83,11 +79,7 @@ export default class DoctorController {
   }
 
   public async index({ auth, response }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
-    const doctors = await DoctorService.getAll(auth.user.tenant_id)
+    const doctors = await DoctorService.getAll(auth.user!.tenant_id)
 
     return response.status(200).json(doctors)
   }
@@ -97,12 +89,8 @@ export default class DoctorController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     const { id } = params
-    const user = await DoctorService.find(id, auth.user.tenant_id)
+    const user = await DoctorService.find(id, auth.user!.tenant_id)
 
     return response.status(200).json(user)
   }
@@ -112,11 +100,7 @@ export default class DoctorController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
-    await DoctorService.destroy(params.id, auth.user.tenant_id)
+    await DoctorService.destroy(params.id, auth.user!.tenant_id)
     return response.status(200).json({ success: true })
   }
 }

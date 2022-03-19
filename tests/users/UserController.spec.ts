@@ -88,6 +88,17 @@ test.group('UserController', (group) => {
       .expect(422)
   })
 
+  test('should return status 401 (PUT /user) when user try to update data of another user', async () => {
+    await supertest(BASE_URL)
+      .put(`/user/${defaultUser.id * -35}`)
+      .set(headers)
+      .send({
+        name: 'John A. Doez',
+        password: defaultUser.password,
+      })
+      .expect(401)
+  })
+
   test('should return status 422 (POST /user)', async () => {
     const payload = {
       email: 'jane@test.com',

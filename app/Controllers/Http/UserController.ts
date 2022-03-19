@@ -13,9 +13,6 @@ export default class UserController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
     await request.validate(CreateUserValidator)
 
     const data = request.only([
@@ -30,7 +27,7 @@ export default class UserController {
     ])
     const user = await UserService.store({
       ...data,
-      tenant_id: auth.user.tenant_id,
+      tenant_id: auth.user!.tenant_id,
     })
 
     return response.status(201).json(user)
@@ -42,11 +39,12 @@ export default class UserController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user || auth.user.id.toString() !== params.id.toString()) {
+    const { id } = params
+
+    if (auth?.user?.id?.toString() !== id?.toString()) {
       return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
-    const { id } = params
     const data = request.only([
       'name',
       'email',
@@ -58,7 +56,7 @@ export default class UserController {
     ])
 
     try {
-      await auth.attempt(auth.user.email, data.password)
+      await auth.attempt(auth.user!.email, data.password)
     } catch (err) {
       return response.status(400).json({
         errors: [
@@ -73,7 +71,7 @@ export default class UserController {
 
     await request.validate(UpdateUserValidator)
 
-    const user = await UserService.update(id, auth.user.tenant_id, data)
+    const user = await UserService.update(id, auth.user!.tenant_id, data)
 
     return response.status(200).json(user)
   }
@@ -83,11 +81,7 @@ export default class UserController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
-    const tenantId = auth.user.tenant_id
+    const tenantId = auth.user!.tenant_id
     const { cpf, email, name, order, orderBy, page, perPage, role, filterOwn } =
       request.qs()
     const params = {
@@ -101,7 +95,7 @@ export default class UserController {
       role,
       filterOwn: filterOwn === 'true' || filterOwn === true,
     }
-    const users = await UserService.getAll(auth.user.id, tenantId, params)
+    const users = await UserService.getAll(auth.user!.id, tenantId, params)
 
     return response.status(200).json(users)
   }
@@ -111,12 +105,8 @@ export default class UserController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     const { id } = params
-    const user = await UserService.find(id, auth.user.tenant_id)
+    const user = await UserService.find(id, auth.user!.tenant_id)
 
     return response.status(200).json(user)
   }
@@ -126,11 +116,7 @@ export default class UserController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
-    await UserService.destroy(params.id, auth.user.tenant_id)
+    await UserService.destroy(params.id, auth.user!.tenant_id)
     return response.status(200).json({ success: true })
   }
 

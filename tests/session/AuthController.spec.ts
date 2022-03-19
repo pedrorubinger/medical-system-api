@@ -1,7 +1,7 @@
 import test from 'japa'
 import supertest from 'supertest'
-import { defaultUser } from 'Database/seeders/02_User'
 
+import { defaultUser } from 'Database/seeders/02_User'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 
 const BASE_URL = `http://${process.env.HOST}:${process.env.PORT}`

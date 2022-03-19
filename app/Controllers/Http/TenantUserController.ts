@@ -3,17 +3,10 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import CreateTenantUserValidator from 'App/Validators/CreateTenantUserValidator'
 import UserService from 'App/Services/UserService'
 import { TRole } from 'App/Models/User'
-import {
-  HAS_NO_PERMISSION_CODE,
-  MISSING_TENANT_ID,
-} from '../../../utils/constants/errors'
+import { MISSING_TENANT_ID } from '../../../utils/constants/errors'
 
 export default class TenantUserController {
   public async store({ auth, request, response }) {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     await request.validate(CreateTenantUserValidator)
 
     const ownerTenant: boolean | undefined = request.input('owner_tenant')
@@ -48,14 +41,10 @@ export default class TenantUserController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     const ownerTenant = request.headers()?.owner_tenant?.toString()
     const tenantId =
-      ownerTenant && auth.user.is_master && ['true', '1'].includes(ownerTenant)
-        ? auth.user.tenant_id
+      ownerTenant && auth.user!.is_master && ['true', '1'].includes(ownerTenant)
+        ? auth.user!.tenant_id
         : Number(request.headers()?.tenant_id)
 
     if (!tenantId) {
@@ -75,7 +64,7 @@ export default class TenantUserController {
       role,
       filterOwn: filterOwn === 'true' || filterOwn === true,
     }
-    const users = await UserService.getAll(auth.user.id, tenantId, params)
+    const users = await UserService.getAll(auth.user!.id, tenantId, params)
 
     return response.status(200).json(users)
   }

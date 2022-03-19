@@ -2,7 +2,6 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import CreateOrUpdateSpecialtyValidator from 'App/Validators/CreateOrUpdateSpecialtyValidator'
 import SpecialtyService from 'App/Services/SpecialtyService'
-import { HAS_NO_PERMISSION_CODE } from '../../../utils/constants/errors'
 
 export default class SpecialtyController {
   public async store({
@@ -10,13 +9,9 @@ export default class SpecialtyController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     await request.validate(CreateOrUpdateSpecialtyValidator)
 
-    const data = { ...request.only(['name']), tenant_id: auth.user.tenant_id }
+    const data = { ...request.only(['name']), tenant_id: auth.user!.tenant_id }
     const specialty = await SpecialtyService.store(data)
 
     return response.status(201).json(specialty)
@@ -28,17 +23,13 @@ export default class SpecialtyController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     await request.validate(CreateOrUpdateSpecialtyValidator)
 
     const { id } = params
     const data = request.only(['name'])
     const specialty = await SpecialtyService.update(
       id,
-      auth.user.tenant_id,
+      auth.user!.tenant_id,
       data
     )
 
@@ -50,10 +41,6 @@ export default class SpecialtyController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     const { name, order, orderBy, page, perPage } = request.qs()
     const params = {
       name,
@@ -63,7 +50,7 @@ export default class SpecialtyController {
       perPage,
     }
     const specialties = await SpecialtyService.getAll(
-      auth.user?.tenant_id,
+      auth.user!.tenant_id,
       params
     )
 
@@ -75,12 +62,8 @@ export default class SpecialtyController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     const { id } = params
-    const specialty = await SpecialtyService.find(id, auth.user.tenant_id)
+    const specialty = await SpecialtyService.find(id, auth.user!.tenant_id)
 
     return response.status(200).json(specialty)
   }
@@ -90,11 +73,7 @@ export default class SpecialtyController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (!auth.user) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
-    await SpecialtyService.destroy(params.id, auth.user.tenant_id)
+    await SpecialtyService.destroy(params.id, auth.user!.tenant_id)
     return response.status(200).json({ success: true })
   }
 }
