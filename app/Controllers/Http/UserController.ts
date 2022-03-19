@@ -14,7 +14,7 @@ export default class UserController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
     await request.validate(CreateUserValidator)
 
@@ -43,7 +43,7 @@ export default class UserController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user || auth.user.id.toString() !== params.id.toString()) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     const { id } = params
@@ -84,7 +84,7 @@ export default class UserController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     const tenantId = auth.user.tenant_id
@@ -112,7 +112,7 @@ export default class UserController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     const { id } = params
@@ -127,7 +127,7 @@ export default class UserController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     await UserService.destroy(params.id, auth.user.tenant_id)

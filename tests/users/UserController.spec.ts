@@ -5,6 +5,7 @@ import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
 import { defaultUser } from '../../database/seeders/02_User'
 import { TRole } from 'App/Models/User'
+import { defaultTenant } from '../../database/seeders/01_Tenant'
 
 test.group('UserController', (group) => {
   let headers: Object
@@ -93,7 +94,7 @@ test.group('UserController', (group) => {
       password: 'jane123',
       password_confirmation: 'jane123',
       role: 'doctor' as TRole,
-      tenant_id: 1,
+      tenant_id: defaultTenant.id,
     }
 
     await supertest(BASE_URL)

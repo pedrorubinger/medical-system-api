@@ -11,8 +11,9 @@ export default class Users extends BaseSchema {
       table.string('cpf', 20).notNullable().unique()
       table.string('phone', 40).notNullable()
       table.boolean('is_admin').notNullable().defaultTo(false)
+      table.boolean('is_master').notNullable().defaultTo(false)
       table.string('password', 255).nullable()
-      table.enum('role', ['manager', 'doctor'])
+      table.enum('role', ['manager', 'doctor', 'developer'])
       table.string('reset_password_token', 255).nullable()
       table
         .integer('tenant_id')

@@ -8,7 +8,7 @@ const credentials = {
   host: process.env.MYSQL_HOST,
 }
 
-const restartDatabases = async (connection: mysql.Connection) => {
+const restartTestDatabase = async (connection: mysql.Connection) => {
   const defaultDbName = process.env.MYSQL_TEST_DB_NAME || 'medical_test'
   const dropDbSql = `DROP DATABASE IF EXISTS ${defaultDbName}`
   const createDbSql = `CREATE DATABASE ${defaultDbName}`
@@ -47,7 +47,7 @@ export const startTestDatabaseConnection = async (): Promise<void> => {
   try {
     connection.connect()
     console.log('[DATABASE] Test database connected successfully!')
-    await restartDatabases(connection)
+    await restartTestDatabase(connection)
   } catch (err) {
     console.log('[DATABASE] Error trying to connect to test database:', err)
   }

@@ -18,7 +18,7 @@ export default class UpdateUserValidator {
     is_admin: schema.boolean.optional(),
     password: schema.string({}, [rules.maxLength(255)]),
     new_password: schema.string.optional({}, [rules.maxLength(255)]),
-    role: schema.enum.optional(['manager', 'doctor']),
+    role: schema.enum.optional(['manager', 'doctor', 'developer']),
     crm_document: schema.string.optional({}, [rules.maxLength(20)]),
   })
 

@@ -23,8 +23,8 @@ test.group('UserController', (group) => {
 
   test('should deny the user access (incorrect credentials)', async () => {
     const wrongCredentials = {
-      email: 'pedro@test.com.br',
-      password: 'pedro1234',
+      email: 'mark@test.com.br',
+      password: 'mark1234',
     }
 
     await supertest(BASE_URL)

@@ -4,11 +4,19 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class CreateDoctorValidator {
   constructor(protected ctx: HttpContextContract) {}
 
+  public refs = schema.refs({
+    tenant_id: this.ctx.auth.user!.tenant_id,
+  })
+
   public schema = schema.create({
     user_id: schema.number(),
     crm_document: schema.string({}, [
       rules.maxLength(20),
-      rules.unique({ table: 'doctors', column: 'crm_document' }),
+      rules.unique({
+        table: 'doctors',
+        column: 'crm_document',
+        where: { tenant_id: this.refs.tenant_id },
+      }),
     ]),
   })
 

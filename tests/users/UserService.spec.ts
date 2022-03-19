@@ -21,7 +21,7 @@ test.group('UserService', (group) => {
 
   test('should not update a user which id does not exist', async (assert: Assert) => {
     try {
-      const data = { email: 'pedro@test.com.br', name: 'Pedro Doe' }
+      const data = { email: 'mark@test.com.br', name: 'Mark Doe' }
 
       await UserService.update(99, defaultUser.tenant_id, data)
     } catch (err) {

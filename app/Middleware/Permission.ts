@@ -3,7 +3,7 @@ import { HAS_NO_PERMISSION_CODE } from '../../utils/constants/errors'
 
 import { TENANT_NAME } from '../../utils/constants/tenant'
 
-type TPermission = 'admin' | 'manager' | 'doctor'
+type TPermission = 'admin' | 'manager' | 'doctor' | 'developer' | 'master'
 
 export default class Permission {
   public async handle(
@@ -19,10 +19,31 @@ export default class Permission {
         .send({ code: 'MUST_PROVIDE_VALID_CREDENTIALS' })
     }
 
-    const userRoles = user.is_admin ? ['admin', user.role] : [user.role]
+    if (!user?.tenant.is_active) {
+      return response
+        .status(401)
+        .send({ code: 'ACCESS_DENIED_TENANT_IS_INACTIVE' })
+    }
+
+    const getUserRoles = (): TPermission[] => {
+      let roles: TPermission[] = [user.role]
+
+      if (user.is_admin) {
+        roles.push('admin')
+      }
+
+      if (user.is_master) {
+        roles.push('master')
+      }
+
+      return roles
+    }
+
+    const userRoles = getUserRoles()
     const hasPermission = userRoles.some((role) =>
       properties.includes(role as TPermission)
     )
+    const isDeveloper = user.role === 'developer'
     const userTenant = user.tenant_id.toString()
     const tenantIsInvalid =
       (request.params()?.[TENANT_NAME]?.toString() &&
@@ -34,7 +55,7 @@ export default class Permission {
       (request?.headers()?.[TENANT_NAME]?.toString() &&
         userTenant !== request?.headers()?.[TENANT_NAME]?.toString())
 
-    if (tenantIsInvalid || !hasPermission) {
+    if ((!isDeveloper && tenantIsInvalid) || !hasPermission) {
       return response.status(401).send(HAS_NO_PERMISSION_CODE)
     }
 

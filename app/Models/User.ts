@@ -15,7 +15,7 @@ import { DateTime } from 'luxon'
 import Doctor from 'App/Models/Doctor'
 import Tenant from 'App/Models/Tenant'
 
-export type TRole = 'manager' | 'doctor'
+export type TRole = 'manager' | 'doctor' | 'developer'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -38,6 +38,9 @@ export default class User extends BaseModel {
 
   @column()
   public is_admin: boolean
+
+  @column()
+  public is_master: boolean
 
   @column({ serializeAs: null })
   public password: string | undefined
@@ -68,9 +71,10 @@ export default class User extends BaseModel {
   }
 
   @beforeFind()
-  public static async preloadDoctorBeforeFind(
+  public static async preloadBeforeFind(
     query: ModelQueryBuilderContract<typeof User>
   ) {
+    await query.preload('tenant')
     await query.preload('doctor', (builder) => {
       builder.preload('insurance', (insuranceBuilder) => {
         insuranceBuilder.pivotColumns(['price'])

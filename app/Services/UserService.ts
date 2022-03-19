@@ -227,6 +227,13 @@ class UserService {
         throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
       }
 
+      if (user.is_master) {
+        throw new AppError(
+          'You cannot delete this user!',
+          'CANNOT_DELETE_MASTER_USER'
+        )
+      }
+
       await user.delete()
       return true
     } catch (err) {

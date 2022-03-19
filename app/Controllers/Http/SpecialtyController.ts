@@ -11,7 +11,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     await request.validate(CreateOrUpdateSpecialtyValidator)
@@ -29,7 +29,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     await request.validate(CreateOrUpdateSpecialtyValidator)
@@ -51,7 +51,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     const { name, order, orderBy, page, perPage } = request.qs()
@@ -76,7 +76,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     const { id } = params
@@ -91,7 +91,7 @@ export default class SpecialtyController {
     response,
   }: HttpContextContract): Promise<void> {
     if (!auth.user) {
-      return response.status(401).json({ code: HAS_NO_PERMISSION_CODE })
+      return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
     await SpecialtyService.destroy(params.id, auth.user.tenant_id)

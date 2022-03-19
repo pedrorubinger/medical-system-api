@@ -20,6 +20,11 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
+/* TENANT */
+Route.group(() => {
+  Route.resource('tenant', 'TenantController')
+}).middleware(['auth', 'permission:developer'])
+
 /* USER */
 Route.group(() => {
   Route.post('/user', 'UserController.store').middleware([
@@ -46,6 +51,11 @@ Route.put(
   'UserController.requestPasswordChange'
 )
 Route.put('/user/password/set_password/:id', 'UserController.setPassword')
+
+/* TENANT USER */
+Route.group(() => {
+  Route.resource('tenant_user', 'TenantUserController')
+}).middleware(['auth', 'permission:developer'])
 
 /* AUTH & SESSION */
 Route.post('/session', 'AuthController.signIn')

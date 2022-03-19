@@ -1,12 +1,10 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class CreateUserValidator {
-  constructor(protected ctx: HttpContextContract) {}
+import { MISSING_TENANT_ID } from '../../utils/constants/errors'
 
-  public refs = schema.refs({
-    tenant_id: this.ctx.auth.user!.tenant_id,
-  })
+export default class CreateTenantUserValidator {
+  constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
     name: schema.string({}, [rules.maxLength(100)]),
@@ -30,6 +28,10 @@ export default class CreateUserValidator {
       rules.requiredWhen('role', '=', 'doctor'),
       rules.unique({ table: 'doctors', column: 'crm_document' }),
     ]),
+    owner_tenant: schema.boolean(),
+    tenant_id: schema.number.optional([
+      rules.requiredWhen('owner_tenant', '=', false),
+    ]),
   })
 
   public messages = {
@@ -50,5 +52,6 @@ export default class CreateUserValidator {
     'crm_document.required': 'CRM_DOCUMENT_IS_REQUIRED',
     'crm_document.unique': 'CRM_DOCUMENT_ALREADY_REGISTERED',
     'crm_document.max_length': 'CRM_DOCUMENT_MAX_LENGTH_20',
+    'tenant_id.required': MISSING_TENANT_ID.code,
   }
 }
