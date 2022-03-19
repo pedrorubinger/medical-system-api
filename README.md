@@ -50,6 +50,13 @@ O projeto possui duas branches principais:
 
 Os commits devem acontecer em branches separadas (quando há mais de um colaborador) e então devem ser mergeados na branch **dev** para que só então sejam mergeados na branch **master**.
 
+## 🧪 Testes
+
+Este projeto utiliza a biblioteca <a href="https://docs.adonisjs.com/cookbooks/testing-adonisjs-apps">Japa</a>, indicada para testes pela documentação oficial do framework <a href="https://docs.adonisjs.com/guides/introduction">AdonisJS</a>. Até o momento o projeto conta com testes de **Controllers** e **Services**. Siga os passos abaixo para executá-los:
+
+1. Entre na pasta do projeto e siga os passos de configuração da aplicação caso ainda não o tenha feito.
+1. No terminal, execute o comando `yarn test` para executar os testes do projeto. Caso queira ver a cobertura de testes, execute o comando `yarn coverage`.
+
 ## 🤝 Colaboradores
 
 Abaixo estão listados os colaboradores que atuam neste projeto:
