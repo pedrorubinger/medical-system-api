@@ -144,6 +144,10 @@ class UserService {
     params?: FetchUsersData
   ): Promise<ModelPaginatorContract<User> | User[]> {
     try {
+      if (params?.filterOwn && !userId) {
+        throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
+      }
+
       if (params) {
         const {
           cpf,
@@ -230,7 +234,8 @@ class UserService {
       if (user.is_master) {
         throw new AppError(
           'You cannot delete this user!',
-          'CANNOT_DELETE_MASTER_USER'
+          'CANNOT_DELETE_MASTER_USER',
+          401
         )
       }
 
@@ -284,19 +289,11 @@ class UserService {
     try {
       const user = await User.findBy('reset_password_token', token)
 
-      if (!user) {
+      if (!user || !user.reset_password_token) {
         throw new AppError(
           'The token does not exist!',
           'TOKEN_DOES_NOT_EXIST',
           404
-        )
-      }
-
-      if (!user.reset_password_token) {
-        throw new AppError(
-          'The token is not valid or has expired!',
-          'TOKEN_INVALID_OR_HAS_EXPIRED',
-          401
         )
       }
 

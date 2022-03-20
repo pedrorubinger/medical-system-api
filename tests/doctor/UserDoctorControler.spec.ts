@@ -12,7 +12,7 @@ import { defaultSpecialty } from '../../database/seeders/04_Specialty'
 import { defaultInsurance } from '../../database/seeders/03_Insurance'
 
 /** NOTE: The tests below are related to DoctorController and simulate an user which role is Doctor. */
-test.group('UserDoctorController', (group) => {
+test.group('DoctorController', (group) => {
   let headers: Object
 
   group.before(async () => {
