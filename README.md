@@ -55,7 +55,8 @@ Os commits devem acontecer em branches separadas (quando há mais de um colabora
 Este projeto utiliza a biblioteca <a href="https://docs.adonisjs.com/cookbooks/testing-adonisjs-apps">Japa</a>, indicada para testes pela documentação oficial do framework <a href="https://docs.adonisjs.com/guides/introduction">AdonisJS</a>. Até o momento o projeto conta com testes de **Controllers** e **Services**. Siga os passos abaixo para executá-los:
 
 1. Entre na pasta do projeto e siga os passos de configuração da aplicação caso ainda não o tenha feito.
-1. No terminal, execute o comando `yarn test` para executar os testes do projeto. Caso queira ver a cobertura de testes, execute o comando `yarn coverage`.
+2. No terminal, execute o comando `yarn test` para executar os testes do projeto. Caso queira executar os testes e ainda ver a sua cobertura de código, execute o comando `yarn coverage`.
+3. Caso queira executar os casos de testes de um único arquivo, execute o comando `yarn test` ou `yarn coverage` seguido do caminho do arquivo. Por exemplo: `yarn coverage tests/user/UserController.spec.ts`.
 
 ## 🤝 Colaboradores
 
