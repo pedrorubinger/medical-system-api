@@ -24,8 +24,8 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 
 Estes são os requisitos para que este projeto execute corretamente em sua máquina:
 
-- Você tem instalado em sua máquina `Node.js v16.13.2 (ou superior)`. Utilize o comando `node --version` para checar a sua versão do Node.js. Você também pode utilizar o `nvm` para alternar entre as versões do Node.js em sua máquina;
-- Você tem instalado em sua máquina um gerenciador de pacotes para Node.js (Yarn ou NPM);
+- Você tem instalado em sua máquina `Node.js v16.13.2`. Utilize o comando `node --version` para checar a sua versão. Você também pode utilizar o `nvm` para alternar entre as versões do Node.js em sua máquina;
+- Você tem instalado em sua máquina um gerenciador de pacotes para Node.js (yarn ou npm);
 
 ## ☕ Configurando a aplicação
 
