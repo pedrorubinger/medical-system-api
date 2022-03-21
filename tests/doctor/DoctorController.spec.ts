@@ -97,14 +97,14 @@ test.group('DoctorController', (group) => {
 
   test('should return status 404 (DELETE /doctor/:id) when user tries to delete a doctor which id does not exist', async () => {
     await supertest(BASE_URL)
-      .delete(`/doctor/${defaultDoctorUserOne.id * 44}`)
+      .delete(`/doctor/${defaultDoctorUserOne.id * -44}`)
       .set(headers)
       .expect(404)
   })
 
   test('should return status 200 (DELETE /doctor/:id) when user deletes a specified doctor', async () => {
     await supertest(BASE_URL)
-      .delete(`/doctor/${defaultDoctorUserOne.id}`)
+      .delete(`/doctor/${defaultDoctorOne.id}`)
       .set(headers)
       .expect(200)
   })

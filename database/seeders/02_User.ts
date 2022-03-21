@@ -3,6 +3,7 @@ import Env from '@ioc:Adonis/Core/Env'
 
 import Doctor from 'App/Models/Doctor'
 import User, { TRole } from 'App/Models/User'
+import { defaultTenantTwo } from './01_Tenant'
 
 /** WARNING: Changing any information of the mocked data below can affect the tests results */
 export const defaultDeveloperUser = {
@@ -57,6 +58,32 @@ export const defaultDoctorUserTwo = {
   reset_password_token: null,
 }
 
+export const defaultUserTwo = {
+  id: 5,
+  name: 'José Eustáquio',
+  cpf: '12345670011',
+  role: 'doctor' as TRole,
+  phone: '31 801106551',
+  email: 'jose.eustaquio@test.com',
+  password: 'jose123',
+  is_admin: true,
+  tenant_id: defaultTenantTwo.id,
+  reset_password_token: null,
+}
+
+export const defaultDeveloperUserTwo = {
+  id: 6,
+  name: 'João Doe',
+  cpf: '10545671110',
+  role: 'developer' as TRole,
+  phone: '31 994999999',
+  email: 'joaodoe@test.com',
+  password: 'joao123',
+  is_admin: false,
+  is_master: false,
+  tenant_id: 1,
+}
+
 export const defaultDoctorOne = {
   id: 1,
   tenant_id: 2,
@@ -71,12 +98,22 @@ export const defaultDoctorTwo = {
   user_id: defaultDoctorUserTwo.id,
 }
 
+export const defaultDoctorThree = {
+  id: 3,
+  tenant_id: defaultUserTwo.tenant_id,
+  crm_document: 'CRM-PR 83749',
+  user_id: defaultUserTwo.id,
+}
+
 export default class UserSeeder extends BaseSeeder {
   public async run() {
     await User.create(defaultDeveloperUser)
+    await User.create(defaultDeveloperUserTwo)
     await User.create(defaultUser)
     await User.create(defaultDoctorUserOne)
+    await User.create(defaultUserTwo)
     await Doctor.create(defaultDoctorOne)
+    await Doctor.create(defaultDoctorThree)
 
     if (Env.get('NODE_ENV') === 'testing') {
       await User.create(defaultDoctorUserTwo)

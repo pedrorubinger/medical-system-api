@@ -85,10 +85,6 @@ export default class TenantUserController {
       return response.status(400).json(MISSING_TENANT_ID)
     }
 
-    if (!tenantId) {
-      return response.status(400).json(MISSING_TENANT_ID)
-    }
-
     await UserService.destroy(params.id, tenantId)
     return response.status(200).json({ success: true })
   }
