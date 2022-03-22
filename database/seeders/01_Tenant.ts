@@ -21,10 +21,17 @@ export const defaultTenantTwo = {
   is_active: true,
 }
 
+export const defaultInactiveTenantOne = {
+  id: 4,
+  name: 'Clinic C',
+  is_active: false,
+}
+
 export default class TenantSeeder extends BaseSeeder {
   public async run() {
     await Tenant.create(defaultOwnerTenant)
     await Tenant.create(defaultTenant)
     await Tenant.create(defaultTenantTwo)
+    await Tenant.create(defaultInactiveTenantOne)
   }
 }

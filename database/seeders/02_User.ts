@@ -3,7 +3,12 @@ import Env from '@ioc:Adonis/Core/Env'
 
 import Doctor from 'App/Models/Doctor'
 import User, { TRole } from 'App/Models/User'
-import { defaultTenantTwo } from './01_Tenant'
+import {
+  defaultInactiveTenantOne,
+  defaultOwnerTenant,
+  defaultTenant,
+  defaultTenantTwo,
+} from './01_Tenant'
 
 /** WARNING: Changing any information of the mocked data below can affect the tests results */
 export const defaultDeveloperUser = {
@@ -16,7 +21,7 @@ export const defaultDeveloperUser = {
   password: 'pedro123',
   is_admin: false,
   is_master: true,
-  tenant_id: 1,
+  tenant_id: defaultOwnerTenant.id,
 }
 
 export const defaultUser = {
@@ -28,7 +33,7 @@ export const defaultUser = {
   email: 'mark@test.com',
   password: 'mark123',
   is_admin: true,
-  tenant_id: 2,
+  tenant_id: defaultTenant.id,
   reset_password_token: Env.get('NODE_ENV') === 'testing' ? 't0ken-123' : null,
 }
 
@@ -40,14 +45,14 @@ export const defaultDoctorUserOne = {
   phone: '31 999999990',
   email: 'jane@test.com',
   password: 'jane123',
-  tenant_id: 2,
+  tenant_id: defaultTenant.id,
   is_admin: false,
   reset_password_token: null,
 }
 
 export const defaultDoctorUserTwo = {
   id: 4,
-  tenant_id: 2,
+  tenant_id: defaultTenant.id,
   name: 'Joseph Doe',
   cpf: '12345678912',
   role: 'doctor' as TRole,
@@ -81,19 +86,32 @@ export const defaultDeveloperUserTwo = {
   password: 'joao123',
   is_admin: false,
   is_master: false,
-  tenant_id: 1,
+  tenant_id: defaultOwnerTenant.id,
+}
+
+export const defaultUserThree = {
+  id: 7,
+  name: 'Morgan J',
+  cpf: '02345678010',
+  role: 'manager' as TRole,
+  phone: '32 999999999',
+  email: 'morganj@test.com',
+  password: 'morgan123',
+  is_admin: true,
+  tenant_id: defaultInactiveTenantOne.id,
+  reset_password_token: null,
 }
 
 export const defaultDoctorOne = {
   id: 1,
-  tenant_id: 2,
+  tenant_id: defaultTenant.id,
   crm_document: 'CRM-MG 00009',
   user_id: defaultDoctorUserOne.id,
 }
 
 export const defaultDoctorTwo = {
   id: 2,
-  tenant_id: 2,
+  tenant_id: defaultTenant.id,
   crm_document: 'CRM-MG 00310',
   user_id: defaultDoctorUserTwo.id,
 }
@@ -116,6 +134,7 @@ export default class UserSeeder extends BaseSeeder {
     await Doctor.create(defaultDoctorThree)
 
     if (Env.get('NODE_ENV') === 'testing') {
+      await User.create(defaultUserThree)
       await User.create(defaultDoctorUserTwo)
       await Doctor.create(defaultDoctorTwo)
     }
