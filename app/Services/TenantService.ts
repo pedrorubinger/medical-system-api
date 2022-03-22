@@ -20,7 +20,7 @@ interface FetchTenantsData {
   /** @default 'asc' */
   order?: 'asc' | 'desc'
   /** @default 'name' */
-  orderBy?: 'name' | 'cpf' | 'role' | 'email'
+  orderBy?: 'name'
 }
 
 class TenantService {
@@ -78,11 +78,7 @@ class TenantService {
         }
       }
 
-      return await Tenant.query().where((query) => {
-        if (params?.filterOwn && tenantId) {
-          query.andWhereNot('id', tenantId)
-        }
-      })
+      return await Tenant.query()
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
