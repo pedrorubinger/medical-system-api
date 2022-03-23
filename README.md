@@ -15,7 +15,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [ ] Implementação do módulo de Recuperar Senha;
 - [ ] Implementação do módulo de Solicitar uma Conta (?);
 - [ ] Implementação do módulo de Médicos;
-- [ ] Implementação do middleware de Permissões;
+- [x] Implementação do middleware de Permissões;
 - [ ] Implementação do módulo de Relatórios;
 - [ ] Implementação da Configuração de Agenda;
 - [ ] Melhorar cobertura de testes;
