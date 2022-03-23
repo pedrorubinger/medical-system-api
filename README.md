@@ -14,7 +14,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [x] Implementação do módulo de Gerenciar Tenants;
 - [ ] Implementação do módulo de Recuperar Senha;
 - [ ] Implementação do módulo de Solicitar uma Conta (?);
-- [ ] Implementação do módulo de Médicos;
+- [x] Implementação do módulo de Médicos;
 - [x] Implementação do middleware de Permissões;
 - [ ] Implementação do módulo de Relatórios;
 - [ ] Implementação da Configuração de Agenda;
