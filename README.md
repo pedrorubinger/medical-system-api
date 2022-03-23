@@ -12,6 +12,8 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [x] Implementação do módulo de Convênios;
 - [x] Implementação do módulo de Especialidades;
 - [x] Implementação do módulo de Gerenciar Tenants;
+- [ ] Implementação do módulo de Pacientes;
+- [ ] Implementação do módulo de Endereços;
 - [ ] Implementação do módulo de Recuperar Senha;
 - [ ] Implementação do módulo de Solicitar uma Conta (?);
 - [x] Implementação do módulo de Médicos;
