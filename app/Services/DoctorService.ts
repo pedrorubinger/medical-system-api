@@ -15,11 +15,15 @@ interface StoreDoctorData {
   crm_document: string
   user_id: number
   tenant_id: number
+  private_appointment_price?: number
+  appointment_follow_up_limit?: number
 }
 
 interface UpdateDoctorData {
   crm_document?: string
   user_id?: number
+  private_appointment_price?: number
+  appointment_follow_up_limit?: number
 }
 
 class DoctorService {
@@ -34,6 +38,9 @@ class DoctorService {
         doctor.user_id = data.user_id
         doctor.crm_document = data.crm_document
         doctor.tenant_id = data.tenant_id
+        doctor.private_appointment_price = data.private_appointment_price || 0
+        doctor.appointment_follow_up_limit =
+          data.appointment_follow_up_limit || 15
         doctor.useTransaction(trx)
         return await doctor.save()
       } else {
@@ -48,11 +55,12 @@ class DoctorService {
     id: number,
     tenantId: number,
     data: UpdateDoctorData,
-    specialties?: number[]
+    specialties?: number[],
+    paymentMethods?: number[]
   ): Promise<Doctor> {
     const trx = await Database.transaction()
 
-    const attachSpecialties = (arr: number[]) => {
+    const attachIds = (arr: number[]) => {
       const obj = {}
 
       arr.forEach((item: number) => {
@@ -76,9 +84,17 @@ class DoctorService {
       if (specialties?.length) {
         await doctor
           .related('specialty')
-          .sync(attachSpecialties(specialties), true, trx)
+          .sync(attachIds(specialties), true, trx)
       } else {
         await doctor.related('specialty').detach()
+      }
+
+      if (paymentMethods?.length) {
+        await doctor
+          .related('payment_method')
+          .sync(attachIds(paymentMethods), true, trx)
+      } else {
+        await doctor.related('payment_method').detach()
       }
 
       doctor.merge(data)

@@ -10,6 +10,9 @@ export default class UpdateDoctorValidator {
       rules.unique({ table: 'doctors', column: 'crm_document' }),
     ]),
     specialties: schema.array.optional().members(schema.number()),
+    payment_methods: schema.array.optional().members(schema.number()),
+    private_appointment_price: schema.number.optional(),
+    appointment_follow_up_limit: schema.number.optional(),
   })
 
   public messages = {

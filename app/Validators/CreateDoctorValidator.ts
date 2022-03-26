@@ -18,6 +18,8 @@ export default class CreateDoctorValidator {
         where: { tenant_id: this.refs.tenant_id },
       }),
     ]),
+    private_appointment_price: schema.number.optional(),
+    appointment_follow_up_limit: schema.number.optional(),
   })
 
   public messages = {

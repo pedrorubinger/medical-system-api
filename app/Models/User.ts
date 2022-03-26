@@ -80,6 +80,7 @@ export default class User extends BaseModel {
         insuranceBuilder.pivotColumns(['price'])
       })
       builder.preload('specialty')
+      builder.preload('payment_method')
     })
   }
 }

@@ -14,6 +14,7 @@ import User from 'App/Models/User'
 import Insurance from 'App/Models/Insurance'
 import Specialty from 'App/Models/Specialty'
 import Tenant from 'App/Models/Tenant'
+import PaymentMethod from './PaymentMethod'
 
 export interface DoctorAttributes {
   id?: number
@@ -21,6 +22,8 @@ export interface DoctorAttributes {
   crm_document: string
   created_at?: DateTime
   updated_at?: DateTime
+  private_appointment_price?: number
+  appointment_follow_up_limit?: number
 }
 
 export default class Doctor extends BaseModel {
@@ -29,6 +32,12 @@ export default class Doctor extends BaseModel {
 
   @column()
   public crm_document: string
+
+  @column()
+  public private_appointment_price: number
+
+  @column()
+  public appointment_follow_up_limit: number
 
   @column()
   public user_id: number
@@ -60,6 +69,15 @@ export default class Doctor extends BaseModel {
   })
   public specialty: ManyToMany<typeof Specialty>
 
+  @manyToMany(() => PaymentMethod, {
+    localKey: 'id',
+    pivotForeignKey: 'doctor_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'payment_method_id',
+    pivotTable: 'doctors_payment_methods',
+  })
+  public payment_method: ManyToMany<typeof PaymentMethod>
+
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime
 
@@ -71,6 +89,13 @@ export default class Doctor extends BaseModel {
     query: ModelQueryBuilderContract<typeof Doctor>
   ) {
     await query.preload('specialty')
+  }
+
+  @beforeFind()
+  public static async preloadPaymentMethodsBeforeFind(
+    query: ModelQueryBuilderContract<typeof Doctor>
+  ) {
+    await query.preload('payment_method')
   }
 
   @beforeFind()

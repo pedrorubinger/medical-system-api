@@ -6,7 +6,7 @@ export default class Specialties extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.string('name', 80).notNullable().unique()
+      table.string('name', 80).notNullable()
       table
         .integer('tenant_id')
         .unsigned()

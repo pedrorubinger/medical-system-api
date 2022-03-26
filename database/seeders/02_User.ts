@@ -132,9 +132,9 @@ export default class UserSeeder extends BaseSeeder {
     await User.create(defaultUserTwo)
     await Doctor.create(defaultDoctorOne)
     await Doctor.create(defaultDoctorThree)
+    await User.create(defaultUserThree)
 
     if (Env.get('NODE_ENV') === 'testing') {
-      await User.create(defaultUserThree)
       await User.create(defaultDoctorUserTwo)
       await Doctor.create(defaultDoctorTwo)
     }

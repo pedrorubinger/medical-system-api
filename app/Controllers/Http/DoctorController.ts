@@ -16,7 +16,12 @@ export default class DoctorController {
     await request.validate(CreateDoctorValidator)
 
     const data = {
-      ...request.only(['user_id', 'crm_document']),
+      ...request.only([
+        'user_id',
+        'crm_document',
+        'private_appointment_price',
+        'appointment_follow_up_limit',
+      ]),
       [TENANT_NAME]: auth.user!.tenant_id,
     }
     const doctor = await DoctorService.store(data)
@@ -36,16 +41,22 @@ export default class DoctorController {
       return response.status(401).json(HAS_NO_PERMISSION_CODE)
     }
 
-    const data = request.only(['user_id', 'crm_document'])
-    const specialties = request.input('specialties')
-
     await request.validate(UpdateDoctorValidator)
 
+    const data = request.only([
+      'user_id',
+      'crm_document',
+      'private_appointment_price',
+      'appointment_follow_up_limit',
+    ])
+    const specialties = request.input('specialties')
+    const paymentMethods = request.input('payment_methods')
     const doctor = await DoctorService.update(
       id,
       auth.user!.tenant_id,
       data,
-      specialties
+      specialties,
+      paymentMethods
     )
 
     return response.status(200).json(doctor)

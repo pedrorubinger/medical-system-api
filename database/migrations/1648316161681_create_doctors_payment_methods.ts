@@ -1,17 +1,23 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class Doctors extends BaseSchema {
-  protected tableName = 'doctors'
+export default class DoctorsPaymentMethods extends BaseSchema {
+  protected tableName = 'doctors_payment_methods'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id').primary()
-      table.string('crm_document', 20).notNullable().unique()
       table
-        .integer('user_id')
+        .integer('doctor_id')
         .unsigned()
         .references('id')
-        .inTable('users')
+        .inTable('doctors')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+        .notNullable()
+      table
+        .integer('payment_method_id')
+        .unsigned()
+        .references('id')
+        .inTable('payment_methods')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
         .notNullable()
@@ -23,11 +29,6 @@ export default class Doctors extends BaseSchema {
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
         .notNullable()
-      table
-        .decimal('private_appointment_price', 8, 2)
-        .notNullable()
-        .defaultTo(0)
-      table.integer('appointment_follow_up_limit').notNullable().defaultTo(15)
       table.timestamps(true, true)
     })
   }

@@ -135,3 +135,26 @@ Route.group(() => {
     'permission:admin,manager',
   ])
 })
+
+/* PAYMENT METHOD */
+Route.group(() => {
+  Route.post('/payment_method', 'PaymentMethodController.store').middleware([
+    'auth',
+    'permission:admin,manager',
+  ])
+  Route.get('/payment_method', 'PaymentMethodController.index').middleware([
+    'auth',
+    'permission:admin,manager,doctor',
+  ])
+  Route.get('/payment_method/:id', 'PaymentMethodController.show').middleware([
+    'auth',
+    'permission:admin,manager,doctor',
+  ])
+  Route.put('/payment_method/:id', 'PaymentMethodController.update').middleware(
+    ['auth', 'permission:admin,manager']
+  )
+  Route.delete(
+    '/payment_method/:id',
+    'PaymentMethodController.destroy'
+  ).middleware(['auth', 'permission:admin,manager'])
+})
