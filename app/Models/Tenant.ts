@@ -5,6 +5,8 @@ import Doctor from 'App/Models/Doctor'
 import User from 'App/Models/User'
 import Specialty from 'App/Models/Specialty'
 import Insurance from 'App/Models/Insurance'
+import PaymentMethod from 'App/Models/PaymentMethod'
+import ScheduleSettings from 'App/Models/ScheduleSettings'
 
 export default class Tenant extends BaseModel {
   @column({ isPrimary: true })
@@ -27,6 +29,12 @@ export default class Tenant extends BaseModel {
 
   @hasOne(() => Insurance, { foreignKey: 'tenant_id' })
   public insurance: HasOne<typeof Insurance>
+
+  @hasOne(() => PaymentMethod, { foreignKey: 'tenant_id' })
+  public payment_method: HasOne<typeof PaymentMethod>
+
+  @hasOne(() => ScheduleSettings, { foreignKey: 'tenant_id' })
+  public schedule_settings: HasOne<typeof ScheduleSettings>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime

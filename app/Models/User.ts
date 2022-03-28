@@ -54,7 +54,7 @@ export default class User extends BaseModel {
   @hasOne(() => Doctor, { foreignKey: 'user_id' })
   public doctor: HasOne<typeof Doctor>
 
-  @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })
+  @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
 
   @column.dateTime({ autoCreate: true })
@@ -76,6 +76,7 @@ export default class User extends BaseModel {
   ) {
     await query.preload('tenant')
     await query.preload('doctor', (builder) => {
+      builder.preload('schedule_settings')
       builder.preload('insurance', (insuranceBuilder) => {
         insuranceBuilder.pivotColumns(['price'])
       })

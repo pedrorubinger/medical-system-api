@@ -158,3 +158,27 @@ Route.group(() => {
     'PaymentMethodController.destroy'
   ).middleware(['auth', 'permission:admin,manager'])
 })
+
+/* SCHEDULE SETTINGS */
+Route.group(() => {
+  Route.post(
+    '/schedule_settings',
+    'ScheduleSettingsController.store'
+  ).middleware(['auth', 'permission:doctor'])
+  Route.get(
+    '/schedule_settings',
+    'ScheduleSettingsController.index'
+  ).middleware(['auth', 'permission:admin'])
+  Route.get(
+    '/schedule_settings/:id',
+    'ScheduleSettingsController.show'
+  ).middleware(['auth', 'permission:admin,doctor'])
+  Route.put(
+    '/schedule_settings/:id',
+    'ScheduleSettingsController.update'
+  ).middleware(['auth', 'permission:doctor'])
+  Route.delete(
+    '/schedule_settings/:id',
+    'ScheduleSettingsController.destroy'
+  ).middleware(['auth', 'permission:doctor'])
+})

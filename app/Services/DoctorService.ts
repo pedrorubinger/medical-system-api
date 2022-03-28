@@ -5,6 +5,7 @@ import AppError from 'App/Exceptions/AppError'
 import Doctor from 'App/Models/Doctor'
 import Insurance from 'App/Models/Insurance'
 import { TENANT_NAME } from '../../utils/constants/tenant'
+import ScheduleSettingsService from './ScheduleSettingsService'
 
 interface InsuranceData {
   insurance_id: number
@@ -29,25 +30,54 @@ interface UpdateDoctorData {
 class DoctorService {
   public async store(
     data: StoreDoctorData,
-    trx?: TransactionClientContract
+    providedTrx?: TransactionClientContract
   ): Promise<Doctor> {
-    try {
-      if (trx) {
-        const doctor = new Doctor()
+    const doctor = new Doctor()
 
-        doctor.user_id = data.user_id
-        doctor.crm_document = data.crm_document
-        doctor.tenant_id = data.tenant_id
-        doctor.private_appointment_price = data.private_appointment_price || 0
-        doctor.appointment_follow_up_limit =
-          data.appointment_follow_up_limit || 15
-        doctor.useTransaction(trx)
-        return await doctor.save()
-      } else {
-        return await Doctor.create(data)
+    doctor.user_id = data.user_id
+    doctor.crm_document = data.crm_document
+    doctor.tenant_id = data.tenant_id
+    doctor.private_appointment_price = data.private_appointment_price || 0
+    doctor.appointment_follow_up_limit = data.appointment_follow_up_limit || 15
+
+    if (providedTrx) {
+      try {
+        doctor.useTransaction(providedTrx)
+
+        const createdDoctor = await doctor.save()
+
+        await ScheduleSettingsService.store(
+          {
+            doctor_id: createdDoctor.id,
+            tenant_id: data.tenant_id,
+          },
+          providedTrx
+        )
+        return createdDoctor
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
       }
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
+    } else {
+      return await Database.transaction(async (trx) => {
+        try {
+          doctor.useTransaction(trx)
+
+          const createdDoctor = await doctor.save()
+
+          await ScheduleSettingsService.store(
+            {
+              doctor_id: createdDoctor.id,
+              tenant_id: data.tenant_id,
+            },
+            trx
+          )
+          await trx.commit()
+          return doctor
+        } catch (err) {
+          await trx.rollback()
+          throw new AppError(err?.message, err?.code, err?.status)
+        }
+      })
     }
   }
 

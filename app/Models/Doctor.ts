@@ -7,6 +7,8 @@ import {
   ManyToMany,
   beforeFind,
   ModelQueryBuilderContract,
+  HasOne,
+  hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
@@ -14,7 +16,8 @@ import User from 'App/Models/User'
 import Insurance from 'App/Models/Insurance'
 import Specialty from 'App/Models/Specialty'
 import Tenant from 'App/Models/Tenant'
-import PaymentMethod from './PaymentMethod'
+import PaymentMethod from 'App/Models/PaymentMethod'
+import ScheduleSettings from 'App/Models/ScheduleSettings'
 
 export interface DoctorAttributes {
   id?: number
@@ -45,11 +48,14 @@ export default class Doctor extends BaseModel {
   @column({ serializeAs: null })
   public tenant_id: number
 
-  @belongsTo(() => User, { foreignKey: 'user_id' })
+  @belongsTo(() => User, { foreignKey: 'user_id', serializeAs: null })
   public user: BelongsTo<typeof User>
 
-  @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })
+  @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
+
+  @hasOne(() => ScheduleSettings, { foreignKey: 'doctor_id' })
+  public schedule_settings: HasOne<typeof ScheduleSettings>
 
   @manyToMany(() => Insurance, {
     localKey: 'id',
@@ -85,23 +91,12 @@ export default class Doctor extends BaseModel {
   public updated_at: DateTime
 
   @beforeFind()
-  public static async preloadSpecialtiesBeforeFind(
+  public static async preloadRelations(
     query: ModelQueryBuilderContract<typeof Doctor>
   ) {
     await query.preload('specialty')
-  }
-
-  @beforeFind()
-  public static async preloadPaymentMethodsBeforeFind(
-    query: ModelQueryBuilderContract<typeof Doctor>
-  ) {
     await query.preload('payment_method')
-  }
-
-  @beforeFind()
-  public static async preloadInsurancesBeforeFind(
-    query: ModelQueryBuilderContract<typeof Doctor>
-  ) {
+    await query.preload('schedule_settings')
     await query.preload('insurance', (builder) => {
       builder.pivotColumns(['price'])
     })

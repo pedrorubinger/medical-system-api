@@ -10,7 +10,9 @@ export default class AppError {
 
   constructor(message?: string, code?: string, status?: number) {
     this.message =
-      code?.toString() === '500' ? DEFAULT_MESSAGE : message || DEFAULT_MESSAGE
+      status?.toString() === '500'
+        ? DEFAULT_MESSAGE
+        : message || DEFAULT_MESSAGE
     this.code = code || DEFAULT_CODE
     this.status = status || DEFAULT_STATUS
   }

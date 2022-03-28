@@ -21,7 +21,7 @@ export default class PaymentMethod extends BaseModel {
   @column({ serializeAs: null })
   public tenant_id: number
 
-  @belongsTo(() => Tenant, { foreignKey: 'tenant_id' })
+  @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
 
   @manyToMany(() => Doctor, {
