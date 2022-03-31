@@ -18,6 +18,7 @@ import Specialty from 'App/Models/Specialty'
 import Tenant from 'App/Models/Tenant'
 import PaymentMethod from 'App/Models/PaymentMethod'
 import ScheduleSettings from 'App/Models/ScheduleSettings'
+import ScheduleDaysOff from 'App/Models/ScheduleDaysOff'
 
 export interface DoctorAttributes {
   id?: number
@@ -56,6 +57,9 @@ export default class Doctor extends BaseModel {
 
   @hasOne(() => ScheduleSettings, { foreignKey: 'doctor_id' })
   public schedule_settings: HasOne<typeof ScheduleSettings>
+
+  @hasOne(() => ScheduleDaysOff, { foreignKey: 'doctor_id' })
+  public schedule_days_off: HasOne<typeof ScheduleDaysOff>
 
   @manyToMany(() => Insurance, {
     localKey: 'id',

@@ -182,3 +182,23 @@ Route.group(() => {
     'ScheduleSettingsController.destroy'
   ).middleware(['auth', 'permission:doctor'])
 })
+
+/* SCHEDULE DAYS OFF */
+Route.group(() => {
+  Route.post(
+    '/schedule_days_off',
+    'ScheduleDaysOffController.store'
+  ).middleware(['auth', 'permission:doctor'])
+  Route.get(
+    '/schedule_days_off',
+    'ScheduleDaysOffController.findByDoctorId'
+  ).middleware(['auth', 'permission:manager,doctor'])
+  Route.put(
+    '/schedule_days_off/:id',
+    'ScheduleDaysOffController.update'
+  ).middleware(['auth', 'permission:doctor'])
+  Route.delete(
+    '/schedule_days_off/:id',
+    'ScheduleDaysOffController.destroy'
+  ).middleware(['auth', 'permission:doctor'])
+})
