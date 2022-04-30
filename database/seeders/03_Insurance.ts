@@ -1,4 +1,5 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
+import Env from '@ioc:Adonis/Core/Env'
 
 import Insurance from 'App/Models/Insurance'
 
@@ -7,6 +8,8 @@ export const defaultInsurance = { id: 1, name: 'Life', tenant_id: 2 }
 
 export default class InsuranceSeeder extends BaseSeeder {
   public async run() {
-    await Insurance.create(defaultInsurance)
+    if (Env.get('NODE_ENV') === 'testing') {
+      await Insurance.create(defaultInsurance)
+    }
   }
 }

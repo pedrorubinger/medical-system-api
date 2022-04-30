@@ -1,4 +1,5 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
+import Env from '@ioc:Adonis/Core/Env'
 
 import Tenant from 'App/Models/Tenant'
 
@@ -30,8 +31,11 @@ export const defaultInactiveTenantOne = {
 export default class TenantSeeder extends BaseSeeder {
   public async run() {
     await Tenant.create(defaultOwnerTenant)
-    await Tenant.create(defaultTenant)
-    await Tenant.create(defaultTenantTwo)
-    await Tenant.create(defaultInactiveTenantOne)
+
+    if (Env.get('NODE_ENV') === 'testing') {
+      await Tenant.create(defaultTenant)
+      await Tenant.create(defaultTenantTwo)
+      await Tenant.create(defaultInactiveTenantOne)
+    }
   }
 }

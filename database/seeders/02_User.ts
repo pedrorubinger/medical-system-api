@@ -126,15 +126,15 @@ export const defaultDoctorThree = {
 export default class UserSeeder extends BaseSeeder {
   public async run() {
     await User.create(defaultDeveloperUser)
-    await User.create(defaultDeveloperUserTwo)
-    await User.create(defaultUser)
-    await User.create(defaultDoctorUserOne)
-    await User.create(defaultUserTwo)
-    await Doctor.create(defaultDoctorOne)
-    await Doctor.create(defaultDoctorThree)
-    await User.create(defaultUserThree)
 
     if (Env.get('NODE_ENV') === 'testing') {
+      await User.create(defaultDeveloperUserTwo)
+      await User.create(defaultUser)
+      await User.create(defaultDoctorUserOne)
+      await User.create(defaultUserTwo)
+      await Doctor.create(defaultDoctorOne)
+      await Doctor.create(defaultDoctorThree)
+      await User.create(defaultUserThree)
       await User.create(defaultDoctorUserTwo)
       await Doctor.create(defaultDoctorTwo)
     }
