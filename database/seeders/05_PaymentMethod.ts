@@ -1,4 +1,5 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
+import Env from '@ioc:Adonis/Core/Env'
 
 import PaymentMethod from 'App/Models/PaymentMethod'
 import { defaultTenant } from './01_Tenant'
@@ -24,8 +25,10 @@ export const cashPaymentMethod = {
 
 export default class InsuranceSeeder extends BaseSeeder {
   public async run() {
-    await PaymentMethod.create(creditCardPaymentMethod)
-    await PaymentMethod.create(debitCardPaymentMethod)
-    await PaymentMethod.create(cashPaymentMethod)
+    if (Env.get('NODE_ENV') === 'testing') {
+      await PaymentMethod.create(creditCardPaymentMethod)
+      await PaymentMethod.create(debitCardPaymentMethod)
+      await PaymentMethod.create(cashPaymentMethod)
+    }
   }
 }
