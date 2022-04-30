@@ -7,10 +7,15 @@ import {
   ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 import { TENANT_NAME } from '../../utils/constants/tenant'
+import { datesOverlap } from '../../utils/helpers/dates'
 
 interface ScheduleDaysOffData {
   datetime_start: DateTime
   datetime_end: DateTime
+}
+
+interface StoreScheduleDaysOffData extends ScheduleDaysOffData {
+  doctor_id: number
 }
 
 interface FindScheduleDaysOffData {
@@ -19,13 +24,74 @@ interface FindScheduleDaysOffData {
   perPage?: number
 }
 
+interface Error {
+  errors: {
+    field: string
+    rule: string
+    message: string
+  }[]
+}
+
+const convertDate = (date: DateTime) =>
+  new Date(date.toString()).toISOString().split('T').join(' ').split('.000Z')[0]
+
 class ScheduleDaysOffService {
   public async store(
-    data: ScheduleDaysOffData,
+    data: StoreScheduleDaysOffData,
     tenant_id: number
-  ): Promise<ScheduleDaysOff> {
+  ): Promise<{ data?: ScheduleDaysOff; error?: Error }> {
     try {
-      return await ScheduleDaysOff.create({ ...data, tenant_id })
+      const whereCallback = (
+        query: ModelQueryBuilderContract<
+          typeof ScheduleDaysOff,
+          ScheduleDaysOff
+        >
+      ) => {
+        query
+          .where(TENANT_NAME, tenant_id)
+          .andWhere('doctor_id', data.doctor_id)
+      }
+
+      const daysOff = await ScheduleDaysOff.query().where(whereCallback)
+
+      if (
+        daysOff.some((dayOff) =>
+          datesOverlap(
+            {
+              datetime_start: convertDate(data.datetime_start),
+              datetime_end: convertDate(data.datetime_end),
+            },
+            {
+              datetime_start: convertDate(dayOff.datetime_start),
+              datetime_end: convertDate(dayOff.datetime_end),
+            }
+          )
+        )
+      ) {
+        return {
+          error: {
+            errors: [
+              {
+                field: 'datetime_start',
+                rule: 'invalid',
+                message: 'SCHEDULE_DAYS_OFF_INVALID_RANGE',
+              },
+              {
+                field: 'datetime_end',
+                rule: 'invalid',
+                message: 'SCHEDULE_DAYS_OFF_INVALID_RANGE',
+              },
+            ],
+          },
+        }
+      }
+
+      const createdDaysOff = await ScheduleDaysOff.create({
+        ...data,
+        tenant_id,
+      })
+
+      return { data: createdDaysOff }
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
@@ -75,7 +141,7 @@ class ScheduleDaysOffService {
 
         if (page && perPage) {
           return await ScheduleDaysOff.query()
-            .orderBy('created_at')
+            .orderBy('datetime_start')
             .where(whereCallback)
             .paginate(page, perPage)
         }

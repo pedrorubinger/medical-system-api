@@ -12,13 +12,17 @@ export default class ScheduleDaysOffController {
   }: HttpContextContract): Promise<void> {
     await request.validate(CreateOrUpdateScheduleDaysOffValidator)
 
-    const data = request.only(['datetime_start', 'datetime_end'])
-    const insurance = await ScheduleDaysOffService.store(
+    const data = request.only(['datetime_start', 'datetime_end', 'doctor_id'])
+    const scheduleDaysOff = await ScheduleDaysOffService.store(
       data,
       auth.user!.tenant_id
     )
 
-    return response.status(201).json(insurance)
+    if (scheduleDaysOff.error) {
+      return response.status(400).json(scheduleDaysOff.error)
+    } else {
+      return response.status(201).json(scheduleDaysOff.data)
+    }
   }
 
   public async update({
@@ -31,13 +35,13 @@ export default class ScheduleDaysOffController {
 
     const { id } = params
     const data = request.only(['datetime_start', 'datetime_end'])
-    const insurance = await ScheduleDaysOffService.update(
+    const scheduleDaysOff = await ScheduleDaysOffService.update(
       id,
       auth.user!.tenant_id,
       data
     )
 
-    return response.status(200).json(insurance)
+    return response.status(200).json(scheduleDaysOff)
   }
 
   public async findByDoctorId({
@@ -72,10 +76,6 @@ export default class ScheduleDaysOffController {
     params,
     response,
   }: HttpContextContract): Promise<void> {
-    if (auth?.user?.doctor?.id?.toString() !== params.id?.toString()) {
-      return response.status(401).json(HAS_NO_PERMISSION_CODE)
-    }
-
     await ScheduleDaysOffService.destroy(params.id, auth.user!.tenant_id)
     return response.status(200).json({ success: true })
   }
