@@ -4,10 +4,6 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class CreateUserValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  public refs = schema.refs({
-    tenant_id: this.ctx.auth.user!.tenant_id,
-  })
-
   public schema = schema.create({
     name: schema.string({}, [rules.maxLength(100)]),
     phone: schema.string({}, [rules.maxLength(40)]),

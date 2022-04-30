@@ -202,3 +202,51 @@ Route.group(() => {
     'ScheduleDaysOffController.destroy'
   ).middleware(['auth', 'permission:doctor'])
 })
+
+/* ADDRESS */
+Route.group(() => {
+  Route.post('/address', 'AddressController.store').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.get('/address', 'AddressController.index').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.get('/address/:id', 'AddressController.show').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.put('/address/:id', 'AddressController.update').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.delete('/address/:id', 'AddressController.destroy').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+})
+
+/* PATIENT */
+Route.group(() => {
+  Route.post('/patient', 'PatientController.store').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.get('/patient', 'PatientController.index').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.get('/patient/:id', 'PatientController.show').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.put('/patient/:id', 'PatientController.update').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.delete('/patient/:id', 'PatientController.destroy').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+})
