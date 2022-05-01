@@ -50,7 +50,7 @@ export default class Patient extends BaseModel {
   public address: HasOne<typeof Address>
 
   @hasOne(() => Appointment, { foreignKey: 'patient_id' })
-  public insurance: HasOne<typeof Appointment>
+  public appointment: HasOne<typeof Appointment>
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
