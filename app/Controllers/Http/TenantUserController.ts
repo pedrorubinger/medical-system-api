@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import CreateTenantUserValidator from 'App/Validators/CreateTenantUserValidator'
 import UserService from 'App/Services/UserService'
-import { TRole } from 'App/Models/User'
+import { Role } from 'App/Models/User'
 import { MISSING_TENANT_ID } from '../../../utils/constants/errors'
 
 export default class TenantUserController {
@@ -28,7 +28,7 @@ export default class TenantUserController {
             is_admin: false,
             is_master: false,
             tenant_id: auth.user.tenant_id,
-            role: 'developer' as TRole,
+            role: 'developer' as Role,
           }
         : { ...data }
     const user = await UserService.store(payload)

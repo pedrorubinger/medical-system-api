@@ -2,7 +2,7 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Env from '@ioc:Adonis/Core/Env'
 
 import Doctor from 'App/Models/Doctor'
-import User, { TRole } from 'App/Models/User'
+import User, { Role } from 'App/Models/User'
 import {
   defaultInactiveTenantOne,
   defaultOwnerTenant,
@@ -15,7 +15,7 @@ export const defaultDeveloperUser = {
   id: 1,
   name: 'Pedro Rubinger',
   cpf: '10545678910',
-  role: 'developer' as TRole,
+  role: 'developer' as Role,
   phone: '31 994999999',
   email: 'pedro@test.com',
   password: 'pedro123',
@@ -28,7 +28,7 @@ export const defaultUser = {
   id: 2,
   name: 'Mark Jones',
   cpf: '12345678910',
-  role: 'manager' as TRole,
+  role: 'manager' as Role,
   phone: '31 999999999',
   email: 'mark@test.com',
   password: 'mark123',
@@ -41,7 +41,7 @@ export const defaultDoctorUserOne = {
   id: 3,
   name: 'Jane Doe',
   cpf: '12345678911',
-  role: 'doctor' as TRole,
+  role: 'doctor' as Role,
   phone: '31 999999990',
   email: 'jane@test.com',
   password: 'jane123',
@@ -55,7 +55,7 @@ export const defaultDoctorUserTwo = {
   tenant_id: defaultTenant.id,
   name: 'Joseph Doe',
   cpf: '12345678912',
-  role: 'doctor' as TRole,
+  role: 'doctor' as Role,
   phone: '31 999999991',
   email: 'joseph@test.com',
   password: 'joseph123',
@@ -67,7 +67,7 @@ export const defaultUserTwo = {
   id: 5,
   name: 'José Eustáquio',
   cpf: '12345670011',
-  role: 'doctor' as TRole,
+  role: 'doctor' as Role,
   phone: '31 801106551',
   email: 'jose.eustaquio@test.com',
   password: 'jose123',
@@ -80,7 +80,7 @@ export const defaultDeveloperUserTwo = {
   id: 6,
   name: 'João Doe',
   cpf: '10545671110',
-  role: 'developer' as TRole,
+  role: 'developer' as Role,
   phone: '31 994999999',
   email: 'joaodoe@test.com',
   password: 'joao123',
@@ -93,7 +93,7 @@ export const defaultUserThree = {
   id: 7,
   name: 'Morgan J',
   cpf: '02345678010',
-  role: 'manager' as TRole,
+  role: 'manager' as Role,
   phone: '32 999999999',
   email: 'morganj@test.com',
   password: 'morgan123',

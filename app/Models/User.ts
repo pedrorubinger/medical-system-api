@@ -16,7 +16,7 @@ import { DateTime } from 'luxon'
 import Doctor from 'App/Models/Doctor'
 import Tenant from 'App/Models/Tenant'
 
-export type TRole = 'manager' | 'doctor' | 'developer'
+export type Role = 'manager' | 'doctor' | 'developer'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -47,7 +47,7 @@ export default class User extends BaseModel {
   public password: string | undefined
 
   @column()
-  public role: TRole
+  public role: Role
 
   @column({ serializeAs: null })
   public reset_password_token: string | null

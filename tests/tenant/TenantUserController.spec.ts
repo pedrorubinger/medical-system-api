@@ -4,7 +4,7 @@ import supertest from 'supertest'
 import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
 import { defaultDeveloperUserTwo, defaultUser } from 'Database/seeders/02_User'
-import { TRole } from 'App/Models/User'
+import { Role } from 'App/Models/User'
 
 /** TO DO: Implement more test cases... */
 test.group('TenantUserController', (group) => {
@@ -38,7 +38,7 @@ test.group('TenantUserController', (group) => {
       email: 'zack@test.com',
       password: 'zack123',
       password_confirmation: 'zack123',
-      role: 'doctor' as TRole,
+      role: 'doctor' as Role,
       crm_document: 'CRM122345',
       name: 'Zack Doe',
       phone: '124534384',

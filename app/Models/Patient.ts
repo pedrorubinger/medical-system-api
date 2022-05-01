@@ -13,6 +13,7 @@ import { DateTime } from 'luxon'
 
 import Address from 'App/Models/Address'
 import Tenant from 'App/Models/Tenant'
+import Appointment from 'App/Models/Appointment'
 
 export default class Patient extends BaseModel {
   @column({ isPrimary: true })
@@ -47,6 +48,9 @@ export default class Patient extends BaseModel {
 
   @hasOne(() => Address, { foreignKey: 'patient_id' })
   public address: HasOne<typeof Address>
+
+  @hasOne(() => Appointment, { foreignKey: 'patient_id' })
+  public insurance: HasOne<typeof Appointment>
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>

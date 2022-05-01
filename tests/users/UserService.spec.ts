@@ -2,7 +2,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import test from 'japa'
 import { Assert } from 'japa/build/src/Assert'
 
-import { TRole } from 'App/Models/User'
+import { Role } from 'App/Models/User'
 import UserService from 'App/Services/UserService'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 import {
@@ -53,7 +53,7 @@ test.group('UserService', (group) => {
     const data = {
       email: 'john@test.com',
       password: 'john123123',
-      role: 'doctor' as TRole,
+      role: 'doctor' as Role,
       name: 'John Doe',
       phone: '31 914384',
       cpf: '12345633910',
@@ -71,7 +71,7 @@ test.group('UserService', (group) => {
       const data = {
         email: 'john@test.com',
         password: 'john123123',
-        role: 'doctor' as TRole,
+        role: 'doctor' as Role,
         name: 'John Doe',
         phone: '31 914384',
         cpf: '12345633910',
@@ -91,7 +91,7 @@ test.group('UserService', (group) => {
     const data = {
       email: 'mary@test.com',
       password: 'mary123123',
-      role: 'doctor' as TRole,
+      role: 'doctor' as Role,
       name: 'Mary Doe',
       phone: '32 092384',
       cpf: '10545210910',

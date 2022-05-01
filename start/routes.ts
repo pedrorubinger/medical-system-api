@@ -250,3 +250,27 @@ Route.group(() => {
     'permission:manager',
   ])
 })
+
+/* APPOINTMENT */
+Route.group(() => {
+  Route.post('/appointment', 'AppointmentController.store').middleware([
+    'auth',
+    'permission:manager',
+  ])
+  Route.get('/appointment', 'AppointmentController.index').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.get('/appointment/:id', 'AppointmentController.show').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.put('/appointment/:id', 'AppointmentController.update').middleware([
+    'auth',
+    'permission:manager,doctor',
+  ])
+  Route.delete('/appointment/:id', 'AppointmentController.destroy').middleware([
+    'auth',
+    'permission:manager',
+  ])
+})

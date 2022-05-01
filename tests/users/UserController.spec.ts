@@ -4,7 +4,7 @@ import supertest from 'supertest'
 import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
 import { defaultUser } from '../../database/seeders/02_User'
-import { TRole } from 'App/Models/User'
+import { Role } from 'App/Models/User'
 import { defaultTenant } from '../../database/seeders/01_Tenant'
 
 test.group('UserController', (group) => {
@@ -36,7 +36,7 @@ test.group('UserController', (group) => {
       email: 'john@test.com',
       password: 'john123',
       password_confirmation: 'john123',
-      role: 'doctor' as TRole,
+      role: 'doctor' as Role,
       crm_document: 'CRM12345',
       name: 'John Doe',
       phone: '124534384',
@@ -104,7 +104,7 @@ test.group('UserController', (group) => {
       email: 'jane@test.com',
       password: 'jane123',
       password_confirmation: 'jane123',
-      role: 'doctor' as TRole,
+      role: 'doctor' as Role,
       tenant_id: defaultTenant.id,
     }
 

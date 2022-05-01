@@ -7,7 +7,7 @@ import {
 import { v4 as uuidv4 } from 'uuid'
 
 import AppError from 'App/Exceptions/AppError'
-import User, { TRole } from 'App/Models/User'
+import User, { Role } from 'App/Models/User'
 import EmailService from './EmailService'
 import DoctorService from './DoctorService'
 import { TENANT_NAME } from '../../utils/constants/tenant'
@@ -19,7 +19,7 @@ interface StoreUserData {
   phone: string
   cpf: string
   is_admin: boolean
-  role: TRole
+  role: Role
   tenant_id: number
   crm_document?: string
 }
@@ -41,7 +41,7 @@ interface FetchUsersData {
   email?: string
   name?: string
   cpf?: string
-  role?: TRole
+  role?: Role
   /** @default false */
   filterOwn?: boolean
   /** @default 'asc' */
