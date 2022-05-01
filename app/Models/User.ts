@@ -71,20 +71,20 @@ export default class User extends BaseModel {
     }
   }
 
-  // @beforeFetch()
-  // public static async preloadModelsBeforeFetch(
-  //   query: ModelQueryBuilderContract<typeof User>
-  // ) {
-  //   await query.preload('tenant')
-  //   await query.preload('doctor', (builder) => {
-  //     builder.preload('schedule_settings')
-  //     builder.preload('insurance', (insuranceBuilder) => {
-  //       insuranceBuilder.pivotColumns(['price'])
-  //     })
-  //     builder.preload('specialty')
-  //     builder.preload('payment_method')
-  //   })
-  // }
+  @beforeFetch()
+  public static async preloadModelsBeforeFetch(
+    query: ModelQueryBuilderContract<typeof User>
+  ) {
+    query.preload('tenant')
+    query.preload('doctor', (builder) => {
+      builder.preload('schedule_settings')
+      builder.preload('insurance', (insuranceBuilder) => {
+        insuranceBuilder.pivotColumns(['price'])
+      })
+      builder.preload('specialty')
+      builder.preload('payment_method')
+    })
+  }
 
   @beforeFind()
   public static async preloadModelsBeforeFind(
