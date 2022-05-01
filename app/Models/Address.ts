@@ -1,11 +1,4 @@
-import {
-  column,
-  BaseModel,
-  BelongsTo,
-  belongsTo,
-  HasOne,
-  hasOne,
-} from '@ioc:Adonis/Lucid/Orm'
+import { column, BaseModel, BelongsTo, belongsTo } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import Tenant from 'App/Models/Tenant'
@@ -28,7 +21,10 @@ export default class Address extends BaseModel {
   public postal_code: string
 
   @column()
-  public complement: string
+  public complement?: string
+
+  @column()
+  public patient_id: number
 
   @column({ serializeAs: null })
   public tenant_id: number
@@ -36,8 +32,8 @@ export default class Address extends BaseModel {
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
 
-  @hasOne(() => Patient, { foreignKey: 'patient_id' })
-  public patient: HasOne<typeof Patient>
+  @belongsTo(() => Patient, { foreignKey: 'patient_id' })
+  public patient: BelongsTo<typeof Patient>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime

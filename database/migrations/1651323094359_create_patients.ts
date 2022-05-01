@@ -15,14 +15,6 @@ export default class Patients extends BaseSchema {
       table.string('secondary_phone', 30).nullable()
       table.string('email', 80).nullable().unique()
       table
-        .integer('address_id')
-        .references('id')
-        .inTable('addresses')
-        .onUpdate('CASCADE')
-        .onDelete('SET NULL')
-        .unsigned()
-        .nullable()
-      table
         .integer('tenant_id')
         .references('id')
         .inTable('tenants')

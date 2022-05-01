@@ -3,6 +3,8 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import PatientService from 'App/Services/PatientService'
 import CreatePatientValidator from 'App/Validators/CreatePatientValidator'
 import UpdatePatientValidator from 'App/Validators/UpdatePatientValidator'
+import CreatePatientWithAddressValidator from 'App/Validators/CreatePatientWithAddressValidator'
+import UpdatePatientWithAddressValidator from 'App/Validators/UpdatePatientWithAddressValidator'
 
 export default class PatientController {
   public async store({
@@ -10,8 +12,8 @@ export default class PatientController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    await request.validate(CreatePatientValidator)
-
+    const tenantId = auth.user!.tenant_id
+    const address = request.input('address')
     const data = {
       ...request.only([
         'name',
@@ -23,9 +25,19 @@ export default class PatientController {
         'secondary_phone',
         'email',
       ]),
-      tenant_id: auth.user!.tenant_id,
+      tenant_id: tenantId,
     }
-    const patient = await PatientService.store(data)
+
+    if (address) {
+      await request.validate(CreatePatientWithAddressValidator)
+    } else {
+      await request.validate(CreatePatientValidator)
+    }
+
+    const addressData = address
+      ? { ...address, tenant_id: tenantId }
+      : undefined
+    const patient = await PatientService.store(data, addressData)
 
     return response.status(201).json(patient)
   }
@@ -36,9 +48,9 @@ export default class PatientController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    await request.validate(UpdatePatientValidator)
-
     const { id } = params
+    const tenantId = auth.user!.tenant_id
+    const address = request.input('address')
     const data = request.only([
       'name',
       'cpf',
@@ -49,7 +61,17 @@ export default class PatientController {
       'secondary_phone',
       'email',
     ])
-    const patient = await PatientService.update(id, auth.user!.tenant_id, data)
+    const addressData = address
+      ? { ...address, tenant_id: tenantId }
+      : undefined
+
+    if (address) {
+      await request.validate(UpdatePatientWithAddressValidator)
+    } else {
+      await request.validate(UpdatePatientValidator)
+    }
+
+    const patient = await PatientService.update(id, tenantId, data, addressData)
 
     return response.status(200).json(patient)
   }
@@ -60,20 +82,22 @@ export default class PatientController {
     response,
   }: HttpContextContract): Promise<void> {
     const {
-      street,
-      number,
-      neighborhood,
-      postalCode,
+      name,
+      cpf,
+      email,
+      motherName,
+      primaryPhone,
       order,
       orderBy,
       page,
       perPage,
     } = request.qs()
     const params = {
-      street,
-      number,
-      neighborhood,
-      postalCode,
+      name,
+      cpf,
+      email,
+      motherName,
+      primaryPhone,
       order,
       orderBy,
       page,

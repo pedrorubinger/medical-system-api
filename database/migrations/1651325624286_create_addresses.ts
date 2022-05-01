@@ -12,6 +12,14 @@ export default class Creates extends BaseSchema {
       table.string('postal_code', 15).notNullable()
       table.string('complement', 50).nullable()
       table
+        .integer('patient_id')
+        .references('id')
+        .inTable('patients')
+        .onUpdate('CASCADE')
+        .onDelete('CASCADE')
+        .unsigned()
+        .notNullable()
+      table
         .integer('tenant_id')
         .references('id')
         .inTable('tenants')

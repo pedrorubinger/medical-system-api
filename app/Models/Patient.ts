@@ -1,4 +1,14 @@
-import { column, BaseModel, BelongsTo, belongsTo } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  beforeFetch,
+  beforeFind,
+  ModelQueryBuilderContract,
+  hasOne,
+  HasOne,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import Address from 'App/Models/Address'
@@ -32,14 +42,11 @@ export default class Patient extends BaseModel {
   @column()
   public email?: string
 
-  @column()
-  public address_id?: number
-
   @column({ serializeAs: null })
   public tenant_id: number
 
-  @belongsTo(() => Address, { foreignKey: 'address_id' })
-  public address: BelongsTo<typeof Address>
+  @hasOne(() => Address, { foreignKey: 'patient_id' })
+  public address: HasOne<typeof Address>
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
@@ -49,4 +56,18 @@ export default class Patient extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updated_at: DateTime
+
+  @beforeFetch()
+  public static async preloadModelsBeforeFetch(
+    query: ModelQueryBuilderContract<typeof Patient>
+  ) {
+    query.preload('address')
+  }
+
+  @beforeFind()
+  public static async preloadModelsBeforeFind(
+    query: ModelQueryBuilderContract<typeof Patient>
+  ) {
+    await query.preload('address')
+  }
 }

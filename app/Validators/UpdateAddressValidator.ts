@@ -5,6 +5,7 @@ export default class UpdateAddressValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
+    patient_id: schema.number.optional(),
     street: schema.string.optional({}, [rules.maxLength(80)]),
     number: schema.string.optional({}, [rules.maxLength(10)]),
     neighborhood: schema.string.optional({}, [rules.maxLength(50)]),

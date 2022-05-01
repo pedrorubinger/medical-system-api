@@ -5,6 +5,7 @@ export default class CreateAddressValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
+    patient_id: schema.number(),
     street: schema.string({}, [rules.maxLength(80)]),
     number: schema.string({}, [rules.maxLength(10)]),
     neighborhood: schema.string({}, [rules.maxLength(50)]),
@@ -13,6 +14,7 @@ export default class CreateAddressValidator {
   })
 
   public messages = {
+    'patient_id.required': 'PATIENT_IS_IS_REQUIRED',
     'street.required': 'STREET_IS_REQUIRED',
     'street.maxLength': 'STREET_MAX_LENGTH_80',
     'number.required': 'ADDRESS_NUMBER_IS_REQUIRED',

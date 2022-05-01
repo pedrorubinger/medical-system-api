@@ -1,3 +1,4 @@
+import { TransactionClientContract } from '@ioc:Adonis/Lucid/Database'
 import {
   ModelPaginatorContract,
   ModelQueryBuilderContract,
@@ -8,10 +9,12 @@ import Address from 'App/Models/Address'
 import { TENANT_NAME } from '../../utils/constants/tenant'
 
 interface StoreAddressData {
+  patient_id: number
   street: string
   number: string
   neighborhood: string
   postal_code: string
+  tenant_id: number
   complement?: string
 }
 
@@ -31,34 +34,73 @@ interface FetchAddressesData {
 }
 
 class AddressService {
-  public async store(data: StoreAddressData): Promise<Address> {
-    try {
-      return await Address.create(data)
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
+  public async store(
+    data: StoreAddressData,
+    providedTrx?: TransactionClientContract
+  ): Promise<Address> {
+    if (providedTrx) {
+      const address = new Address()
+
+      address.street = data.street
+      address.number = data.number
+      address.neighborhood = data.neighborhood
+      address.complement = data.complement
+      address.postal_code = data.postal_code
+      address.tenant_id = data.tenant_id
+      address.patient_id = data.patient_id
+      address.useTransaction(providedTrx)
+
+      return await address.save()
+    } else {
+      try {
+        return await Address.create(data)
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
     }
   }
 
   public async update(
     id: number,
     tenantId: number,
-    data: UpdateAddressData
+    data: UpdateAddressData,
+    providedTrx?: TransactionClientContract
   ): Promise<Address> {
-    try {
-      const address = await Address.find(id)
+    if (providedTrx) {
+      try {
+        const address = await Address.find(id)
 
-      if (!address || tenantId.toString() !== address.tenant_id.toString()) {
-        throw new AppError(
-          'This address was not found!',
-          'ADDRESS_NOT_FOUND',
-          404
-        )
+        if (!address || tenantId.toString() !== address.tenant_id.toString()) {
+          throw new AppError(
+            'This address was not found!',
+            'ADDRESS_NOT_FOUND',
+            404
+          )
+        }
+
+        address.useTransaction(providedTrx)
+        address.merge({ ...data })
+        return await address.save()
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
       }
+    } else {
+      try {
+        const address = await Address.find(id)
 
-      address.merge({ ...data })
-      return await address.save()
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
+        if (!address || tenantId.toString() !== address.tenant_id.toString()) {
+          throw new AppError(
+            'This address was not found!',
+            'ADDRESS_NOT_FOUND',
+            404
+          )
+        }
+
+        address.merge({ ...data })
+        return await address.save()
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
     }
   }
 
@@ -132,7 +174,11 @@ class AddressService {
     }
   }
 
-  public async destroy(id: number, tenantId: number): Promise<boolean> {
+  public async destroy(
+    id: number,
+    tenantId: number,
+    providedTrx?: TransactionClientContract
+  ): Promise<boolean> {
     try {
       const address = await Address.find(id)
 
@@ -144,6 +190,9 @@ class AddressService {
         )
       }
 
+      if (providedTrx) {
+        address.useTransaction(providedTrx)
+      }
       await address.delete()
       return true
     } catch (err) {

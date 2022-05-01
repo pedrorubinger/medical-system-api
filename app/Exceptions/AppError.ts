@@ -9,8 +9,10 @@ export default class AppError {
   public readonly status: number
 
   constructor(message?: string, code?: string, status?: number) {
+    console.error('[APP ERROR] - MESSAGE:', message)
+
     this.message =
-      status?.toString() === '500'
+      status?.toString() === '500' || status === undefined
         ? DEFAULT_MESSAGE
         : message || DEFAULT_MESSAGE
     this.code = code || DEFAULT_CODE
