@@ -92,7 +92,9 @@ export default class PatientController {
       page,
       perPage,
     } = request.qs()
+    const doctorId = auth.user!.doctor?.id
     const params = {
+      doctorId,
       name,
       cpf,
       email,

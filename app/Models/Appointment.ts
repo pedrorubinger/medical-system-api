@@ -94,7 +94,7 @@ export default class Appointment extends BaseModel {
   ) {
     query.preload('doctor')
     query.preload('insurance')
-    query.preload('patient')
+    // query.preload('patient')
     query.preload('specialty')
     query.preload('payment_method')
   }
@@ -105,7 +105,7 @@ export default class Appointment extends BaseModel {
   ) {
     await query.preload('doctor')
     await query.preload('insurance')
-    await query.preload('patient')
+    // await query.preload('patient')
     await query.preload('specialty')
     await query.preload('payment_method')
   }

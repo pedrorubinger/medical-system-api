@@ -27,6 +27,7 @@ interface UpdatePatientData extends Partial<StorePatientData> {}
 interface FetchPatientsData {
   page?: number
   perPage?: number
+  doctorId?: number
   name?: string
   cpf?: string
   email?: string
@@ -155,6 +156,7 @@ class PatientService {
     try {
       if (params) {
         const {
+          // doctorId,
           name,
           cpf,
           email,
@@ -169,6 +171,10 @@ class PatientService {
           query: ModelQueryBuilderContract<typeof Patient, Patient>
         ) => {
           query.where(TENANT_NAME, tenantId)
+
+          // if (doctorId) {
+          //   query.andWhere('doctor_id', '=', `${doctorId}`)
+          // }
 
           if (name) {
             query.andWhere('name', 'like', `${name}%`)
