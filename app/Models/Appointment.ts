@@ -23,9 +23,6 @@ export default class Appointment extends BaseModel {
   public id: number
 
   @column()
-  public name: string
-
-  @column()
   public datetime: DateTime
 
   @column()
@@ -56,13 +53,13 @@ export default class Appointment extends BaseModel {
   public doctor_id: number
 
   @column()
-  public insurance_id: number
+  public insurance_id?: number
 
   @column()
-  public specialty_id: number
+  public specialty_id?: number
 
   @column()
-  public payment_method_id: number
+  public payment_method_id?: number
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
@@ -93,8 +90,8 @@ export default class Appointment extends BaseModel {
     query: ModelQueryBuilderContract<typeof Appointment>
   ) {
     query.preload('doctor')
+    query.preload('patient')
     query.preload('insurance')
-    // query.preload('patient')
     query.preload('specialty')
     query.preload('payment_method')
   }
@@ -104,8 +101,8 @@ export default class Appointment extends BaseModel {
     query: ModelQueryBuilderContract<typeof Appointment>
   ) {
     await query.preload('doctor')
+    await query.preload('patient')
     await query.preload('insurance')
-    // await query.preload('patient')
     await query.preload('specialty')
     await query.preload('payment_method')
   }

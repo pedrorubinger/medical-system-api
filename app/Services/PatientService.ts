@@ -114,12 +114,16 @@ class PatientService {
               tenant_id: tenantId,
             }
 
-            await AddressService.update(
-              addressData.id,
-              tenantId,
-              addressPayload,
-              trx
-            )
+            if (addressData.id) {
+              await AddressService.update(
+                addressData.id,
+                tenantId,
+                addressPayload,
+                trx
+              )
+            } else {
+              await AddressService.store(addressPayload, trx)
+            }
           }
 
           const updatedPatient = await patient.save()

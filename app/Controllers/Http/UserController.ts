@@ -100,6 +100,16 @@ export default class UserController {
     return response.status(200).json(users)
   }
 
+  public async getDoctors({
+    auth,
+    response,
+  }: HttpContextContract): Promise<void> {
+    const tenantId = auth.user!.tenant_id
+    const users = await UserService.getDoctors(tenantId)
+
+    return response.status(200).json(users)
+  }
+
   public async show({
     auth,
     params,

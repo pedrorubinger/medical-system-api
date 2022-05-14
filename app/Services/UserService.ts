@@ -209,6 +209,26 @@ class UserService {
     }
   }
 
+  public async getDoctors(tenantId: number): Promise<User[]> {
+    try {
+      return await User.query()
+        // .join('doctors', 'users.id', 'doctors.user_id')
+        .where('users.tenant_id', tenantId)
+        .andWhere('role', 'doctor')
+        .select('name', 'id', 'tenant_id')
+      // .select('id')
+      // return await Database.from('users')
+      //   .join('doctors', 'users.id', '=', 'doctors.user_id')
+      //   .select('users.name')
+      //   .select('doctors.user_id')
+      //   .select('doctors.id')
+      //   .where('users.tenant_id', '=', tenantId)
+      //   .andWhere('doctors.tenant_id', '=', tenantId)
+    } catch (err) {
+      throw new AppError(err?.message, err?.code, err?.status)
+    }
+  }
+
   public async find(id: number, tenantId: number): Promise<User> {
     try {
       const user = await User.find(id)

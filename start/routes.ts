@@ -35,6 +35,10 @@ Route.group(() => {
     'auth',
     'permission:admin',
   ])
+  Route.get('/user/doctor', 'UserController.getDoctors').middleware([
+    'auth',
+    'permission:manager',
+  ])
   Route.get('/user/:id', 'UserController.show').middleware([
     'auth',
     'permission:admin',
