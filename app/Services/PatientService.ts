@@ -206,6 +206,10 @@ class PatientService {
             .orderBy(orderBy || 'name', order || 'asc')
             .where(whereCallback)
             .paginate(page, perPage)
+        } else {
+          return await Patient.query()
+            .orderBy(orderBy || 'name', order || 'asc')
+            .where(whereCallback)
         }
       }
 
