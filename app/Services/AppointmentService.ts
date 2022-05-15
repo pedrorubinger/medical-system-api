@@ -5,10 +5,22 @@ import {
 
 import AppError from 'App/Exceptions/AppError'
 import Appointment from 'App/Models/Appointment'
+import { DateTime } from 'luxon'
 import { TENANT_NAME } from '../../utils/constants/tenant'
 
 interface AppointmentData {
-  name: string
+  datetime: DateTime
+  is_follow_up: boolean
+  last_appointment_datetime?: DateTime
+  notes?: string
+  exam_request?: string
+  is_private: boolean
+  tenant_id: number
+  patient_id: number
+  doctor_id: number
+  insurance_id: number
+  specialty_id: number
+  payment_method_id: number
 }
 
 interface FetchAppointmentsData {
@@ -26,6 +38,7 @@ interface FetchAppointmentsData {
 class AppointmentService {
   public async store(data: AppointmentData): Promise<Appointment> {
     try {
+      console.log('data:', data)
       return await Appointment.create(data)
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
@@ -35,7 +48,7 @@ class AppointmentService {
   public async update(
     id: number,
     tenantId: number,
-    data: AppointmentData
+    data: Partial<AppointmentData>
   ): Promise<Appointment> {
     try {
       const appointment = await Appointment.find(id)

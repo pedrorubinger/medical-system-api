@@ -6,7 +6,7 @@ export default class CreateAppointmentValidator {
 
   public refs = schema.refs({
     tenant_id: this.ctx.auth.user!.tenant_id,
-    doctor_id: this.ctx.auth.user!.doctor.id,
+    doctor_id: this.ctx.request.body().doctor_id,
   })
 
   public schema = schema.create({

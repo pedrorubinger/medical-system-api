@@ -12,7 +12,23 @@ export default class AppointmentController {
   }: HttpContextContract): Promise<void> {
     await request.validate(CreateAppointmentValidator)
 
-    const data = { ...request.only(['name']), tenant_id: auth.user!.tenant_id }
+    const data = {
+      ...request.only([
+        'datetime',
+        'is_follow_up',
+        'last_appointment_datetime',
+        'notes',
+        'exam_request',
+        'is_private',
+        'tenant_id',
+        'patient_id',
+        'doctor_id',
+        'insurance_id',
+        'specialty_id',
+        'payment_method_id',
+      ]),
+      tenant_id: auth.user!.tenant_id,
+    }
     const appointment = await AppointmentService.store(data)
 
     return response.status(201).json(appointment)
@@ -27,7 +43,20 @@ export default class AppointmentController {
     await request.validate(UpdateAppointmentValidator)
 
     const { id } = params
-    const data = request.only(['name'])
+    const data = request.only([
+      'datetime',
+      'is_follow_up',
+      'last_appointment_datetime',
+      'notes',
+      'exam_request',
+      'is_private',
+      'tenant_id',
+      'patient_id',
+      'doctor_id',
+      'insurance_id',
+      'specialty_id',
+      'payment_method_id',
+    ])
     const appointment = await AppointmentService.update(
       id,
       auth.user!.tenant_id,

@@ -66,7 +66,6 @@ export default class Patient extends BaseModel {
     query: ModelQueryBuilderContract<typeof Patient>
   ) {
     query.preload('address')
-    query.preload('appointment')
   }
 
   @beforeFind()
