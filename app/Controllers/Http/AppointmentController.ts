@@ -71,9 +71,13 @@ export default class AppointmentController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
-    const { name, order, orderBy, page, perPage } = request.qs()
+    const { date, datetime, doctor, patientId, order, orderBy, page, perPage } =
+      request.qs()
     const params = {
-      name,
+      date,
+      datetime,
+      doctor,
+      patientId,
       order,
       orderBy,
       page,

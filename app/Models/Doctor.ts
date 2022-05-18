@@ -9,6 +9,9 @@ import {
   ModelQueryBuilderContract,
   HasOne,
   hasOne,
+  HasMany,
+  hasMany,
+  beforeFetch,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
@@ -59,8 +62,8 @@ export default class Doctor extends BaseModel {
   @hasOne(() => ScheduleSettings, { foreignKey: 'doctor_id' })
   public schedule_settings: HasOne<typeof ScheduleSettings>
 
-  @hasOne(() => ScheduleDaysOff, { foreignKey: 'doctor_id' })
-  public schedule_days_off: HasOne<typeof ScheduleDaysOff>
+  @hasMany(() => ScheduleDaysOff, { foreignKey: 'doctor_id' })
+  public schedule_days_off: HasMany<typeof ScheduleDaysOff>
 
   @hasOne(() => Appointment, { foreignKey: 'doctor_id' })
   public appointment: HasOne<typeof Appointment>
@@ -98,8 +101,15 @@ export default class Doctor extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updated_at: DateTime
 
+  @beforeFetch()
+  public static async preloadRelationsBeforeFetch(
+    query: ModelQueryBuilderContract<typeof Doctor>
+  ) {
+    query.preload('schedule_days_off')
+  }
+
   @beforeFind()
-  public static async preloadRelations(
+  public static async preloadRelationsBeforeFind(
     query: ModelQueryBuilderContract<typeof Doctor>
   ) {
     await query.preload('specialty')

@@ -26,12 +26,13 @@ interface AppointmentData {
 interface FetchAppointmentsData {
   page?: number
   perPage?: number
+  date?: string
   datetime?: string
-  doctorId?: number
+  doctor?: number
   patientId?: number
   /** @default 'asc' */
   order?: 'asc' | 'desc'
-  /** @default 'datetime' */
+  /** @default 'date' */
   orderBy?: 'datetime'
 }
 
@@ -77,19 +78,31 @@ class AppointmentService {
   ): Promise<ModelPaginatorContract<Appointment> | Appointment[]> {
     try {
       if (params) {
-        const { datetime, doctorId, patientId, order, orderBy, page, perPage } =
-          params
+        const {
+          date,
+          datetime,
+          doctor,
+          patientId,
+          order,
+          orderBy,
+          page,
+          perPage,
+        } = params
         const whereCallback = (
           query: ModelQueryBuilderContract<typeof Appointment, Appointment>
         ) => {
           query.where(TENANT_NAME, tenantId)
 
+          if (date) {
+            query.andWhereRaw(`datetime LIKE '${date}%'`)
+          }
+
           if (datetime) {
             query.andWhere('datetime', '=', `${datetime}`)
           }
 
-          if (doctorId) {
-            query.andWhere('doctor_id', '=', `${doctorId}`)
+          if (doctor) {
+            query.andWhere('doctor_id', '=', `${doctor}`)
           }
 
           if (patientId) {
@@ -102,6 +115,10 @@ class AppointmentService {
             .orderBy(orderBy || 'datetime', order || 'asc')
             .where(whereCallback)
             .paginate(page, perPage)
+        } else {
+          return await Appointment.query()
+            .orderBy(orderBy || 'datetime', order || 'asc')
+            .where(whereCallback)
         }
       }
 
