@@ -1,4 +1,4 @@
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class UpdateAppointmentValidator {
@@ -6,20 +6,20 @@ export default class UpdateAppointmentValidator {
 
   public refs = schema.refs({
     tenant_id: this.ctx.auth.user!.tenant_id,
-    doctor_id: this.ctx.auth.user!.doctor.id,
+    // doctor_id: this.ctx.auth.user!.doctor.id,
   })
 
   public schema = schema.create({
-    datetime: schema.date({ format: 'yyyy-MM-dd HH:mm' }, [
-      rules.unique({
-        table: 'appointments',
-        column: 'datetime',
-        where: {
-          tenant_id: this.refs.tenant_id,
-          doctor_id: this.refs.doctor_id,
-        },
-      }),
-    ]),
+    // datetime: schema.date({ format: 'yyyy-MM-dd HH:mm' }, [
+    //   rules.unique({
+    //     table: 'appointments',
+    //     column: 'datetime',
+    //     where: {
+    //       tenant_id: this.refs.tenant_id,
+    //       doctor_id: this.refs.doctor_id,
+    //     },
+    //   }),
+    // ]),
     is_follow_up: schema.boolean.optional(),
     last_appointment_datetime: schema.date.optional({
       format: 'yyyy-MM-dd HH:mm',

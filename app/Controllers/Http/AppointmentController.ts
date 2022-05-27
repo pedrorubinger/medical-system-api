@@ -48,6 +48,7 @@ export default class AppointmentController {
       'is_follow_up',
       'last_appointment_datetime',
       'notes',
+      'status',
       'exam_request',
       'is_private',
       'tenant_id',
