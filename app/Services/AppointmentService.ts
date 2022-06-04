@@ -29,6 +29,7 @@ interface FetchAppointmentsData {
   date?: string
   datetime?: string
   doctor?: number
+  status?: string
   patientId?: number
   /** @default 'asc' */
   order?: 'asc' | 'desc'
@@ -83,6 +84,7 @@ class AppointmentService {
           datetime,
           doctor,
           patientId,
+          status,
           order,
           orderBy,
           page,
@@ -97,16 +99,20 @@ class AppointmentService {
             query.andWhereRaw(`datetime LIKE '${date}%'`)
           }
 
+          if (status) {
+            query.andWhere('status', '=', status)
+          }
+
           if (datetime) {
-            query.andWhere('datetime', '=', `${datetime}`)
+            query.andWhere('datetime', '=', datetime)
           }
 
           if (doctor) {
-            query.andWhere('doctor_id', '=', `${doctor}`)
+            query.andWhere('doctor_id', '=', doctor)
           }
 
           if (patientId) {
-            query.andWhere('patient_id', '=', `${patientId}`)
+            query.andWhere('patient_id', '=', patientId)
           }
         }
 
