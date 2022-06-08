@@ -21,6 +21,7 @@ interface StoreUserData {
   is_admin: boolean
   role: Role
   tenant_id: number
+  tenant_name?: string
   crm_document?: string
 }
 
@@ -92,17 +93,22 @@ class UserService {
           )
         }
 
-        const content = `
-          <h1>Bem-vindo(a), ${data.name}!</h1>
-          <h2>A sua conta foi criada! Agora você precisa definir uma nova senha começar a utilizar o sistema.</h2>
-          <a href="http://localhost:3000/set-password?token=${resetPasswordToken}">Clique aqui para criar sua senha.</a>
-        `
+        // const content = `
+        //   <h1>Bem-vindo(a), ${data.name}!</h1>
+        //   <h2>A sua conta foi criada! Agora você precisa definir uma nova senha começar a utilizar o sistema.</h2>
+        //   <a href="http://localhost:3000/set-password?token=${resetPasswordToken}">Clique aqui para criar sua senha.</a>
+        // `
 
         await EmailService.send({
+          path: 'emails/set_password',
+          subject: 'Medical System - Acesso',
           from: Env.get('SMTP_USERNAME'),
           to: data.email,
-          subject: 'Medical System - Acesso',
-          content,
+          content: {
+            url: `http://localhost:3000/set-password?token=${resetPasswordToken}`,
+            name: createdUser.name,
+            tenant_name: data?.tenant_name,
+          },
         })
         await trx.commit()
         return createdUser
@@ -272,19 +278,21 @@ class UserService {
         user.merge({ reset_password_token: token })
         await user.save()
 
-        const content = `
-          <h1>Olá, ${user.name}!</h1>
-          <h2>Você solicitou uma alteração de senha para o email ${email}.</h2>
-          <a href="http://localhost:3000/set-password?token=${token}">Clique aqui para redefinir sua senha.</a>
-        `
+        // const content = `
+        //   <h1>Olá, ${user.name}!</h1>
+        //   <h2>Você solicitou uma alteração de senha para o email ${email}.</h2>
+        //   <a href="http://localhost:3000/set-password?token=${token}">Clique aqui para redefinir sua senha.</a>
+        // `
 
         await EmailService.send({
+          path: 'emails/recover_password',
           from: Env.get('SMTP_USERNAME'),
           to: email,
           subject: 'Medical System - Alteração de Senha',
-          content,
+          content: {
+            url: `http://localhost:3000/set-password?token=${token}`,
+          },
         })
-
         trx.commit()
         return true
       } catch (err) {

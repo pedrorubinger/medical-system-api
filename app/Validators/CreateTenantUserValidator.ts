@@ -8,6 +8,7 @@ export default class CreateTenantUserValidator {
 
   public schema = schema.create({
     name: schema.string({}, [rules.maxLength(100)]),
+    tenant_name: schema.string.optional({}),
     phone: schema.string({}, [rules.maxLength(40)]),
     email: schema.string({}, [
       rules.unique({ table: 'users', column: 'email' }),

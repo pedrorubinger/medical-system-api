@@ -23,6 +23,7 @@ export default class UserController {
       'is_admin',
       'password',
       'role',
+      'tenant_name',
       'crm_document',
     ])
     const user = await UserService.store({

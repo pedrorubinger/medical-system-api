@@ -18,6 +18,7 @@ export default class TenantUserController {
       'is_admin',
       'password',
       'role',
+      'tenant_name',
       'crm_document',
       'tenant_id',
     ])
