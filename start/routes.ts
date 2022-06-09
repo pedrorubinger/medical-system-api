@@ -253,6 +253,10 @@ Route.group(() => {
     'auth',
     'permission:manager',
   ])
+  Route.get('/my-patients', 'PatientController.getMyPatients').middleware([
+    'auth',
+    'permission:doctor',
+  ])
 })
 
 /* APPOINTMENT */

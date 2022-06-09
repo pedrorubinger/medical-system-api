@@ -9,6 +9,7 @@ import AppError from 'App/Exceptions/AppError'
 import Patient from 'App/Models/Patient'
 import Address from 'App/Models/Address'
 import AddressService from 'App/Services/AddressService'
+import Doctor from 'App/Models/Doctor'
 
 interface StorePatientData {
   name: string
@@ -214,6 +215,82 @@ class PatientService {
       }
 
       return await Patient.query().where(TENANT_NAME, tenantId)
+    } catch (err) {
+      throw new AppError(err?.message, err?.code, err?.status)
+    }
+  }
+
+  public async getMyPatients(
+    tenantId: number,
+    doctorId: number,
+    params?: FetchPatientsData
+  ): Promise<ModelPaginatorContract<Patient> | Patient[]> {
+    try {
+      const doctor = await Doctor.find(doctorId)
+
+      if (!doctor) {
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
+      }
+
+      if (params) {
+        const {
+          name,
+          cpf,
+          email,
+          motherName,
+          primaryPhone,
+          order,
+          orderBy,
+          page,
+          perPage,
+        } = params
+
+        const whereCallback = (
+          query: ModelQueryBuilderContract<typeof Patient, Patient>
+        ) => {
+          query.where(`doctors_patients.${TENANT_NAME}`, tenantId)
+
+          if (name) {
+            query.andWhere('name', 'like', `${name}%`)
+          }
+
+          if (cpf) {
+            query.andWhere('cpf', 'like', `${cpf}%`)
+          }
+
+          if (email) {
+            query.andWhere('email', 'like', `${email}%`)
+          }
+
+          if (motherName) {
+            query.andWhere('mother_name', 'like', `${motherName}%`)
+          }
+
+          if (primaryPhone) {
+            query.andWhere('primary_phone', 'like', `${primaryPhone}%`)
+          }
+        }
+
+        if (page && perPage) {
+          return await doctor
+            .related('patient')
+            .query()
+            .orderBy(orderBy || 'name', order || 'asc')
+            .where(whereCallback)
+            .paginate(page, perPage)
+        } else {
+          return await doctor.related('patient').query().where(whereCallback)
+        }
+      }
+
+      return await doctor
+        .related('patient')
+        .query()
+        .where(TENANT_NAME, tenantId)
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }

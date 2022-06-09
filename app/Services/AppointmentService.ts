@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+import Database from '@ioc:Adonis/Lucid/Database'
 import {
   ModelPaginatorContract,
   ModelQueryBuilderContract,
@@ -5,7 +7,7 @@ import {
 
 import AppError from 'App/Exceptions/AppError'
 import Appointment from 'App/Models/Appointment'
-import { DateTime } from 'luxon'
+import Doctor from 'App/Models/Doctor'
 import { TENANT_NAME } from '../../utils/constants/tenant'
 
 interface AppointmentData {
@@ -39,12 +41,51 @@ interface FetchAppointmentsData {
 
 class AppointmentService {
   public async store(data: AppointmentData): Promise<Appointment> {
-    try {
-      console.log('data:', data)
-      return await Appointment.create(data)
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
-    }
+    return await Database.transaction(async (trx) => {
+      try {
+        const appointment = new Appointment()
+
+        appointment.datetime = data.datetime
+        appointment.is_follow_up = data.is_follow_up
+        appointment.last_appointment_datetime = data.last_appointment_datetime
+        appointment.notes = data.notes
+        appointment.exam_request = data.exam_request
+        appointment.is_private = data.is_private
+        appointment.tenant_id = data.tenant_id
+        appointment.patient_id = data.patient_id
+        appointment.doctor_id = data.doctor_id
+        appointment.insurance_id = data.insurance_id
+        appointment.specialty_id = data.specialty_id
+        appointment.payment_method_id = data.payment_method_id
+        appointment.useTransaction(trx)
+
+        const createdAppointment = await appointment.save()
+        const doctor = await Doctor.find(data.doctor_id)
+
+        if (!doctor) {
+          throw new AppError(
+            'This doctor was not found!',
+            'DOCTOR_NOT_FOUND',
+            404
+          )
+        }
+
+        doctor.useTransaction(trx)
+        await doctor.related('patient').attach(
+          {
+            [data.patient_id]: {
+              tenant_id: data.tenant_id,
+            },
+          },
+          trx
+        )
+        await trx.commit()
+        return createdAppointment
+      } catch (err) {
+        await trx.rollback()
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
+    })
   }
 
   public async update(

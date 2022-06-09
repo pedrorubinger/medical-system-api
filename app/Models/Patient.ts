@@ -8,14 +8,27 @@ import {
   ModelQueryBuilderContract,
   hasOne,
   HasOne,
+  ManyToMany,
+  manyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 
 import Address from 'App/Models/Address'
 import Tenant from 'App/Models/Tenant'
 import Appointment from 'App/Models/Appointment'
+import Doctor from 'App/Models/Doctor'
 
 export default class Patient extends BaseModel {
+  public serializeExtras() {
+    return {
+      weight: this.$extras.pivot_weight,
+      height: this.$extras.pivot_height,
+      allergies: this.$extras.pivot_allergies,
+      illnesses: this.$extras.pivot_illnesses,
+      notes: this.$extras.pivot_notes,
+    }
+  }
+
   @column({ isPrimary: true })
   public id: number
 
@@ -54,6 +67,15 @@ export default class Patient extends BaseModel {
 
   @belongsTo(() => Tenant, { foreignKey: 'tenant_id', serializeAs: null })
   public tenant: BelongsTo<typeof Tenant>
+
+  @manyToMany(() => Doctor, {
+    localKey: 'id',
+    pivotForeignKey: 'patient_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'doctor_id',
+    pivotTable: 'doctors_patients',
+  })
+  public doctor: ManyToMany<typeof Doctor>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime

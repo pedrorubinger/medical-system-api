@@ -23,6 +23,7 @@ import PaymentMethod from 'App/Models/PaymentMethod'
 import ScheduleSettings from 'App/Models/ScheduleSettings'
 import ScheduleDaysOff from 'App/Models/ScheduleDaysOff'
 import Appointment from 'App/Models/Appointment'
+import Patient from 'App/Models/Patient'
 
 export interface DoctorAttributes {
   id?: number
@@ -94,6 +95,15 @@ export default class Doctor extends BaseModel {
     pivotTable: 'doctors_payment_methods',
   })
   public payment_method: ManyToMany<typeof PaymentMethod>
+
+  @manyToMany(() => Patient, {
+    localKey: 'id',
+    pivotForeignKey: 'doctor_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'patient_id',
+    pivotTable: 'doctors_patients',
+  })
+  public patient: ManyToMany<typeof Patient>
 
   @column.dateTime({ autoCreate: true })
   public created_at: DateTime

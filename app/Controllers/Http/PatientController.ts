@@ -110,6 +110,43 @@ export default class PatientController {
     return response.status(200).json(patients)
   }
 
+  public async getMyPatients({
+    auth,
+    request,
+    response,
+  }: HttpContextContract): Promise<void> {
+    const {
+      name,
+      cpf,
+      email,
+      motherName,
+      primaryPhone,
+      order,
+      orderBy,
+      page,
+      perPage,
+    } = request.qs()
+    const doctorId = auth.user!.doctor?.id
+    const params = {
+      name,
+      cpf,
+      email,
+      motherName,
+      primaryPhone,
+      order,
+      orderBy,
+      page,
+      perPage,
+    }
+    const patients = await PatientService.getMyPatients(
+      auth.user!.tenant_id,
+      doctorId,
+      params
+    )
+
+    return response.status(200).json(patients)
+  }
+
   public async show({
     auth,
     params,
