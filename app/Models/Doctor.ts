@@ -102,6 +102,7 @@ export default class Doctor extends BaseModel {
     relatedKey: 'id',
     pivotRelatedForeignKey: 'patient_id',
     pivotTable: 'doctors_patients',
+    pivotColumns: ['weight', 'height', 'allergies', 'illnesses', 'notes'],
   })
   public patient: ManyToMany<typeof Patient>
 
