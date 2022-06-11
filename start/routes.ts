@@ -253,7 +253,15 @@ Route.group(() => {
     'auth',
     'permission:manager',
   ])
-  Route.get('/my-patients', 'PatientController.getMyPatients').middleware([
+})
+
+/** MY PATIENT */
+Route.group(() => {
+  Route.get('/my-patient', 'MyPatientController.index').middleware([
+    'auth',
+    'permission:doctor',
+  ])
+  Route.put('/my-patient/:id', 'MyPatientController.update').middleware([
     'auth',
     'permission:doctor',
   ])
