@@ -38,6 +38,9 @@ export default class Appointment extends BaseModel {
   public exam_request?: string
 
   @column()
+  public prescription?: string
+
+  @column()
   public status?: AppointmentStatus
 
   @column()

@@ -19,6 +19,7 @@ export default class AppointmentController {
         'last_appointment_datetime',
         'notes',
         'exam_request',
+        'prescription',
         'is_private',
         'tenant_id',
         'patient_id',
@@ -50,6 +51,7 @@ export default class AppointmentController {
       'notes',
       'status',
       'exam_request',
+      'prescription',
       'is_private',
       'tenant_id',
       'patient_id',
@@ -72,6 +74,7 @@ export default class AppointmentController {
     request,
     response,
   }: HttpContextContract): Promise<void> {
+    const isDoctor = !!auth?.user?.doctor?.id
     const {
       date,
       status,
@@ -96,6 +99,7 @@ export default class AppointmentController {
     }
     const appointments = await AppointmentService.getAll(
       auth.user!.tenant_id,
+      isDoctor,
       params
     )
 

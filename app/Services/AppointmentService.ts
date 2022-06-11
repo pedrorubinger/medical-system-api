@@ -16,6 +16,7 @@ interface AppointmentData {
   last_appointment_datetime?: DateTime
   notes?: string
   exam_request?: string
+  prescription?: string
   is_private: boolean
   tenant_id: number
   patient_id: number
@@ -50,6 +51,7 @@ class AppointmentService {
         appointment.last_appointment_datetime = data.last_appointment_datetime
         appointment.notes = data.notes
         appointment.exam_request = data.exam_request
+        appointment.prescription = data.prescription
         appointment.is_private = data.is_private
         appointment.tenant_id = data.tenant_id
         appointment.patient_id = data.patient_id
@@ -71,12 +73,13 @@ class AppointmentService {
         }
 
         doctor.useTransaction(trx)
-        await doctor.related('patient').attach(
+        await doctor.related('patient').sync(
           {
             [data.patient_id]: {
               tenant_id: data.tenant_id,
             },
           },
+          false,
           trx
         )
         await trx.commit()
@@ -116,9 +119,26 @@ class AppointmentService {
 
   public async getAll(
     tenantId: number,
+    isDoctor = true,
     params?: FetchAppointmentsData
   ): Promise<ModelPaginatorContract<Appointment> | Appointment[]> {
     try {
+      const selectData = isDoctor
+        ? ['*']
+        : [
+            'id',
+            'datetime',
+            'is_follow_up',
+            'status',
+            'is_private',
+            'patient_id',
+            'doctor_id',
+            'insurance_id',
+            'specialty_id',
+            'payment_method_id',
+            'created_at',
+            'updated_at',
+          ]
       if (params) {
         const {
           date,
@@ -161,15 +181,19 @@ class AppointmentService {
           return await Appointment.query()
             .orderBy(orderBy || 'datetime', order || 'asc')
             .where(whereCallback)
+            .select(...selectData)
             .paginate(page, perPage)
         } else {
           return await Appointment.query()
             .orderBy(orderBy || 'datetime', order || 'asc')
             .where(whereCallback)
+            .select(...selectData)
         }
       }
 
-      return await Appointment.query().where(TENANT_NAME, tenantId)
+      return await Appointment.query()
+        .where(TENANT_NAME, tenantId)
+        .select(...selectData)
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
