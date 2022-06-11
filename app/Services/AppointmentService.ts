@@ -13,7 +13,6 @@ import { TENANT_NAME } from '../../utils/constants/tenant'
 interface AppointmentData {
   datetime: DateTime
   is_follow_up: boolean
-  last_appointment_datetime?: DateTime
   notes?: string
   exam_request?: string
   prescription?: string

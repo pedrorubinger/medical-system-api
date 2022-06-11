@@ -29,9 +29,6 @@ export default class Appointment extends BaseModel {
   public is_follow_up: boolean
 
   @column()
-  public last_appointment_datetime?: DateTime
-
-  @column()
   public notes?: string
 
   @column()

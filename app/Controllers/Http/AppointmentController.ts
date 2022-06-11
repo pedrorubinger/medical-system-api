@@ -16,7 +16,6 @@ export default class AppointmentController {
       ...request.only([
         'datetime',
         'is_follow_up',
-        'last_appointment_datetime',
         'notes',
         'exam_request',
         'prescription',
@@ -47,7 +46,6 @@ export default class AppointmentController {
     const data = request.only([
       'datetime',
       'is_follow_up',
-      'last_appointment_datetime',
       'notes',
       'status',
       'exam_request',

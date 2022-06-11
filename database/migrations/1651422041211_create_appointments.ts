@@ -8,7 +8,6 @@ export default class Appointments extends BaseSchema {
       table.increments('id').primary()
       table.datetime('datetime').notNullable()
       table.boolean('is_follow_up').notNullable().defaultTo(false)
-      table.datetime('last_appointment_datetime').nullable()
       table.text('notes').nullable()
       table.text('exam_request').nullable()
       table.text('prescription').nullable()
