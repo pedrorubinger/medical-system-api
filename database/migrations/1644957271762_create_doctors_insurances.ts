@@ -5,6 +5,7 @@ export default class DoctorsInsurances extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
+      table.primary(['doctor_id', 'insurance_id'])
       table.decimal('price', 8, 2).notNullable()
       table
         .integer('doctor_id')

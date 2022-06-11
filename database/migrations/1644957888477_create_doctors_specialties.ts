@@ -5,6 +5,7 @@ export default class DoctorsSpecialties extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
+      table.primary(['doctor_id', 'specialty_id'])
       table
         .integer('doctor_id')
         .unsigned()

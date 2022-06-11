@@ -5,6 +5,7 @@ export default class DoctorsPatients extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
+      table.primary(['doctor_id', 'patient_id'])
       table.decimal('weight', 10, 2).nullable()
       table.decimal('height', 10, 2).nullable()
       table.text('allergies').nullable()
