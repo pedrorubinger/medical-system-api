@@ -290,3 +290,7 @@ Route.group(() => {
     'permission:manager',
   ])
 })
+Route.get(
+  '/last-appointment',
+  'AppointmentController.findLastAppointment'
+).middleware(['auth', 'permission:manager,doctor'])

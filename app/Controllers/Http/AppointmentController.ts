@@ -117,6 +117,30 @@ export default class AppointmentController {
     return response.status(200).json(appointment)
   }
 
+  public async findLastAppointment({
+    auth,
+    request,
+    response,
+  }: HttpContextContract): Promise<void> {
+    const { patientId, doctorId } = request.qs()
+
+    if (!patientId || !doctorId) {
+      return response
+        .status(404)
+        .json({ code: 'MISSING_PATIENT_AND_DOCTOR_ID' })
+    }
+
+    const isDoctor = !!auth?.user?.doctor?.id
+    const lastAppointment = await AppointmentService.findLastAppointment(
+      patientId,
+      auth.user!.tenant_id,
+      doctorId,
+      isDoctor
+    )
+
+    return response.status(200).json(lastAppointment)
+  }
+
   public async destroy({
     auth,
     params,

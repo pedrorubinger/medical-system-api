@@ -40,6 +40,21 @@ interface FetchAppointmentsData {
   orderBy?: 'datetime'
 }
 
+const appointmentAttributesWhenUserIsDoctor = [
+  'id',
+  'datetime',
+  'is_follow_up',
+  'status',
+  'is_private',
+  'patient_id',
+  'doctor_id',
+  'insurance_id',
+  'specialty_id',
+  'payment_method_id',
+  'created_at',
+  'updated_at',
+]
+
 class AppointmentService {
   public async store(data: AppointmentData): Promise<Appointment> {
     return await Database.transaction(async (trx) => {
@@ -48,7 +63,6 @@ class AppointmentService {
 
         appointment.datetime = data.datetime
         appointment.is_follow_up = data.is_follow_up
-        appointment.last_appointment_datetime = data.last_appointment_datetime
         appointment.notes = data.notes
         appointment.exam_request = data.exam_request
         appointment.prescription = data.prescription
@@ -119,26 +133,13 @@ class AppointmentService {
 
   public async getAll(
     tenantId: number,
-    isDoctor = true,
+    isDoctor: boolean,
     params?: FetchAppointmentsData
   ): Promise<ModelPaginatorContract<Appointment> | Appointment[]> {
     try {
       const selectData = isDoctor
         ? ['*']
-        : [
-            'id',
-            'datetime',
-            'is_follow_up',
-            'status',
-            'is_private',
-            'patient_id',
-            'doctor_id',
-            'insurance_id',
-            'specialty_id',
-            'payment_method_id',
-            'created_at',
-            'updated_at',
-          ]
+        : appointmentAttributesWhenUserIsDoctor
       if (params) {
         const {
           date,
@@ -215,6 +216,30 @@ class AppointmentService {
       }
 
       return appointment
+    } catch (err) {
+      throw new AppError(err?.message, err?.code, err?.status)
+    }
+  }
+
+  public async findLastAppointment(
+    patientId: number,
+    tenantId: number,
+    doctorId: number,
+    isDoctor: boolean
+  ): Promise<Appointment | null> {
+    try {
+      const selectData = isDoctor
+        ? ['*']
+        : appointmentAttributesWhenUserIsDoctor
+      const lastAppointment = await Appointment.query()
+        .where(TENANT_NAME, tenantId)
+        .andWhere('patient_id', '=', patientId)
+        .andWhere('doctor_id', '=', doctorId)
+        .andWhere('status', '=', 'confirmed')
+        .orderBy('datetime')
+        .select(...selectData)
+
+      return lastAppointment?.[0] || null
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
