@@ -1,3 +1,4 @@
+import Database from '@ioc:Adonis/Lucid/Database'
 import {
   ModelPaginatorContract,
   ModelQueryBuilderContract,
@@ -6,9 +7,11 @@ import {
 import AppError from 'App/Exceptions/AppError'
 import Insurance from 'App/Models/Insurance'
 import { TENANT_NAME } from '../../utils/constants/tenant'
+import DoctorService from './DoctorService'
 
 interface InsuranceData {
   name: string
+  price?: number
 }
 
 interface FetchInsurancesData {
@@ -22,12 +25,52 @@ interface FetchInsurancesData {
 }
 
 class InsuranceService {
-  public async store(data: InsuranceData): Promise<Insurance> {
-    try {
-      return await Insurance.create(data)
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
+  public async store(
+    data: InsuranceData,
+    tenantId: number,
+    doctorId: number
+  ): Promise<Insurance> {
+    if (!doctorId) {
+      try {
+        return await Insurance.create({
+          name: data.name,
+          tenant_id: tenantId,
+        })
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
     }
+
+    return await Database.transaction(async (trx) => {
+      try {
+        const insurance = new Insurance()
+
+        insurance.name = data.name
+        insurance[TENANT_NAME] = tenantId
+        insurance.useTransaction(trx)
+
+        const createdInsurance = await insurance.save()
+
+        await DoctorService.manageInsurance(
+          doctorId,
+          tenantId,
+          'attach',
+          [
+            {
+              price: data.price || 0,
+              insurance_id: insurance.id,
+            },
+          ],
+          trx
+        )
+
+        await trx.commit()
+        return createdInsurance
+      } catch (err) {
+        await trx.rollback()
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
+    })
   }
 
   public async update(

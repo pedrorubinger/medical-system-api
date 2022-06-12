@@ -144,10 +144,9 @@ class DoctorService {
     id: number,
     tenantId: number,
     flag: 'attach' | 'dettach',
-    insurances: InsuranceData[]
+    insurances: InsuranceData[],
+    providedTrx?: TransactionClientContract
   ): Promise<Insurance[]> {
-    const trx = await Database.transaction()
-
     const attachInsurances = (arr: InsuranceData[]) => {
       const obj = {}
 
@@ -157,6 +156,8 @@ class DoctorService {
 
       return obj
     }
+
+    const trx = providedTrx ? providedTrx : await Database.transaction()
 
     try {
       const doctor = await Doctor.find(id)

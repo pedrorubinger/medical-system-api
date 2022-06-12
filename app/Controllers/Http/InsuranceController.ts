@@ -11,8 +11,16 @@ export default class InsuranceController {
   }: HttpContextContract): Promise<void> {
     await request.validate(CreateOrUpdateInsuranceValidator)
 
-    const data = { ...request.only(['name']), tenant_id: auth.user!.tenant_id }
-    const insurance = await InsuranceService.store(data)
+    const doctorId = request.input('doctorId')
+    const data = {
+      ...request.only(['name', 'price']),
+      tenant_id: auth.user!.tenant_id,
+    }
+    const insurance = await InsuranceService.store(
+      data,
+      auth.user!.tenant_id,
+      doctorId
+    )
 
     return response.status(201).json(insurance)
   }
