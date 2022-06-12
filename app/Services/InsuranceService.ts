@@ -7,7 +7,7 @@ import {
 import AppError from 'App/Exceptions/AppError'
 import Insurance from 'App/Models/Insurance'
 import { TENANT_NAME } from '../../utils/constants/tenant'
-import DoctorService from './DoctorService'
+import DoctorService from 'App/Services/DoctorService'
 
 interface InsuranceData {
   name: string
@@ -28,7 +28,7 @@ class InsuranceService {
   public async store(
     data: InsuranceData,
     tenantId: number,
-    doctorId: number
+    doctorId?: number
   ): Promise<Insurance> {
     if (!doctorId) {
       try {

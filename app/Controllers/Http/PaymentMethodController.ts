@@ -11,8 +11,13 @@ export default class PaymentMethodController {
   }: HttpContextContract): Promise<void> {
     await request.validate(CreateOrUpdatePaymentMethodValidator)
 
-    const data = { ...request.only(['name']), tenant_id: auth.user!.tenant_id }
-    const paymentMethod = await PaymentMethodService.store(data)
+    const doctorId = request.input('doctorId')
+    const data = request.only(['name'])
+    const paymentMethod = await PaymentMethodService.store(
+      data,
+      auth.user!.tenant_id,
+      doctorId
+    )
 
     return response.status(201).json(paymentMethod)
   }

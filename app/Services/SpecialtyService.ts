@@ -1,11 +1,13 @@
+import Database from '@ioc:Adonis/Lucid/Database'
 import {
   ModelPaginatorContract,
   ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 
+import { TENANT_NAME } from '../../utils/constants/tenant'
 import AppError from 'App/Exceptions/AppError'
 import Specialty from 'App/Models/Specialty'
-import { TENANT_NAME } from '../../utils/constants/tenant'
+import Doctor from 'App/Models/Doctor'
 
 interface StoreSpecialtyData {
   name: string
@@ -27,12 +29,61 @@ interface FetchSpecialtiesData {
 }
 
 class SpecialtyService {
-  public async store(data: StoreSpecialtyData): Promise<Specialty> {
-    try {
-      return await Specialty.create(data)
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
+  public async store(
+    data: StoreSpecialtyData,
+    doctorId?: number
+  ): Promise<Specialty> {
+    if (!doctorId) {
+      try {
+        return await Specialty.create(data)
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
     }
+
+    return await Database.transaction(async (trx) => {
+      const tenantId = data.tenant_id
+
+      try {
+        const doctor = await Doctor.find(doctorId)
+
+        if (!doctor || tenantId.toString() !== doctor.tenant_id.toString()) {
+          throw new AppError(
+            'This doctor was not found!',
+            'DOCTOR_NOT_FOUND',
+            404
+          )
+        }
+
+        const specialty = new Specialty()
+
+        specialty.name = data.name
+        specialty[TENANT_NAME] = tenantId
+        specialty.useTransaction(trx)
+
+        const createdSpecialty = await specialty.save()
+
+        const attachIds = (arr: number[]) => {
+          const obj = {}
+
+          arr.forEach((item: number) => {
+            obj[item] = { tenant_id: tenantId }
+          })
+
+          return obj
+        }
+
+        await doctor
+          .related('specialty')
+          .sync(attachIds([createdSpecialty.id]), false, trx)
+
+        await trx.commit()
+        return createdSpecialty
+      } catch (err) {
+        await trx.rollback()
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
+    })
   }
 
   public async update(

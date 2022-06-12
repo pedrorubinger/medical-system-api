@@ -1,11 +1,13 @@
+import Database from '@ioc:Adonis/Lucid/Database'
 import {
   ModelPaginatorContract,
   ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 
+import { TENANT_NAME } from '../../utils/constants/tenant'
 import AppError from 'App/Exceptions/AppError'
 import PaymentMethod from 'App/Models/PaymentMethod'
-import { TENANT_NAME } from '../../utils/constants/tenant'
+import Doctor from 'App/Models/Doctor'
 
 interface PaymentMethodData {
   name: string
@@ -22,12 +24,60 @@ interface FetchPaymentMethodsData {
 }
 
 class PaymentMethodService {
-  public async store(data: PaymentMethodData): Promise<PaymentMethod> {
-    try {
-      return await PaymentMethod.create(data)
-    } catch (err) {
-      throw new AppError(err?.message, err?.code, err?.status)
+  public async store(
+    data: PaymentMethodData,
+    tenantId: number,
+    doctorId?: number
+  ): Promise<PaymentMethod> {
+    if (!doctorId) {
+      try {
+        return await PaymentMethod.create({ ...data, [TENANT_NAME]: tenantId })
+      } catch (err) {
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
     }
+
+    return await Database.transaction(async (trx) => {
+      try {
+        const doctor = await Doctor.find(doctorId)
+
+        if (!doctor || tenantId.toString() !== doctor.tenant_id.toString()) {
+          throw new AppError(
+            'This doctor was not found!',
+            'DOCTOR_NOT_FOUND',
+            404
+          )
+        }
+
+        const paymentMethod = new PaymentMethod()
+
+        paymentMethod.name = data.name
+        paymentMethod[TENANT_NAME] = tenantId
+        paymentMethod.useTransaction(trx)
+
+        const createdPaymentMethod = await paymentMethod.save()
+
+        const attachIds = (arr: number[]) => {
+          const obj = {}
+
+          arr.forEach((item: number) => {
+            obj[item] = { tenant_id: tenantId }
+          })
+
+          return obj
+        }
+
+        await doctor
+          .related('payment_method')
+          .sync(attachIds([createdPaymentMethod.id]), false, trx)
+
+        await trx.commit()
+        return createdPaymentMethod
+      } catch (err) {
+        await trx.rollback()
+        throw new AppError(err?.message, err?.code, err?.status)
+      }
+    })
   }
 
   public async update(

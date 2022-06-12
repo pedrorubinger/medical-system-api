@@ -11,8 +11,9 @@ export default class SpecialtyController {
   }: HttpContextContract): Promise<void> {
     await request.validate(CreateOrUpdateSpecialtyValidator)
 
+    const doctorId = request.input('doctorId')
     const data = { ...request.only(['name']), tenant_id: auth.user!.tenant_id }
-    const specialty = await SpecialtyService.store(data)
+    const specialty = await SpecialtyService.store(data, doctorId)
 
     return response.status(201).json(specialty)
   }
