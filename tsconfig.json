@@ -33,7 +33,8 @@
       "@adonisjs/session",
       "@adonisjs/redis",
       "@adonisjs/mail",
-      "@adonisjs/view"
+      "@adonisjs/view",
+      "@adonisjs/drive-gcs"
     ]
   }
 }

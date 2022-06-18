@@ -93,21 +93,18 @@ class UserService {
           )
         }
 
-        // const content = `
-        //   <h1>Bem-vindo(a), ${data.name}!</h1>
-        //   <h2>A sua conta foi criada! Agora você precisa definir uma nova senha começar a utilizar o sistema.</h2>
-        //   <a href="http://localhost:3000/set-password?token=${resetPasswordToken}">Clique aqui para criar sua senha.</a>
-        // `
-
         await EmailService.send({
           path: 'emails/set_password',
           subject: 'Medical System - Acesso',
           from: Env.get('SMTP_USERNAME'),
           to: data.email,
           content: {
-            url: `http://localhost:3000/set-password?token=${resetPasswordToken}`,
+            url: `${Env.get(
+              'CLIENT_DOMAIN'
+            )}/set-password?token=${resetPasswordToken}`,
             name: createdUser.name,
             tenant_name: data?.tenant_name,
+            year: new Date().getFullYear().toString(),
           },
         })
         await trx.commit()

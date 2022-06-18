@@ -294,3 +294,10 @@ Route.get(
   '/last-appointment',
   'AppointmentController.findLastAppointment'
 ).middleware(['auth', 'permission:manager,doctor'])
+
+/* APOINTMENT FILE */
+Route.group(() => {
+  Route.post('/appointment-file', 'AppointmentFileController.store').middleware(
+    ['auth', 'permission:doctor']
+  )
+})
