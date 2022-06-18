@@ -26,4 +26,18 @@ export default class AppointmentFileController {
 
     return response.status(201).json(appointmentFile)
   }
+
+  public async show({
+    auth,
+    params,
+    response,
+  }: HttpContextContract): Promise<void> {
+    const { id } = params
+    const appointmentFile = await AppointmentFileService.findByAppointmentId(
+      id,
+      auth!.user!.tenant_id
+    )
+
+    return response.status(200).json(appointmentFile)
+  }
 }

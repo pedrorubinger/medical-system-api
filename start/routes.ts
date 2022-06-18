@@ -297,6 +297,10 @@ Route.get(
 
 /* APOINTMENT FILE */
 Route.group(() => {
+  Route.get(
+    '/appointment-file/:id',
+    'AppointmentFileController.show'
+  ).middleware(['auth', 'permission:doctor'])
   Route.post('/appointment-file', 'AppointmentFileController.store').middleware(
     ['auth', 'permission:doctor']
   )
