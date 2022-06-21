@@ -40,27 +40,6 @@ class AppointmentFileService {
     }
   }
 
-  private async findFileByPath(
-    filePath: string
-  ): Promise<NodeJS.ReadableStream> {
-    try {
-      if (!(await Drive.exists(filePath))) {
-        throw new Error()
-      }
-
-      // return await Drive.get(filePath)
-      const stream = await Drive.getStream(filePath)
-
-      return stream
-    } catch (err) {
-      throw new AppError(
-        err?.message,
-        err?.code || 'APPOINTMENT_FILE_NOT_FOUND',
-        err?.status
-      )
-    }
-  }
-
   public async store(
     data: AppointmentFileData,
     doctorId: number,
@@ -110,25 +89,30 @@ class AppointmentFileService {
     })
   }
 
-  public async findByAppointmentId(appointmentId: number, tenantId: number) {
+  public async findByAppointmentId(
+    appointmentId: number,
+    tenantId: number
+  ): Promise<string[]> {
     try {
-      const appointment = await AppointmentFile.findBy(
-        'appointment_id',
-        appointmentId
-      )
+      const appointmentFiles = await AppointmentFile.query()
+        .where(TENANT_NAME, '=', tenantId)
+        .andWhere('appointment_id', '=', appointmentId)
 
-      if (
-        !appointment ||
-        tenantId.toString() !== appointment.tenant_id.toString()
-      ) {
-        throw new AppError(
-          'This appointment was not found!',
-          'APPOINTMENT_NOT_FOUND',
-          404
-        )
+      if (!appointmentFiles) {
+        return []
       }
 
-      console.log('result:', await this.findFileByPath(appointment.file_path))
+      const fileUrls: string[] = []
+
+      for (const file of appointmentFiles) {
+        const signedUrl = await Drive.getSignedUrl(file.file_path)
+
+        if (signedUrl) {
+          fileUrls.push(signedUrl)
+        }
+      }
+
+      return fileUrls
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
