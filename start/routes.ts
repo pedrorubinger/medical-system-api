@@ -304,4 +304,8 @@ Route.group(() => {
   Route.post('/appointment-file', 'AppointmentFileController.store').middleware(
     ['auth', 'permission:doctor']
   )
+  Route.delete(
+    '/appointment-file/:id',
+    'AppointmentFileController.destroy'
+  ).middleware(['auth', 'permission:doctor'])
 })

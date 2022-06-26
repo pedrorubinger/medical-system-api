@@ -6,16 +6,21 @@ export default class CreateAppointmentFileValidator {
 
   public schema = schema.create({
     appointment_id: schema.number(),
-    file: schema.file({
-      size: '12mb',
-      extnames: ['jpg', 'jpeg', 'png', 'doc', 'docx', 'txt', 'pdf'],
-    }),
+    files: schema.array().members(
+      schema.file({
+        size: '12mb',
+        extnames: ['jpg', 'jpeg', 'png', 'doc', 'docx', 'txt', 'pdf'],
+      })
+    ),
   })
 
   public messages = {
     'appointment_id.required': 'APPOINTMENT_IS_REQUIRED',
-    'file.required': 'APPOINTMENT_FILE_IS_REQUIRED',
-    'file.size': 'APPOINTMENT_FILE_MAXIMUM_SIZE_12MB',
-    'file.extname': 'APPOINTMENT_FILE_EXTNAME',
+    'files.required': 'APPOINTMENT_FILE_IS_REQUIRED',
+    'files.size': 'APPOINTMENT_FILE_MAXIMUM_SIZE_12MB',
+    'files.extname': 'APPOINTMENT_FILE_EXTNAME',
+    'files.file.required': 'APPOINTMENT_FILE_IS_REQUIRED',
+    'files.file.size': 'APPOINTMENT_FILE_MAXIMUM_SIZE_12MB',
+    'files.file.extname': 'APPOINTMENT_FILE_EXTNAME',
   }
 }
