@@ -58,10 +58,11 @@ export default class AppointmentController {
       'specialty_id',
       'payment_method_id',
     ])
+    const files = request.files('files')
     const appointment = await AppointmentService.update(
       id,
       auth.user!.tenant_id,
-      data
+      { ...data, doctor_id: auth.user?.doctor?.id, files }
     )
 
     return response.status(200).json(appointment)

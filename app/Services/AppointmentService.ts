@@ -9,6 +9,7 @@ import AppError from 'App/Exceptions/AppError'
 import Appointment from 'App/Models/Appointment'
 import Doctor from 'App/Models/Doctor'
 import { TENANT_NAME } from '../../utils/constants/tenant'
+import AppointmentFileService from './AppointmentFileService'
 
 interface AppointmentData {
   datetime: DateTime
@@ -23,6 +24,10 @@ interface AppointmentData {
   insurance_id: number
   specialty_id: number
   payment_method_id: number
+}
+
+interface UpdateAppointmentData extends Partial<AppointmentData> {
+  files?: Array<any> | undefined // type MultipartFileContract[]
 }
 
 interface FetchAppointmentsData {
@@ -107,7 +112,7 @@ class AppointmentService {
   public async update(
     id: number,
     tenantId: number,
-    data: Partial<AppointmentData>
+    data: UpdateAppointmentData
   ): Promise<Appointment> {
     try {
       const appointment = await Appointment.find(id)
@@ -123,6 +128,18 @@ class AppointmentService {
         )
       }
 
+      if (data.files?.length && data?.doctor_id) {
+        await AppointmentFileService.store(
+          {
+            appointmentId: id,
+            files: data.files,
+          },
+          data.doctor_id,
+          tenantId
+        )
+      }
+
+      delete data.files
       appointment.merge({ ...data })
       return await appointment.save()
     } catch (err) {
