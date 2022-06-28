@@ -110,7 +110,7 @@ class AppointmentFileService {
   public async findByAppointmentId(
     appointmentId: number,
     tenantId: number
-  ): Promise<string[]> {
+  ): Promise<AppointmentFile[]> {
     try {
       const appointmentFiles = await AppointmentFile.query()
         .where(TENANT_NAME, '=', tenantId)
@@ -120,17 +120,7 @@ class AppointmentFileService {
         return []
       }
 
-      const fileUrls: string[] = []
-
-      for (const file of appointmentFiles) {
-        const signedUrl = await Drive.getSignedUrl(file.file_path)
-
-        if (signedUrl) {
-          fileUrls.push(signedUrl)
-        }
-      }
-
-      return fileUrls
+      return appointmentFiles
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)
     }
