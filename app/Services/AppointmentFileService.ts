@@ -81,14 +81,15 @@ class AppointmentFileService {
         const result: AppointmentFile[] = []
 
         for (const file of data.files) {
-          const name = `doctor_${doctorId}_appointment_${
+          const path = `doctor_${doctorId}_appointment_${
             data.appointmentId
           }_${new Date().getTime()}_${uuidv4()}.${file.extname}`
-          const storedFile = await this.storeFile(doctorId, file, name)
+          const storedFile = await this.storeFile(doctorId, file, path)
           const appointmentFile = await AppointmentFile.create({
             appointment_id: data.appointmentId,
             file_url: storedFile.signedUrl,
             file_path: storedFile.filePath,
+            file_name: file.clientName,
             [TENANT_NAME]: tenantId,
           })
 
@@ -125,42 +126,6 @@ class AppointmentFileService {
       throw new AppError(err?.message, err?.code, err?.status)
     }
   }
-
-  // public async destroyAll(
-  //   appointmentId: number,
-  //   tenantId: number
-  // ): Promise<DestroyFileResponse> {
-  //   try {
-  //     const appointmentFiles = await AppointmentFile.query()
-  //       .where(TENANT_NAME, '=', tenantId)
-  //       .andWhere('appointment_id', '=', appointmentId)
-  //     const paths = appointmentFiles.map((appointment) => appointment.file_path)
-
-  //     if (!paths?.length) {
-  //       return { total: 0, deleted: 0 }
-  //     }
-
-  //     let deletedFiles = 0
-
-  //     for (const path of paths) {
-  //       const appointment = appointmentFiles.find(
-  //         (appointment) => appointment.file_path === path
-  //       )
-
-  //       if (!appointment) {
-  //         continue
-  //       }
-
-  //       await Drive.delete(path)
-  //       await appointment.delete()
-  //       deletedFiles++
-  //     }
-
-  //     return { total: paths.length, deleted: deletedFiles }
-  //   } catch (err) {
-  //     throw new AppError(err?.message, err?.code, err?.status)
-  //   }
-  // }
 
   public async destroy(
     id: number,

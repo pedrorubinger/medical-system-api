@@ -12,6 +12,9 @@ export default class AppointmentFile extends BaseModel {
   public file_url: string
 
   @column()
+  public file_name: string
+
+  @column()
   public file_path: string
 
   @column({ serializeAs: null })

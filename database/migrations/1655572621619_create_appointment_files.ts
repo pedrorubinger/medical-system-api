@@ -8,6 +8,7 @@ export default class AppointmentFiles extends BaseSchema {
       table.increments('id').primary()
       table.text('file_url').notNullable()
       table.string('file_path', 600).notNullable().unique()
+      table.string('file_name', 250).notNullable()
       table
         .integer('appointment_id')
         .unsigned()
