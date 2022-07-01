@@ -1,5 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
+import { TENANT_NAME } from '../../../utils/constants/tenant'
 import AddressService from 'App/Services/AddressService'
 import CreateAddressValidator from 'App/Validators/CreateAddressValidator'
 import UpdateAddressValidator from 'App/Validators/UpdateAddressValidator'
@@ -19,8 +20,9 @@ export default class AddressController {
         'neighborhood',
         'complement',
         'postal_code',
+        'patient_id',
       ]),
-      tenant_id: auth.user!.tenant_id,
+      [TENANT_NAME]: auth.user!.tenant_id,
     }
     const address = await AddressService.store(data)
 
