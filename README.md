@@ -14,7 +14,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [x] Implementação do módulo de Gerenciar Tenants;
 - [x] Implementação do módulo de Pacientes;
 - [x] Implementação do módulo de Endereços;
-- [ ] Implementação do módulo de Gerenciar Consultas (visão do médico);
+- [x] Implementação do módulo de Gerenciar Consultas (visão do médico);
 - [ ] Implementação do módulo de Recuperar Senha;
 - [ ] Implementação do módulo de Solicitar uma Conta (?);
 - [x] Implementação do módulo de Médicos;
@@ -22,7 +22,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [ ] Implementação do módulo de Relatórios;
 - [x] Implementação da Configuração de Agenda;
 - [x] Implementação da Agenda;
-- [ ] Implementação de Arquivos de Consultas;
+- [x] Implementação de Arquivos de Consultas;
 - [ ] Melhorar cobertura de testes;
 
 ## 💻 Requisitos
@@ -44,7 +44,7 @@ Para configurar o MedicalSystem API, siga estas etapas:
 
 Para executar a API, siga estas etapas:
 
-1. Dentro da pasta do projeto, execute no terminal o script de start `yarn start` ou `npm start`;
+1. Dentro da pasta do projeto, execute no terminal o script de start `yarn dev` ou `npm dev`;
 
 ## 🗃 ️Branches
 
