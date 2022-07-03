@@ -6,7 +6,7 @@ import {
 
 import { TENANT_NAME } from '../../utils/constants/tenant'
 import AppError from 'App/Exceptions/AppError'
-import Patient from 'App/Models/Patient'
+import Patient, { TSex } from 'App/Models/Patient'
 import Address from 'App/Models/Address'
 import AddressService from 'App/Services/AddressService'
 import Doctor from 'App/Models/Doctor'
@@ -15,6 +15,7 @@ interface StorePatientData {
   name: string
   cpf: string
   birthdate: Date
+  sex: TSex
   mother_name: string
   primary_phone: string
   tenant_id: number
@@ -51,6 +52,7 @@ class PatientService {
           const patient = new Patient()
 
           patient.birthdate = data.birthdate
+          patient.sex = data.sex
           patient.cpf = data.cpf
           patient.email = data.email
           patient.father_name = data.father_name

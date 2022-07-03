@@ -18,6 +18,8 @@ import Tenant from 'App/Models/Tenant'
 import Appointment from 'App/Models/Appointment'
 import Doctor from 'App/Models/Doctor'
 
+export type TSex = 'male' | 'female'
+
 export default class Patient extends BaseModel {
   public serializeExtras() {
     return {
@@ -40,6 +42,9 @@ export default class Patient extends BaseModel {
 
   @column()
   public birthdate: Date
+
+  @column()
+  public sex: TSex
 
   @column()
   public primary_phone: string

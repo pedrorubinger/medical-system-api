@@ -9,6 +9,7 @@ export default class Patients extends BaseSchema {
       table.string('name', 150).notNullable()
       table.string('cpf', 20).notNullable().unique()
       table.date('birthdate').notNullable()
+      table.enum('sex', ['female', 'male']).notNullable()
       table.string('primary_phone', 30).notNullable()
       table.string('mother_name', 150).notNullable()
       table.string('father_name', 150).nullable()

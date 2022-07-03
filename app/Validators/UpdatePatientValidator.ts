@@ -19,6 +19,7 @@ export default class UpdatePatientValidator {
       }),
     ]),
     birthdate: schema.date.optional({}),
+    sex: schema.enum.optional(['female', 'male']),
     primary_phone: schema.string.optional({}, [rules.maxLength(30)]),
     mother_name: schema.string.optional({}, [rules.maxLength(150)]),
     father_name: schema.string.optional({}, [rules.maxLength(150)]),
