@@ -39,10 +39,7 @@ Route.group(() => {
     'auth',
     'permission:manager',
   ])
-  Route.get('/user/:id', 'UserController.show').middleware([
-    'auth',
-    'permission:admin',
-  ])
+  Route.get('/user/:id', 'UserController.show').middleware(['auth'])
   Route.delete('/user/:id', 'UserController.destroy').middleware([
     'auth',
     'permission:admin',

@@ -117,6 +117,13 @@ export default class UserController {
     response,
   }: HttpContextContract): Promise<void> {
     const { id } = params
+
+    if (id?.toString() !== auth?.user?.id?.toString()) {
+      return response
+        .status(401)
+        .send({ code: 'USER_HAS_NO_PERMISSION_TO_ACCESS_RESOURCE' })
+    }
+
     const user = await UserService.find(id, auth.user!.tenant_id)
 
     return response.status(200).json(user)
