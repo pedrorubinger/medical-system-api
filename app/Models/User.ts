@@ -41,6 +41,9 @@ export default class User extends BaseModel {
   public is_admin: boolean
 
   @column()
+  public is_clinic_owner: boolean
+
+  @column()
   public is_master: boolean
 
   @column({ serializeAs: null })

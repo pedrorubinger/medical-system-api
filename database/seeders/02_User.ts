@@ -21,6 +21,7 @@ export const defaultDeveloperUser = {
   password: 'pedro123',
   is_admin: false,
   is_master: true,
+  is_clinic_owner: false,
   tenant_id: defaultOwnerTenant.id,
 }
 
@@ -86,6 +87,7 @@ export const defaultDeveloperUserTwo = {
   password: 'joao123',
   is_admin: false,
   is_master: false,
+  is_clinic_owner: false,
   tenant_id: defaultOwnerTenant.id,
 }
 

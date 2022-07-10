@@ -21,6 +21,7 @@ export default class UserController {
       'cpf',
       'phone',
       'is_admin',
+      'is_clinic_owner',
       'password',
       'role',
       'tenant_name',

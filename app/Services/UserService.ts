@@ -19,6 +19,7 @@ interface StoreUserData {
   phone: string
   cpf: string
   is_admin: boolean
+  is_clinic_owner: boolean
   role: Role
   tenant_id: number
   tenant_name?: string
@@ -33,6 +34,7 @@ interface UpdateUserData {
   phone?: string
   cpf?: string
   is_admin?: boolean
+  is_clinic_owner?: boolean
   reset_password_token?: string
 }
 
@@ -77,6 +79,7 @@ class UserService {
         user.phone = data.phone
         user.cpf = data.cpf
         user.is_admin = data.is_admin || false
+        user.is_clinic_owner = data.is_clinic_owner || false
         user.role = data.role
         user.useTransaction(trx)
 

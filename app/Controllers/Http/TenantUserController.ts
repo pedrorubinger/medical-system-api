@@ -16,6 +16,7 @@ export default class TenantUserController {
       'cpf',
       'phone',
       'is_admin',
+      'is_clinic_owner',
       'password',
       'role',
       'tenant_name',
@@ -27,6 +28,7 @@ export default class TenantUserController {
         ? {
             ...data,
             is_admin: false,
+            is_clinic_owner: false,
             is_master: false,
             tenant_id: auth.user.tenant_id,
             role: 'developer' as Role,
