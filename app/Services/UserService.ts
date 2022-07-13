@@ -269,7 +269,7 @@ class UserService {
         const user = await User.findBy('email', email)
 
         if (!user) {
-          throw new AppError('This user was not found!', 'USER_NOT_FOUND', 404)
+          return true
         }
 
         const token = uuidv4()
@@ -278,19 +278,15 @@ class UserService {
         user.merge({ reset_password_token: token })
         await user.save()
 
-        // const content = `
-        //   <h1>Olá, ${user.name}!</h1>
-        //   <h2>Você solicitou uma alteração de senha para o email ${email}.</h2>
-        //   <a href="http://localhost:3000/set-password?token=${token}">Clique aqui para redefinir sua senha.</a>
-        // `
-
         await EmailService.send({
           path: 'emails/recover_password',
           from: Env.get('SMTP_USERNAME'),
           to: email,
-          subject: 'Medical System - Alteração de Senha',
+          subject: 'MedApp - Alteração de Senha',
           content: {
             url: `http://localhost:3000/set-password?token=${token}`,
+            name: user.name,
+            year: new Date().getFullYear().toString(),
           },
         })
         trx.commit()
