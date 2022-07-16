@@ -37,7 +37,7 @@ Route.group(() => {
   ])
   Route.get('/user/doctor', 'UserController.getDoctors').middleware([
     'auth',
-    'permission:manager',
+    'permission:manager,admin',
   ])
   Route.get('/user/:id', 'UserController.show').middleware(['auth'])
   Route.delete('/user/:id', 'UserController.destroy').middleware([
