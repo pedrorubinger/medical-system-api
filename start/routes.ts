@@ -306,3 +306,9 @@ Route.group(() => {
     'AppointmentFileController.destroy'
   ).middleware(['auth', 'permission:doctor'])
 })
+
+/* REPORTS */
+Route.get('/report', 'ReportController.index').middleware([
+  'auth',
+  'permission:admin,doctor',
+])
