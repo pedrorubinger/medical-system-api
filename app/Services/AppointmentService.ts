@@ -5,11 +5,11 @@ import {
   ModelQueryBuilderContract,
 } from '@ioc:Adonis/Lucid/Orm'
 
+import { TENANT_NAME } from '../../utils/constants/tenant'
 import AppError from 'App/Exceptions/AppError'
 import Appointment from 'App/Models/Appointment'
 import Doctor from 'App/Models/Doctor'
-import { TENANT_NAME } from '../../utils/constants/tenant'
-import AppointmentFileService from './AppointmentFileService'
+import AppointmentFileService from 'App/Services/AppointmentFileService'
 
 interface AppointmentData {
   datetime: DateTime
@@ -44,10 +44,17 @@ interface FetchAppointmentsData {
   orderBy?: 'datetime'
 }
 
+interface GetPriceData {
+  is_follow_up: boolean
+  is_private: boolean
+  insurance_id?: number | undefined | null
+}
+
 const appointmentAttributesWhenUserIsDoctor = [
   'id',
   'datetime',
   'is_follow_up',
+  'price',
   'status',
   'is_private',
   'patient_id',
@@ -60,13 +67,48 @@ const appointmentAttributesWhenUserIsDoctor = [
 ]
 
 class AppointmentService {
+  private async getPrice(doctor: Doctor, data: GetPriceData) {
+    if (data?.is_follow_up) {
+      return 0
+    }
+
+    if (data?.insurance_id) {
+      return (
+        doctor?.insurance?.find(
+          ({ id }) => id.toString() === data?.insurance_id?.toString()
+        )?.$extras?.pivot_price || 0
+      )
+    }
+
+    if (data?.is_private) {
+      return doctor?.private_appointment_price || 0
+    }
+
+    return 0
+  }
+
   public async store(data: AppointmentData): Promise<Appointment> {
     return await Database.transaction(async (trx) => {
       try {
+        const doctor = await Doctor.find(data.doctor_id)
+
+        if (!doctor) {
+          throw new AppError(
+            'This doctor was not found!',
+            'DOCTOR_NOT_FOUND',
+            404
+          )
+        }
+
         const appointment = new Appointment()
 
         appointment.datetime = data.datetime
         appointment.is_follow_up = data.is_follow_up
+        appointment.price = await this.getPrice(doctor, {
+          insurance_id: data?.insurance_id,
+          is_follow_up: data?.is_follow_up,
+          is_private: data?.is_private,
+        })
         appointment.notes = data.notes
         appointment.exam_request = data.exam_request
         appointment.prescription = data.prescription
@@ -80,15 +122,6 @@ class AppointmentService {
         appointment.useTransaction(trx)
 
         const createdAppointment = await appointment.save()
-        const doctor = await Doctor.find(data.doctor_id)
-
-        if (!doctor) {
-          throw new AppError(
-            'This doctor was not found!',
-            'DOCTOR_NOT_FOUND',
-            404
-          )
-        }
 
         doctor.useTransaction(trx)
         await doctor.related('patient').sync(
@@ -115,6 +148,16 @@ class AppointmentService {
     data: UpdateAppointmentData
   ): Promise<Appointment> {
     try {
+      const doctor = await Doctor.find(data.doctor_id)
+
+      if (!doctor) {
+        throw new AppError(
+          'This doctor was not found!',
+          'DOCTOR_NOT_FOUND',
+          404
+        )
+      }
+
       const appointment = await Appointment.find(id)
 
       if (
@@ -139,8 +182,26 @@ class AppointmentService {
         )
       }
 
+      const price = await this.getPrice(doctor, {
+        insurance_id:
+          data?.insurance_id === undefined
+            ? appointment?.insurance_id
+            : data.insurance_id,
+        is_follow_up:
+          data?.is_follow_up === undefined
+            ? appointment?.is_follow_up
+            : data.is_follow_up,
+        is_private:
+          data?.is_private === undefined
+            ? appointment?.is_private
+            : data?.is_private,
+      })
+
       delete data.files
-      appointment.merge({ ...data })
+      appointment.merge({
+        ...data,
+        price,
+      })
       return await appointment.save()
     } catch (err) {
       throw new AppError(err?.message, err?.code, err?.status)

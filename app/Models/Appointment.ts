@@ -29,6 +29,9 @@ export default class Appointment extends BaseModel {
   public is_follow_up: boolean
 
   @column()
+  public price: number
+
+  @column()
   public notes?: string
 
   @column()
