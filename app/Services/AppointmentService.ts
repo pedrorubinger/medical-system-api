@@ -313,7 +313,7 @@ class AppointmentService {
         .andWhere('patient_id', '=', patientId)
         .andWhere('doctor_id', '=', doctorId)
         .andWhere('status', '=', 'confirmed')
-        .orderBy('datetime')
+        .orderBy('datetime', 'desc')
         .select(...selectData)
 
       return lastAppointment?.[0] || null
