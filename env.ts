@@ -19,7 +19,7 @@ export default Env.rules({
   PORT: Env.schema.number() || 80,
   APP_KEY: Env.schema.string(),
   APP_NAME: Env.schema.string(),
-  DRIVE_DISK: Env.schema.enum(['local'] as const),
+  DRIVE_DISK: Env.schema.enum(['local', 'gcs'] as const),
   NODE_ENV: Env.schema.enum(['development', 'production', 'testing'] as const),
   SESSION_DRIVER: Env.schema.string(),
   REDIS_CONNECTION: Env.schema.enum(['local', 'session'] as const),
@@ -30,4 +30,7 @@ export default Env.rules({
   SMTP_PORT: Env.schema.number(),
   SMTP_USERNAME: Env.schema.string(),
   SMTP_PASSWORD: Env.schema.string(),
+  GCS_KEY_FILENAME: Env.schema.string(),
+  GCS_BUCKET: Env.schema.string(),
+  CLIENT_DOMAIN: Env.schema.string(),
 })

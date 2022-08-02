@@ -25,9 +25,17 @@
     "@adonisjs/auth",
     "@adonisjs/session",
     "@adonisjs/redis",
-    "@adonisjs/mail"
+    "@adonisjs/mail",
+    "@adonisjs/view",
+    "@adonisjs/drive-gcs"
   ],
   "aceProviders": [
     "@adonisjs/repl"
+  ],
+  "metaFiles": [
+    {
+      "pattern": "resources/views/**/*.edge",
+      "reloadServer": false
+    }
   ]
 }

@@ -6,17 +6,33 @@
 
 O projeto ainda está em desenvolvimento e as próximas atualizações estarão voltadas para as seguintes tarefas:
 
+- [x] Implementação do módulo de Autenticação;
+- [x] Implementação do módulo de Usuários;
+- [x] Implementação do módulo de Gerenciar Perfil;
+- [x] Implementação do módulo de Convênios;
+- [x] Implementação do módulo de Especialidades;
+- [x] Implementação do módulo de Gerenciar Tenants;
+- [x] Implementação do módulo de Pacientes;
+- [x] Implementação do módulo de Endereços;
+- [x] Implementação do módulo de Gerenciar Consultas (visão do médico);
+- [x] Implementação do módulo de Recuperar Senha;
+- [ ] Implementação do módulo de Solicitar uma Conta (?);
+- [x] Implementação do módulo de Médicos;
+- [x] Implementação do middleware de Permissões;
 - [ ] Implementação do módulo de Relatórios;
-- [ ] Implementação da Configuração de Agenda;
+- [x] Implementação da Configuração de Agenda;
+- [x] Implementação da Agenda;
+- [x] Implementação de Arquivos de Consultas;
+- [ ] Melhorar cobertura de testes;
 
 ## 💻 Requisitos
 
 Estes são os requisitos para que este projeto execute corretamente em sua máquina:
 
-* Você tem instalado em sua máquina `Node.js v16.13.2 (ou superior)`. Utilize o comando `node --version` para checar a sua versão do Node.js;
-* Você tem instalado em sua máquina um gerenciador de pacotes para Node.js (Yarn ou NPM);
+- Você tem instalado em sua máquina `Node.js v16.13.2`. Utilize o comando `node --version` para checar a sua versão. Você também pode utilizar o `nvm` para alternar entre as versões do Node.js em sua máquina;
+- Você tem instalado em sua máquina um gerenciador de pacotes para Node.js (yarn ou npm);
 
-## 🚀 Configurando a aplicação
+## ☕ Configurando a aplicação
 
 Para configurar o MedicalSystem API, siga estas etapas:
 
@@ -24,12 +40,28 @@ Para configurar o MedicalSystem API, siga estas etapas:
 2. Execute o comando `yarn` ou `npm install`;
 3. No diretório do projeto raíz do projeto, crie um arquivo `.env` e configure as variáveis de ambiente necessárias. Utilize como base o arquivo `.env.example`;
 
-
-## ☕ Executando a aplicação
+## 🚀 Executando a aplicação
 
 Para executar a API, siga estas etapas:
 
-1. Dentro da pasta do projeto, execute no terminal o script de start `yarn start` ou `npm start`;
+1. Dentro da pasta do projeto, execute no terminal o script de start `yarn dev` ou `npm dev`;
+
+## 🗃 ️Branches
+
+O projeto possui duas branches principais:
+
+1. **dev**: branch onde está o código em desenvolvimento;
+2. **master**: branch principal onde está o código em produção;
+
+Os commits devem acontecer em branches separadas (quando há mais de um colaborador) e então devem ser mergeados na branch **dev** para que só então sejam mergeados na branch **master**.
+
+## 🧪 Testes
+
+Este projeto utiliza a biblioteca <a href="https://docs.adonisjs.com/cookbooks/testing-adonisjs-apps">Japa</a>, indicada para testes pela documentação oficial do framework <a href="https://docs.adonisjs.com/guides/introduction">AdonisJS</a>. Até o momento o projeto conta com testes de **Controllers** e **Services**. Siga os passos abaixo para executá-los:
+
+1. Entre na pasta do projeto e siga os passos de configuração da aplicação caso ainda não o tenha feito.
+2. No terminal, execute o comando `yarn test` para executar os testes do projeto. Caso queira executar os testes e ainda ver a sua cobertura de código, execute o comando `yarn coverage`.
+3. Caso queira executar os casos de testes de um único arquivo, execute o comando `yarn test` ou `yarn coverage` seguido do caminho do arquivo. Por exemplo: `yarn coverage tests/user/UserController.spec.ts`.
 
 ## 🤝 Colaboradores
 
@@ -49,6 +81,5 @@ Abaixo estão listados os colaboradores que atuam neste projeto:
 </table>
 
 ## 📝 Licença
-Esse projeto está sob licença. Veja o arquivo [LICENÇA](LICENSE.md) para mais detalhes.
-
+Esse projeto ainda não está sob licença.
 <br />

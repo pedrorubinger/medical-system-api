@@ -53,7 +53,7 @@ export default class AuthMiddleware {
      * Unable to authenticate using any guard
      */
     throw new AuthenticationException(
-      'Unauthorized access',
+      'You do not have permission to access this resource.',
       'E_UNAUTHORIZED_ACCESS',
       guardLastAttempted,
       this.redirectTo

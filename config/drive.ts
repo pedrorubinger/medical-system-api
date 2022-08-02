@@ -116,11 +116,13 @@ const driveConfig: DriveConfig = {
     |**************************************************************************
     |
     */
-    // gcs: {
-    //   driver: 'gcs',
-    //   visibility: 'public',
-    //   keyFilename: Env.get('GCS_KEY_FILENAME'),
-    //   bucket: Env.get('GCS_BUCKET'),
+    gcs: {
+      driver: 'gcs',
+      visibility: 'private',
+      keyFilename: Env.get('GCS_KEY_FILENAME'),
+      bucket: Env.get('GCS_BUCKET'),
+      usingUniformAcl: false,
+    },
 
     /*
       |--------------------------------------------------------------------------
