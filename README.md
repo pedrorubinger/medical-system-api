@@ -81,7 +81,5 @@ Abaixo estão listados os colaboradores que atuam neste projeto:
 </table>
 
 ## 📝 Licença
-
 Esse projeto ainda não está sob licença.
-
 <br />
