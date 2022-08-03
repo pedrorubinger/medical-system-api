@@ -7,7 +7,7 @@ export default class AppointmentFiles extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
       table.text('file_url').notNullable()
-      table.string('file_path', 600).notNullable().unique()
+      table.text('file_path').notNullable()
       table.string('file_name', 250).notNullable()
       table
         .integer('appointment_id')
