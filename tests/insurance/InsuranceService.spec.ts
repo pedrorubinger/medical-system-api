@@ -4,6 +4,7 @@ import { Assert } from 'japa/build/src/Assert'
 import InsuranceService from 'App/Services/InsuranceService'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 import { defaultInsurance } from '../../database/seeders/03_Insurance'
+import { defaultDoctorOne } from '../../database/seeders/02_User'
 
 const id = defaultInsurance.id
 
@@ -51,7 +52,11 @@ test.group('InsuranceService', (group) => {
         tenant_id: defaultInsurance.tenant_id,
       }
 
-      await InsuranceService.store(data)
+      await InsuranceService.store(
+        data,
+        defaultInsurance.tenant_id,
+        defaultDoctorOne.id
+      )
     } catch (err) {
       assert.equal(err.status, 500)
     }
@@ -62,7 +67,11 @@ test.group('InsuranceService', (group) => {
       name: 'New Dummy Insurance',
       tenant_id: defaultInsurance.tenant_id,
     }
-    const { name } = await InsuranceService.store(data)
+    const { name } = await InsuranceService.store(
+      data,
+      defaultInsurance.tenant_id,
+      defaultDoctorOne.id
+    )
 
     assert.equal(name, data.name)
   })

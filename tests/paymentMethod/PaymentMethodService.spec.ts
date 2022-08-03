@@ -4,6 +4,7 @@ import { Assert } from 'japa/build/src/Assert'
 import PaymentMethodService from 'App/Services/PaymentMethodService'
 import { rollbackMigrations, runMigrations, runSeeds } from '../../japaFile'
 import { creditCardPaymentMethod } from '../../database/seeders/05_PaymentMethod'
+import { defaultDoctorOne } from '../../database/seeders/02_User'
 
 const id = creditCardPaymentMethod.id
 
@@ -55,7 +56,11 @@ test.group('PaymentMethodService', (group) => {
         tenant_id: creditCardPaymentMethod.tenant_id,
       }
 
-      await PaymentMethodService.store(data)
+      await PaymentMethodService.store(
+        data,
+        creditCardPaymentMethod.tenant_id,
+        defaultDoctorOne.id
+      )
     } catch (err) {
       assert.equal(err.status, 500)
     }
@@ -66,7 +71,11 @@ test.group('PaymentMethodService', (group) => {
       name: 'New Dummy Payment Method',
       tenant_id: creditCardPaymentMethod.tenant_id,
     }
-    const { name } = await PaymentMethodService.store(data)
+    const { name } = await PaymentMethodService.store(
+      data,
+      creditCardPaymentMethod.tenant_id,
+      defaultDoctorOne.id
+    )
 
     assert.equal(name, data.name)
   })

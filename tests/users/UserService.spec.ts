@@ -59,6 +59,7 @@ test.group('UserService', (group) => {
       cpf: '12345633910',
       is_admin: false,
       tenant_id: defaultUser.tenant_id,
+      is_clinic_owner: true,
       tenant_name: 'Clinic One',
     }
     const { cpf } = await UserService.store(data)
@@ -78,6 +79,7 @@ test.group('UserService', (group) => {
         cpf: '12345633910',
         is_admin: false,
         tenant_id: defaultUser.tenant_id * -77,
+        is_clinic_owner: true,
         tenant_name: 'Clinic One',
       }
 
@@ -101,6 +103,7 @@ test.group('UserService', (group) => {
       crm_document: 'TEST-MG 8987349',
       tenant_id: defaultUser.tenant_id,
       tenant_name: 'Clinic One',
+      is_clinic_owner: true,
     }
     const { cpf } = await UserService.store(data)
 
