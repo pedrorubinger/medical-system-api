@@ -19,7 +19,7 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [ ] Implementação do módulo de Solicitar uma Conta (?);
 - [x] Implementação do módulo de Médicos;
 - [x] Implementação do middleware de Permissões;
-- [ ] Implementação do módulo de Relatórios;
+- [x] Implementação do módulo de Relatórios;
 - [x] Implementação da Configuração de Agenda;
 - [x] Implementação da Agenda;
 - [x] Implementação de Arquivos de Consultas;
@@ -81,5 +81,6 @@ Abaixo estão listados os colaboradores que atuam neste projeto:
 </table>
 
 ## 📝 Licença
+
 Esse projeto ainda não está sob licença.
 <br />
