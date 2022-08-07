@@ -119,7 +119,7 @@ const driveConfig: DriveConfig = {
     gcs: {
       driver: 'gcs',
       visibility: 'private',
-      keyFilename: JSON.parse(Env.get('GCS_KEY_FILENAME')),
+      keyFilename: Env.get('GCS_KEY_FILENAME'),
       bucket: Env.get('GCS_BUCKET'),
       usingUniformAcl: false,
     },
