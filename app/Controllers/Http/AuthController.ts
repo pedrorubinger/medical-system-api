@@ -32,8 +32,6 @@ export default class AuthController {
       const user = await auth.use('api').authenticate()
 
       console.log('ENV FILE GCS', Env.get('GCS_KEY_FILENAME'))
-      const signedUrl = await Drive.getSignedUrl('doctor_x_appointments')
-      console.log('signedURL', signedUrl)
 
       return response.status(200).json({ user })
     } catch (err) {
