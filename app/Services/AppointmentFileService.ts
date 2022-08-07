@@ -32,7 +32,7 @@ class AppointmentFileService {
     name: string
   ): Promise<StoreFileResponse> {
     try {
-      const location = `doctor_${doctor_id}_appointments`
+      const location = `d_${doctor_id}_apts`
       const filePath = `${location}/${name || new Date().getTime()}`
 
       console.log(
@@ -100,7 +100,7 @@ class AppointmentFileService {
         const result: AppointmentFile[] = []
 
         for (const file of data.files) {
-          const path = `${new Date().getTime()}_${uuidv4()}`
+          const path = `${new Date().getTime()}` // _${uuidv4()}
           console.log(
             'AppointmentFileService > store > dataBase trx path:',
             path
