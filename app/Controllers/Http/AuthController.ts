@@ -1,6 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Env from '@ioc:Adonis/Core/Env'
-// import Drive from '@ioc:Adonis/Core/Drive'
 
 import AppError from 'App/Exceptions/AppError'
 
@@ -30,8 +28,6 @@ export default class AuthController {
   }: HttpContextContract): Promise<void> {
     try {
       const user = await auth.use('api').authenticate()
-
-      console.log('ENV FILE GCS', Env.get('GCS_KEY_FILENAME'))
 
       return response.status(200).json({ user })
     } catch (err) {
