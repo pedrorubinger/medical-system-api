@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
-import Drive from '@ioc:Adonis/Core/Drive'
+// import Drive from '@ioc:Adonis/Core/Drive'
 
 import AppError from 'App/Exceptions/AppError'
 
