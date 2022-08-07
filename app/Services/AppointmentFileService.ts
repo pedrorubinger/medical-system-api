@@ -100,9 +100,7 @@ class AppointmentFileService {
         const result: AppointmentFile[] = []
 
         for (const file of data.files) {
-          const path = `doctor_${doctorId}_appointment_${
-            data.appointmentId
-          }_${new Date().getTime()}_${uuidv4()}.${file.extname}`
+          const path = `${new Date().getTime()}_${uuidv4()}`
           console.log(
             'AppointmentFileService > store > dataBase trx path:',
             path
