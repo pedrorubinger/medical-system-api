@@ -1,6 +1,6 @@
 import Drive from '@ioc:Adonis/Core/Drive'
 import Database from '@ioc:Adonis/Lucid/Database'
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid'
 
 import { TENANT_NAME } from '../../utils/constants/tenant'
 import AppError from 'App/Exceptions/AppError'
