@@ -35,12 +35,30 @@ class AppointmentFileService {
       const location = `doctor_${doctor_id}_appointments`
       const filePath = `${location}/${name || new Date().getTime()}`
 
+      console.log(
+        'AppointmentFileService > storeFile > location and filePath:',
+        location,
+        filePath
+      )
+      console.log(
+        'AppointmentFileService > storeFile > going to move to disk',
+        location,
+        { name },
+        'gcs'
+      )
       await file.moveToDisk(location, { name }, 'gcs')
 
+      console.log(
+        'AppointmentFileService > storeFile > moved to disk',
+        location,
+        { name },
+        'gcs'
+      )
       const signedUrl = await Drive.getSignedUrl(filePath)
 
       return { signedUrl, filePath }
     } catch (err) {
+      console.log('AppointmentFileService > storeFile > err:', err)
       throw new AppError(
         err?.message,
         err?.code || 'STORE_APPOINTMENT_FILE_FAILED',
@@ -69,6 +87,7 @@ class AppointmentFileService {
         )
       }
     } catch (err) {
+      console.log('AppointmentFileService > store > err:', err)
       throw new AppError(err?.message, err?.code, err?.status)
     }
 
@@ -84,6 +103,14 @@ class AppointmentFileService {
           const path = `doctor_${doctorId}_appointment_${
             data.appointmentId
           }_${new Date().getTime()}_${uuidv4()}.${file.extname}`
+          console.log(
+            'AppointmentFileService > store > dataBase trx path:',
+            path
+          )
+          console.log(
+            'AppointmentFileService > store > dataBase trx file:',
+            file
+          )
           const storedFile = await this.storeFile(doctorId, file, path)
           const appointmentFile = await AppointmentFile.create({
             appointment_id: data.appointmentId,
@@ -103,6 +130,10 @@ class AppointmentFileService {
         return result
       } catch (err) {
         await trx.rollback()
+        console.log(
+          'AppointmentFileService > store > database transaction > err:',
+          err
+        )
         throw new AppError(err?.message, err?.code, err?.status)
       }
     })
