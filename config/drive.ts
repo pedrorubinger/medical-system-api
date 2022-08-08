@@ -120,7 +120,6 @@ const driveConfig: DriveConfig = {
       driver: 'gcs',
       visibility: 'private',
       keyFilename: path.join(__dirname, '../../google-credentials.json'),
-      // keyFilename: Env.get('GCS_KEY_FILENAME'),
       bucket: Env.get('GCS_BUCKET'),
       usingUniformAcl: false,
     },
