@@ -4,7 +4,7 @@
  * Feel free to let us know via PR, if you find something broken in this config
  * file.
  */
-
+import * as path from 'path'
 import Env from '@ioc:Adonis/Core/Env'
 import { DriveConfig } from '@ioc:Adonis/Core/Drive'
 import Application from '@ioc:Adonis/Core/Application'
@@ -119,7 +119,8 @@ const driveConfig: DriveConfig = {
     gcs: {
       driver: 'gcs',
       visibility: 'private',
-      keyFilename: Env.get('GCS_KEY_FILENAME'),
+      keyFilename: path.join(__dirname, '../google-credentials.json'),
+      // keyFilename: Env.get('GCS_KEY_FILENAME'),
       bucket: Env.get('GCS_BUCKET'),
       usingUniformAcl: false,
     },
