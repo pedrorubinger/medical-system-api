@@ -119,9 +119,7 @@ const driveConfig: DriveConfig = {
     gcs: {
       driver: 'gcs',
       visibility: 'private',
-      keyFilename: Buffer.from(Env.get('GCS_KEY_FILENAME'), 'base64').toString(
-        'binary'
-      ),
+      keyFilename: Env.get('GCS_KEY_FILENAME'),
       bucket: Env.get('GCS_BUCKET'),
       usingUniformAcl: false,
     },
