@@ -93,7 +93,7 @@ class AppointmentFileService {
 
     console.log('GOING TO GET THE FILE dev_test_one')
 
-    const signed = await Drive.getSignedUrl('dev_test_one')
+    const signed = await Drive.getSignedUrl('test/dev_test_one')
 
     console.log('SIGNED dev_test_one', signed)
     /** NOTE:
