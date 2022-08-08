@@ -1,5 +1,6 @@
 import Drive from '@ioc:Adonis/Core/Drive'
 import Database from '@ioc:Adonis/Lucid/Database'
+import Env from '@ioc:Adonis/Core/Env'
 import { v4 as uuidv4 } from 'uuid'
 
 import { TENANT_NAME } from '../../utils/constants/tenant'
@@ -72,6 +73,7 @@ class AppointmentFileService {
     doctorId: number,
     tenantId: number
   ): Promise<AppointmentFile[]> {
+    console.log('GCS CREDENTIALS', Env.get('GCS_KEY_FILENAME'))
     try {
       const appointment = await Appointment.find(data.appointmentId)
 
