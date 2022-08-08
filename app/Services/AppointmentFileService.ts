@@ -91,6 +91,11 @@ class AppointmentFileService {
       throw new AppError(err?.message, err?.code, err?.status)
     }
 
+    console.log('GOING TO GET THE FILE dev_test_one')
+
+    const signed = await Drive.getSignedUrl('dev_test_one')
+
+    console.log('SIGNED dev_test_one', signed)
     /** NOTE:
      * It m̶i̶g̶h̶t̶  will not work. Must be considered implementing another solution to
      * use transaction between GCS and the database.
