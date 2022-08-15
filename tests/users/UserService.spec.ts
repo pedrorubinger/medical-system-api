@@ -245,13 +245,13 @@ test.group('UserService', (group) => {
     assert.equal(user.name, 'John Doe')
   })
 
-  test('should not proceed with a password recovery proccess when user does not exist', async (assert: Assert) => {
+  test('should return true when user does not exist and tries to recover his password', async (assert: Assert) => {
     try {
       const hasRequested = await UserService.requestPasswordChange(
         `${defaultUser.email}gdifuaiso399`
       )
 
-      assert.isUndefined(hasRequested)
+      assert.equal(hasRequested, true)
     } catch (err) {
       assert.equal(err?.code, 'USER_NOT_FOUND')
     }
