@@ -3,7 +3,7 @@ import supertest from 'supertest'
 
 import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
-import { defaultUser } from '../../database/seeders/02_User'
+import { defaultUser, defaultUserTwo } from '../../database/seeders/02_User'
 import { Role } from 'App/Models/User'
 import { defaultTenant } from '../../database/seeders/01_Tenant'
 
@@ -24,11 +24,29 @@ test.group('UserController', (group) => {
       .expect(400)
   })
 
-  test('should return status 200 (GET /user)', async () => {
+  test('should return status 200 (GET /user) on fetch users (filter own true [string])', async () => {
     await supertest(BASE_URL)
       .get('/user?filterOwn=true')
       .set(headers)
       .expect(200)
+  })
+
+  test('should return status 200 (GET /user) on fetch users (filter own true [boolean])', async () => {
+    await supertest(BASE_URL)
+      .get(`/user?filterOwn=${true}`)
+      .set(headers)
+      .expect(200)
+  })
+
+  test('should return status 401 (GET /user/:id) when requester is not the target user', async () => {
+    await supertest(BASE_URL)
+      .get(`/user/${defaultUserTwo?.id}`)
+      .set(headers)
+      .expect(401)
+  })
+
+  test('should return status 200 (GET /doctor) on fetch doctors', async () => {
+    await supertest(BASE_URL).get('/user/doctor').set(headers).expect(200)
   })
 
   test('should return status 201 (POST /user)', async () => {

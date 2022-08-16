@@ -4,9 +4,11 @@ import supertest from 'supertest'
 import { BASE_URL } from '../utils/urls'
 import { generateTestAuth } from '../utils/authentication'
 import { defaultTenant } from '../../database/seeders/01_Tenant'
-import { defaultDeveloperUser } from '../../database/seeders/02_User'
+import {
+  defaultDeveloperUser,
+  defaultDeveloperUserTwo,
+} from '../../database/seeders/02_User'
 
-/** TO DO: Implement more test cases... */
 test.group('TenantController', (group) => {
   let headers: Object
 
@@ -29,6 +31,19 @@ test.group('TenantController', (group) => {
       .set(headers)
       .expect(200)
   })
+
+  test('should return status 200 (GET /tenant) when a developer non-master user fetches all tenants filtering his own tenant', async () => {
+    const response = await generateTestAuth(
+      defaultDeveloperUserTwo.email,
+      defaultDeveloperUserTwo.password
+    )
+
+    await supertest(BASE_URL)
+      .get('/tenant')
+      .set(response.headers)
+      .expect(200)
+      .timeout(50000)
+  }).timeout(50000)
 
   test('should return status 422 (POST /tenant) when an admin user try to create a new tenant without provide the required fields', async () => {
     const payload = {}
