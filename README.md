@@ -23,7 +23,6 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [x] Implementação da Configuração de Agenda;
 - [x] Implementação da Agenda;
 - [x] Implementação de Arquivos de Consultas;
-- [ ] Melhorar cobertura de testes;
 
 ## 💻 Requisitos
 
