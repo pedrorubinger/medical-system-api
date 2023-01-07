@@ -16,7 +16,6 @@ O projeto ainda está em desenvolvimento e as próximas atualizações estarão 
 - [x] Implementação do módulo de Endereços;
 - [x] Implementação do módulo de Gerenciar Consultas (visão do médico);
 - [x] Implementação do módulo de Recuperar Senha;
-- [ ] Implementação do módulo de Solicitar uma Conta (?);
 - [x] Implementação do módulo de Médicos;
 - [x] Implementação do middleware de Permissões;
 - [x] Implementação do módulo de Relatórios;
